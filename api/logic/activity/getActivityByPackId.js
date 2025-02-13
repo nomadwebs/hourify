@@ -6,6 +6,7 @@ const { SystemError, NotFoundError } = errors
 export default (userId, packId) => {
     validate.id(packId, 'packId')
     validate.id(userId, 'userId')
+    //This is just a test
 
     return (async () => {
         let user, packInfo, activities
