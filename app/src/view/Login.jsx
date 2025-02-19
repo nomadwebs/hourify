@@ -6,7 +6,8 @@ const { SystemError } = errors
 
 import useContex from './useContext'
 
-import logoTemp from '../../public/modernLogo.png'
+//import logoTemp from '../../public/modernLogo.png'
+const logoTemp = '/modernlogo.png';
 
 import { Button, Field, Input, Label, Image } from '../library'
 
