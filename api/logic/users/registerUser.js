@@ -79,7 +79,7 @@ export default (name, email, username, password, passwordRepeat) => {
 
         try {
             //send confirmation email
-            emailRegisterWelcome(email, name)
+            emailRegisterWelcome(email, name, username)
         } catch (error) {
             throw new SystemError(error.message)
         }
