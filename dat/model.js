@@ -143,6 +143,16 @@ const user = new Schema({
         required: false,
         default: '',
         maxLength: 512,
+    },
+    createdDate: {
+        type: Date,
+        required: false,
+        default: Date.now
+    },
+    createdBy: {
+        type: ObjectId,
+        required: false,
+        ref: 'User'
     }
 }, { versionKey: false })
 
