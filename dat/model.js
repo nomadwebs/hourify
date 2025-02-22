@@ -391,16 +391,10 @@ const payment = new Schema({
         enum: ['card', 'bankTransfer', 'paypal', 'stripe', 'cash', 'bizum', 'others'],
     },
 
-    status: {
-        type: String,
-        required: false,
-        enum: ['pending', 'completed', 'partially payed', 'canceled', 'refunded', 'partially refunded', 'expired'],
-        default: 'pending'
-    },
-
     reference: {
         type: String,
         required: false,
+        maxLength: 255,
     }
 
 }, { versionKey: false })

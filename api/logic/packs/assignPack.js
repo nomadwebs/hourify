@@ -6,11 +6,12 @@ import getBasePackDetails from '../packs/getBasePackDetails.js'
 
 const { SystemError, NotFoundError } = errors
 
-export default (userId, customerSearch, selectPack, description, payedAmount, paymentMethod) => {
+export default (userId, customerSearch, selectPack, description, payedAmount, paymentMethod, paymentReference) => {
     validate.id(userId, 'userId')
     validate.id(selectPack, 'packId')
     validate.description(description)
     validate.text(paymentMethod, 'paymentMethod')
+    validate.text(paymentReference, 'payment reference')
 
 
     const descriptionProvided = description
@@ -57,7 +58,7 @@ export default (userId, customerSearch, selectPack, description, payedAmount, pa
             const expiryDate = expiringTime === -1 ? new Date('9999-12-31') :
                 new Date(new Date().setMonth(new Date().getMonth() + expiringTime))
 
-            const status = 'Active'
+            const status = (payedAmount > 0 ? 'Active' : 'Pending')
 
             //First we're going to create the pack
             //Check if description of relationship pack is empty, if empty, we add the basePack default description
@@ -108,15 +109,16 @@ export default (userId, customerSearch, selectPack, description, payedAmount, pa
 
             //Fifth step, update payments
             let payedAmountNum = Number(payedAmount)
-            const addPayment = await Payment.create({
-                pack: newPack._id,
-                amount: payedAmountNum,
-                currency: currency,
-                date: new Date(),
-                method: paymentMethod,
-                //status: paymentStatus,
-            })
-
+            if (payedAmountNum > 0) {
+                const addPayment = await Payment.create({
+                    pack: newPack._id,
+                    amount: payedAmountNum,
+                    currency: currency,
+                    date: new Date(),
+                    method: paymentMethod,
+                    reference: paymentReference
+                })
+            }
             /* return {
                 pack: newPack,
                 updateProvider,
@@ -128,6 +130,6 @@ export default (userId, customerSearch, selectPack, description, payedAmount, pa
         } catch (error) {
             throw new SystemError(error.message)
         }
-    })() //IFEE --> Esta función se llama automáticamente a si misma
+    })()
 
 }
