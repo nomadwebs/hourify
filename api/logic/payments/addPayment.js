@@ -4,18 +4,16 @@ import { validate, errors } from 'com';
 
 const { SystemError, NotFoundError } = errors
 
-export default (userId, packId, amount, currency, method, paymentStatus) => {
+export default (userId, packId, amount, currency, method, paymentReference) => {
     validate.id(packId, 'packId')
     validate.id(userId, 'userId')
     validate.currency(currency)
     validate.method(method)
+    validate.text(paymentReference, 'payment reference')
 
     const floatAmount = parseFloat(amount)
     //if (!floatAmount || floatAmount <= 0) throw new ValidationError("Invalid payment amount");
     validate.number(floatAmount)
-
-    //TODO: TO DELETE PAYMENT STATUS FROM PAYMENTS COLLECTION
-    if (!paymentStatus) { paymentStatus = 'partially payed' }
 
     return User.findById(userId).lean()
         .catch(error => { throw new SystemError(error.message) })
@@ -29,11 +27,15 @@ export default (userId, packId, amount, currency, method, paymentStatus) => {
                 .then(pack => {
                     if (!pack) throw new NotFoundError('Pack not found')
 
-                    return Payment.create({ pack: packId, amount: floatAmount, currency, method, date: new Date() })
-                        .catch(error => {
-                            throw new SystemError(error.message)
+                    return Payment.create({ pack: packId, amount: floatAmount, currency, method, date: new Date(), reference: paymentReference })
+                        .catch(error => { throw new SystemError(error.message) })
+                        .then((paymentAdded) => {
+                            if (pack.status === 'Pending' && floatAmount > 0) {
+                                return Pack.findByIdAndUpdate(packId, { status: 'Active' }).lean()
+                                    .catch(error => { throw new SystemError(error.message) })
+                                    .then(() => { })
+                            }
                         })
-                        .then(() => { })
                 })
         })
 }

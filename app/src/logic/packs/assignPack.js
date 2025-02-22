@@ -3,12 +3,13 @@ import { validate, errors } from 'com'
 const { SystemError, NotFoundError, PaymentError } = errors
 
 
-export default (customerSearch, selectPack, description, payedAmount, paymentMethod) => {
+export default (customerSearch, selectPack, description, payedAmount, paymentMethod, paymentReference) => {
     validate.text(customerSearch)
     validate.id(selectPack)
     validate.description(description)
     validate.payedAmount(payedAmount)
     validate.paymentMethod(paymentMethod)
+    validate.text(paymentReference, 'payment reference')
 
     return fetch(`${import.meta.env.VITE_API_URL}/packs/assign-pack`, {
         method: 'POST',
@@ -16,7 +17,7 @@ export default (customerSearch, selectPack, description, payedAmount, paymentMet
             'Content-Type': 'application/json',
             Authorization: `Bearer ${localStorage.token}`
         },
-        body: JSON.stringify({ customerSearch, selectPack, description, payedAmount, paymentMethod })
+        body: JSON.stringify({ customerSearch, selectPack, description, payedAmount, paymentMethod, paymentReference })
     })
         .catch(error => {
             throw new SystemError(error.message)

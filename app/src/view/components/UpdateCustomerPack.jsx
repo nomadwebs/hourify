@@ -89,7 +89,9 @@ export default function UpdateCustomerPack({ onUpdated, onPaymentAdded, onPaymen
         const { target: form } = event
         let {
             amount: { value: amount },
-            paymentMethod: { value: paymentMethod } } = form
+            paymentMethod: { value: paymentMethod },
+            paymentReference: { value: paymentReference }
+        } = form
 
         if (!amount || !paymentMethod) {
             alert('Please provide the required information')
@@ -102,7 +104,7 @@ export default function UpdateCustomerPack({ onUpdated, onPaymentAdded, onPaymen
         amount = formattedAmount
 
         try {
-            await logic.addPayment(pack.id, amount, pack.currency, paymentMethod)
+            await logic.addPayment(pack.id, amount, pack.currency, paymentMethod, paymentReference)
                 .then(() => {
                     alert('Payment added successfully', 'success');
                     onPaymentAdded()
@@ -237,26 +239,7 @@ export default function UpdateCustomerPack({ onUpdated, onPaymentAdded, onPaymen
                     </div>
 
                     <h2 className='text-2xl mt-10'>Activity log</h2>
-                    {/* <table className="table-auto mt-4 bg-white text-black rounded-md">
-                        <thead>
-                            <tr className='bg-color_Grey'>
-                                <th className="border px-4 py-2">Description</th>
-                                <th className="border px-4 py-2">Date</th>
-                                <th className="border px-4 py-2">Operation</th>
-                                <th className="border px-4 py-2">Remaning</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {packActivities.map(payment => (
-                                <tr key={payment.id}>
-                                    <td className='border px-4 py-2'>{payment.description}</td>
-                                    <td className='border px-4 py-2'>{payment.formatedDate}</td>
-                                    <td className='border px-4 py-2'>{payment.operation === 'add' ? `+${payment.formattedOperation}` : `-${payment.formattedOperation}`}</td>
-                                    <td className='border px-4 py-2'>{payment.formattedRemaining}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table> */}
+
                     <ActivityTable activities={packActivities} packInfo={pack} />
 
                     <h2 className='text-2xl mt-10'>Payments history</h2>
@@ -264,7 +247,7 @@ export default function UpdateCustomerPack({ onUpdated, onPaymentAdded, onPaymen
                         <thead>
                             <tr className='bg-color_Grey'>
                                 <th className="border px-4 py-2">Date</th>
-                                {/* <th className="border px-4 py-2">Reference</th> */}
+                                <th className="border px-4 py-2">Reference</th>
                                 <th className="border px-4 py-2">Amount</th>
                                 <th className="border px-4 py-2">Method</th>
                                 <th className="border px-4 py-2">Actions</th>
@@ -275,7 +258,7 @@ export default function UpdateCustomerPack({ onUpdated, onPaymentAdded, onPaymen
 
                                 <tr key={payment?.id}>
                                     <td className='border px-4 py-2'>{new Date(payment?.date).toLocaleDateString()}</td>
-                                    {/* <td className='border px-4 py-2'></td> */}
+                                    <td className='border px-4 py-2'>{payment?.reference}</td>
                                     <td className='border px-4 py-2'>{payment?.amount} {payment?.currency}</td>
                                     <td className='border px-4 py-2'>{payment?.method}</td>
                                     <td className='border px-4 py-2'>
@@ -298,10 +281,10 @@ export default function UpdateCustomerPack({ onUpdated, onPaymentAdded, onPaymen
                                     <Label htmlFor="amount">Amount</Label>
                                     <Input className="border-2 rounded-lg" type="text" defaultValue={(parseFloat(pack.price) - parseFloat(pack.totalPayments)).toFixed(2)} id="amount" placeholder="0" required={true} />
                                 </Field>
-                                {/*  <Field>
-                                    <Label htmlFor="reference">Reference</Label>
-                                    <Input className="border-2 rounded-lg" type="text" id="reference" placeholder="Payment reference" required={false} />
-                                </Field> */}
+                                <Field>
+                                    <Label htmlFor="paymentReference">Reference</Label>
+                                    <Input className="border-2 rounded-lg" type="text" id="paymentReference" placeholder="Payment reference" required={false} />
+                                </Field>
                                 <Field>
                                     <Label htmlFor="paymentMethod">Select Payment Method</Label>
                                     <select id="paymentMethod" name="paymentMethod" className="border-2 rounded-lg w-full p-2" required>

@@ -2,11 +2,12 @@ import { validate, errors } from 'com'
 
 const { SystemError } = errors
 
-export default (packId, amount, currency, method, paymentStatus) => {
+export default (packId, amount, currency, method, paymentReference) => {
     validate.id(packId)
     validate.payedAmount(amount)
     validate.currency(currency)
     validate.method(method)
+    validate.text(paymentReference, 'payment reference')
 
     return fetch(`${import.meta.env.VITE_API_URL}/payments/add-payment`, {
         method: 'POST',
@@ -14,7 +15,7 @@ export default (packId, amount, currency, method, paymentStatus) => {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${localStorage.token}`
         },
-        body: JSON.stringify({ packId, amount, currency, method, paymentStatus })
+        body: JSON.stringify({ packId, amount, currency, method, paymentReference })
     })
         .catch(error => {
             throw new SystemError(error.message)

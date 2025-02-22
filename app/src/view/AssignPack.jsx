@@ -46,7 +46,8 @@ export default function AssignPack(props) {
             selectPack: { value: selectPack },
             description: { value: description },
             payedAmount: { value: payedAmount },
-            paymentMethod: { value: paymentMethod }
+            paymentMethod: { value: paymentMethod },
+            paymentReference: { value: paymentReference }
         } = form
 
 
@@ -56,7 +57,7 @@ export default function AssignPack(props) {
         payedAmount = formattedPayedAmount
 
         try {
-            const assigned = await assignPack(customerSearch, selectPack, description, payedAmount, paymentMethod)
+            await assignPack(customerSearch, selectPack, description, payedAmount, paymentMethod, paymentReference)
             alert('Pack successfully assigned to customer!', 'success')
         } catch (error) {
             alert(error.message)
@@ -107,6 +108,11 @@ export default function AssignPack(props) {
                     <Field>
                         <Label htmlFor="payedAmount">Payed Amount</Label>
                         <Input id="payedAmount" personalClasses="border-2 rounded-lg w-full" type="text" placeholder="0 €" />
+                    </Field>
+
+                    <Field>
+                        <Label htmlFor="paymentReference">Reference</Label>
+                        <Input className="border-2 rounded-lg" type="text" id="paymentReference" placeholder="Payment reference" required={false} />
                     </Field>
 
                     <Field>
