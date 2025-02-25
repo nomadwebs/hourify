@@ -12,7 +12,9 @@ import {
     getAdquiredPacksHandler,
     updatePackHandler,
     getProviderSoldPacksHandler,
+    getCustomerBoughtPacksHandler,
 } from './handlers/index.js'
+import getCustomerBoughtPacks from "../../logic/packs/getCustomerBoughtPacks.js"
 
 const packsRouter = Router()
 
@@ -25,6 +27,6 @@ packsRouter.put('/update/:basePackId', authorizationHandler, jsonBodyParser, upd
 packsRouter.put('/updatepack/:packId', authorizationHandler, jsonBodyParser, updatePackHandler)
 packsRouter.get('/get-adquired-packs/:targetUserId', authorizationHandler, getAdquiredPacksHandler)
 packsRouter.get('/get-prov-sold-packs/:userId', authorizationHandler, getProviderSoldPacksHandler)
-packsRouter.get('/get-cust-bought-packs/:userId', authorizationHandler, getProviderSoldPacksHandler)
+packsRouter.get('/get-cust-bought-packs/:userId', authorizationHandler, getCustomerBoughtPacksHandler)
 
 export default packsRouter
