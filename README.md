@@ -26,13 +26,13 @@ This program can be used by people such as:
 
 - Web designers and programmers
 
-![Developer](../doc/developer.jpg)
+![Developer](./doc/developer.jpg)
 
 - Psychologists and coaches, 
 
 - Doctors and healthcare professionals, 
 
-![Developer](../doc/doctor.jpg)
+![Developer](./doc/doctor.jpg)
 
 - Painters, illustrators, and photographers, 
 
@@ -40,11 +40,11 @@ This program can be used by people such as:
 
 - Maintenance or cleaning personnel,
 
-![Developer](../doc/cleaner.jpg)
+![Developer](./doc/cleaner.jpg)
 
 - And, in general, anyone who may sell services by hours or sessions.
 
-![Buyer persona](../doc/buyer_persona.png)
+![Buyer persona](./doc/buyer_persona.png)
 
 ## Functional
 
@@ -193,7 +193,7 @@ Payment
 
 ### Test Coverage
 
-![Coverage](./coverage.png)
+![Coverage](./doc/coverage.png)
 
 ```sh
 -----------------------------------|---------|----------|---------|---------|-------------------

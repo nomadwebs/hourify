@@ -7,6 +7,8 @@ import updateBasePack from './updateBasePack.js'
 import getAdquiredPacks from './getAdquiredPacks.js'
 import checkPackAndUpdate from './checkPackAndUpdate.js'
 import updatePack from './updatePack.js'
+import getCustomerBoughtPacks from './getCustomerBoughtPacks.js'
+import getProviderSoldPacks from './getProviderSoldPacks.js'
 
 export {
     createBasePack,
@@ -17,5 +19,7 @@ export {
     updateBasePack,
     getAdquiredPacks,
     checkPackAndUpdate,
-    updatePack
+    updatePack,
+    getCustomerBoughtPacks,
+    getProviderSoldPacks
 }

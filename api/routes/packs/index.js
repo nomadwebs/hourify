@@ -10,7 +10,8 @@ import {
     deleteBasePackHandler,
     updateBasePackHandler,
     getAdquiredPacksHandler,
-    updatePackHandler
+    updatePackHandler,
+    getProviderSoldPacksHandler,
 } from './handlers/index.js'
 
 const packsRouter = Router()
@@ -23,5 +24,7 @@ packsRouter.delete('/delete/:basePackId', authorizationHandler, deleteBasePackHa
 packsRouter.put('/update/:basePackId', authorizationHandler, jsonBodyParser, updateBasePackHandler)
 packsRouter.put('/updatepack/:packId', authorizationHandler, jsonBodyParser, updatePackHandler)
 packsRouter.get('/get-adquired-packs/:targetUserId', authorizationHandler, getAdquiredPacksHandler)
+packsRouter.get('/get-prov-sold-packs/:userId', authorizationHandler, getProviderSoldPacksHandler)
+packsRouter.get('/get-cust-bought-packs/:userId', authorizationHandler, getProviderSoldPacksHandler)
 
 export default packsRouter
