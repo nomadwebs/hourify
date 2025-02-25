@@ -19,7 +19,9 @@ import {
     updateBasePack,
     getAdquiredPacks,
     checkPackAndUpdate,
-    updatePack
+    updatePack,
+    getCustomerBoughtPacks,
+    getProviderSoldPacks
 } from './packs/index.js'
 
 //EMAILING
@@ -69,6 +71,8 @@ const logic = {
     getAdquiredPacks,
     checkPackAndUpdate,
     updatePack,
+    getCustomerBoughtPacks,
+    getProviderSoldPacks,
 
     //emailing
     emailRegisterWelcome,

@@ -20,6 +20,8 @@ import {
     updateBasePack,
     getAdquiredPacks,
     updatePack,
+    getProviderSoldPacks,
+    getCustomerBoughtPacks,
 } from './packs'
 
 import {
@@ -72,6 +74,8 @@ const logic = {
     updateBasePack,
     getAdquiredPacks,
     updatePack,
+    getProviderSoldPacks,
+    getCustomerBoughtPacks,
 
     //Activities
     getActivitiesByPackId,

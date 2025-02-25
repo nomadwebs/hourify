@@ -6,7 +6,8 @@ import deleteBasePackHandler from './deleteBasePackHandler.js'
 import updateBasePackHandler from './updateBasePackHandler.js'
 import getAdquiredPacksHandler from './getAdquiredPacksHandler.js'
 import updatePackHandler from './updatePackHandler.js'
-
+import getProviderSoldPacksHandler from './getProviderSoldPacksHandler.js'
+import getCustomerBoughtPacksHandler from './getCustomerBoughtPacksHandler.js'
 export {
     createBasePackHandlers,
     assingPackHandlers,
@@ -15,5 +16,7 @@ export {
     deleteBasePackHandler,
     updateBasePackHandler,
     getAdquiredPacksHandler,
-    updatePackHandler
+    updatePackHandler,
+    getProviderSoldPacksHandler,
+    getCustomerBoughtPacksHandler
 }
