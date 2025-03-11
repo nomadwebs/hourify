@@ -146,7 +146,7 @@ const user = new Schema({
     },
     createdDate: {
         type: Date,
-        required: false,
+        required: true,
         default: Date.now
     },
     createdBy: {
