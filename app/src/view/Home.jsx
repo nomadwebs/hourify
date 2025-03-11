@@ -182,52 +182,52 @@ export default function Home(props) {
                     {/* <Button className="bg-color_green hover:bg-color_greenDark text-white">Settings</Button> */}
                 </div>
 
-                <h2 className="text-3xl font-bold text-color_darkBlue mb-2">Sold Packs</h2>
-                <p className="text-color_strongGrey">List of Sold Packs</p>
+                {providerSoldPacks.length > 0 && (
+                    <>
+                        <h2 className="text-3xl font-bold text-color_darkBlue mb-2">Sold Packs</h2>
+                        <table className="table-auto mt-4 w-[80%] bg-white text-black rounded-md">
+                            <thead>
+                                <tr className='bg-amarilloCanario'>
+                                    <th className="border px-4 py-2">Customer</th>
+                                    <th className="border px-4 py-2">Pack description</th>
+                                    <th className="border px-4 py-2">Remaining</th>
+                                    <th className="border px-4 py-2">Purchase date</th>
+                                    <th className="border px-4 py-2">Expire date</th>
+                                    <th className="border px-4 py-2">Status</th>
+                                    {/* <th className="border px-4 py-2">Payment Status</th> */}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {providerSoldPacks.map(providerSoldPack => (
 
-                <table className="table-auto mt-4 w-[80%] bg-white text-black rounded-md">
-                    <thead>
-                        <tr className='bg-amarilloCanario'>
-                            <th className="border px-4 py-2">Customer</th>
-                            <th className="border px-4 py-2">Pack description</th>
-                            <th className="border px-4 py-2">Remaining</th>
-                            <th className="border px-4 py-2">Purchase date</th>
-                            <th className="border px-4 py-2">Expire date</th>
-                            <th className="border px-4 py-2">Status</th>
-                            {/* <th className="border px-4 py-2">Payment Status</th> */}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {providerSoldPacks.map(providerSoldPack => (
-
-                            < tr key={providerSoldPack.id} className="cursor-pointer hover:bg-gray-100"
+                                    < tr key={providerSoldPack.id} className="cursor-pointer hover:bg-gray-100"
                                 /* onClick={(event) => handleManageClick(event, providerSoldPack)} */>
 
-                                <td className='border px-4 py-2'>{providerSoldPack.customerName}</td>
-                                <td className='border px-4 py-2'>{providerSoldPack.description}</td>
-                                <td className='border px-4 py-2'>{providerSoldPack.formattedRemaining}</td>
-                                <td className='border px-4 py-2'>{providerSoldPack.formattedPurchaseDate}</td>
-                                <td className='border px-4 py-2'>{providerSoldPack.formattedExpiryDate}</td>
-                                {/* 'Pending', 'Active', 'Expired', 'Finished' */}
+                                        <td className='border px-4 py-2'>{providerSoldPack.customerName}</td>
+                                        <td className='border px-4 py-2'>{providerSoldPack.description}</td>
+                                        <td className='border px-4 py-2'>{providerSoldPack.formattedRemaining}</td>
+                                        <td className='border px-4 py-2'>{providerSoldPack.formattedPurchaseDate}</td>
+                                        <td className='border px-4 py-2'>{providerSoldPack.formattedExpiryDate}</td>
+                                        {/* 'Pending', 'Active', 'Expired', 'Finished' */}
 
-                                <td className="border px-4 py-2">
-                                    {providerSoldPack.status === 'Active' && (<TagOK>Active</TagOK>)}
-                                    {providerSoldPack.status === 'Pending' && (<TagKO>Pending</TagKO>)}
-                                    {providerSoldPack.status === 'Expired' && (<TagKO>Expired</TagKO>)}
-                                    {providerSoldPack.status === 'Finished' && (<TagKO>Finished</TagKO>)}
-                                </td>
+                                        <td className="border px-4 py-2">
+                                            {providerSoldPack.status === 'Active' && (<TagOK>Active</TagOK>)}
+                                            {providerSoldPack.status === 'Pending' && (<TagKO>Pending</TagKO>)}
+                                            {providerSoldPack.status === 'Expired' && (<TagKO>Expired</TagKO>)}
+                                            {providerSoldPack.status === 'Finished' && (<TagKO>Finished</TagKO>)}
+                                        </td>
 
-                                {/*  <td className="border px-4 py-2">
+                                        {/*  <td className="border px-4 py-2">
                                     {providerSoldPack.paymentStatus === 'pending' && (<TagKO>Pending</TagKO>)}
                                     {providerSoldPack.paymentStatus === 'partially payed' && (<TagWARN>Partially Paid</TagWARN>)}
                                     {providerSoldPack.paymentStatus === 'completed' && (<TagOK>Completed</TagOK>)}
                                     {providerSoldPack.paymentStatus === 'payment exceded' && (<TagEXTRA>Payment Exceded</TagEXTRA>)}
                                 </td> */}
-                            </tr>
-                        ))}
-                    </tbody>
+                                    </tr>
+                                ))}
+                            </tbody>
 
-                    {/* {view === 'UpdateCustomerPack' && selectedPack && (
+                            {/* {view === 'UpdateCustomerPack' && selectedPack && (
                         <tr ref={updatePackView}>
                             <td colSpan="10" className="border px-4 py-2">
                                 <UpdateCustomerPack
@@ -242,57 +242,62 @@ export default function Home(props) {
                             </td>
                         </tr>
                     )} */}
-                </table>
+                        </table>
+                    </>
+                )}
+
 
                 <br />
                 <br />
                 <br />
-                <h2 className="text-3xl font-bold text-color_darkBlue mb-2">Adquired Packs</h2>
-                <p className="text-color_strongGrey">List of bought packs</p>
 
-                <table className="table-auto mt-4 w-[80%] bg-white text-black rounded-md">
-                    <thead>
-                        <tr className='bg-amarilloCanario'>
-                            <th className="border px-4 py-2">Provider</th>
-                            <th className="border px-4 py-2">Pack description</th>
-                            <th className="border px-4 py-2">Remaining</th>
-                            <th className="border px-4 py-2">Purchase date</th>
-                            <th className="border px-4 py-2">Expire date</th>
-                            <th className="border px-4 py-2">Status</th>
-                            {/* <th className="border px-4 py-2">Payment Status</th> */}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {customerBoughtPacks.map(customerBoughtPack => (
 
-                            < tr key={customerBoughtPack.id} className="cursor-pointer hover:bg-gray-100"
+                {customerBoughtPacks.length > 0 && (
+                    <>
+                        <h2 className="text-3xl font-bold text-color_darkBlue mb-2">Adquired Packs</h2>
+                        <table className="table-auto mt-4 w-[80%] bg-white text-black rounded-md">
+                            <thead>
+                                <tr className='bg-amarilloCanario'>
+                                    <th className="border px-4 py-2">Provider</th>
+                                    <th className="border px-4 py-2">Pack description</th>
+                                    <th className="border px-4 py-2">Remaining</th>
+                                    <th className="border px-4 py-2">Purchase date</th>
+                                    <th className="border px-4 py-2">Expire date</th>
+                                    <th className="border px-4 py-2">Status</th>
+                                    {/* <th className="border px-4 py-2">Payment Status</th> */}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {customerBoughtPacks.map(customerBoughtPack => (
+
+                                    < tr key={customerBoughtPack.id} className="cursor-pointer hover:bg-gray-100"
                                 /* onClick={(event) => handleManageClick(event, providerSoldPack)} */>
 
-                                <td className='border px-4 py-2'>{customerBoughtPack.providerName}</td>
-                                <td className='border px-4 py-2'>{customerBoughtPack.description}</td>
-                                <td className='border px-4 py-2'>{customerBoughtPack.formattedRemaining}</td>
-                                <td className='border px-4 py-2'>{customerBoughtPack.formattedPurchaseDate}</td>
-                                <td className='border px-4 py-2'>{customerBoughtPack.formattedExpiryDate}</td>
-                                {/* 'Pending', 'Active', 'Expired', 'Finished' */}
+                                        <td className='border px-4 py-2'>{customerBoughtPack.providerName}</td>
+                                        <td className='border px-4 py-2'>{customerBoughtPack.description}</td>
+                                        <td className='border px-4 py-2'>{customerBoughtPack.formattedRemaining}</td>
+                                        <td className='border px-4 py-2'>{customerBoughtPack.formattedPurchaseDate}</td>
+                                        <td className='border px-4 py-2'>{customerBoughtPack.formattedExpiryDate}</td>
+                                        {/* 'Pending', 'Active', 'Expired', 'Finished' */}
 
-                                <td className="border px-4 py-2">
-                                    {customerBoughtPack.status === 'Active' && (<TagOK>Active</TagOK>)}
-                                    {customerBoughtPack.status === 'Pending' && (<TagKO>Pending</TagKO>)}
-                                    {customerBoughtPack.status === 'Expired' && (<TagKO>Expired</TagKO>)}
-                                    {customerBoughtPack.status === 'Finished' && (<TagKO>Finished</TagKO>)}
-                                </td>
+                                        <td className="border px-4 py-2">
+                                            {customerBoughtPack.status === 'Active' && (<TagOK>Active</TagOK>)}
+                                            {customerBoughtPack.status === 'Pending' && (<TagKO>Pending</TagKO>)}
+                                            {customerBoughtPack.status === 'Expired' && (<TagKO>Expired</TagKO>)}
+                                            {customerBoughtPack.status === 'Finished' && (<TagKO>Finished</TagKO>)}
+                                        </td>
 
-                                {/*  <td className="border px-4 py-2">
+                                        {/*  <td className="border px-4 py-2">
                                     {customerBoughtPack.paymentStatus === 'pending' && (<TagKO>Pending</TagKO>)}
                                     {customerBoughtPack.paymentStatus === 'partially payed' && (<TagWARN>Partially Paid</TagWARN>)}
                                     {customerBoughtPack.paymentStatus === 'completed' && (<TagOK>Completed</TagOK>)}
                                     {customerBoughtPack.paymentStatus === 'payment exceded' && (<TagEXTRA>Payment Exceded</TagEXTRA>)}
                                 </td> */}
-                            </tr>
-                        ))}
-                    </tbody>
+                                    </tr>
+                                ))}
+                            </tbody>
 
-                    {/* {view === 'UpdateCustomerPack' && selectedPack && (
+                            {/* {view === 'UpdateCustomerPack' && selectedPack && (
                         <tr ref={updatePackView}>
                             <td colSpan="10" className="border px-4 py-2">
                                 <UpdateCustomerPack
@@ -307,7 +312,9 @@ export default function Home(props) {
                             </td>
                         </tr>
                     )} */}
-                </table>
+                        </table>
+                    </>
+                )}
 
             </main>
         )
