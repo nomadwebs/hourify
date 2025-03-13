@@ -5,6 +5,7 @@ import getCustomersHandler from './getCustomersHandler.js';
 import getUserDetailsHandler from './getUserDetailsHandler.js';
 import updateUserHandler from './updateUserHandler.js';
 import getCustomerPacksHandler from './getCustomerPacksHandler.js';
+import createUserByProviderHandler from './createUserByProviderHandler.js';
 
 export {
     authenticateUserHandler,
@@ -13,5 +14,6 @@ export {
     getCustomersHandler,
     getUserDetailsHandler,
     updateUserHandler,
-    getCustomerPacksHandler
+    getCustomerPacksHandler,
+    createUserByProviderHandler
 }

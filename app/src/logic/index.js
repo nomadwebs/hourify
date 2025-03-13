@@ -8,7 +8,8 @@ import {
     getCustomers,
     getUserDetails,
     updateUser,
-    getCustomerPacks
+    getCustomerPacks,
+    createUserByProvider
 } from './users'
 
 import {
@@ -64,7 +65,7 @@ const logic = {
     getUserDetails,
     updateUser,
     getCustomerPacks,
-
+    createUserByProvider,
     //Packs
     createPack,
     getBasePacks,

@@ -2,17 +2,19 @@ import { useState, useEffect } from 'react'
 import logic from '../logic'
 import { errors } from 'com'
 
-const { SystemError } = errors
+const { SystemError, NotFoundError } = errors
 
-import useContex from './useContext'
+import useContext from './useContext'
 
 import { Button, Field, Input, Label, Image, Textarea } from '../library'
 import { getCurrencySymbol } from '../util'
 import { assignPack } from '../logic/packs'
+import { CreateUserByProvider } from './components'
 
 export default function AssignPack(props) {
     const [basePacks, setPacks] = useState([])
-    const { alert } = useContex()
+    const [showCreateUser, setShowCreateUser] = useState(false)
+    const { alert, confirm } = useContext()
 
     useEffect(() => {
         const fetchBasePacks = async () => {
@@ -60,9 +62,21 @@ export default function AssignPack(props) {
             await assignPack(customerSearch, selectPack, description, payedAmount, paymentMethod, paymentReference)
             alert('Pack successfully assigned to customer!', 'success')
         } catch (error) {
-            alert(error.message)
-            console.error(error)
+            if (error instanceof NotFoundError && error.message === 'Customer not found') {
+                handleCreateUser()
+            } else {
+                alert(error.message)
+                console.error(error)
+            }
         }
+    }
+
+    const handleCreateUser = () => {
+        confirm('User not found. Do you want to create a new user and let them access the platform?', accepted => {
+            if (accepted) {
+                setShowCreateUser(true)
+            }
+        }, 'warn')
     }
 
     const handleHomeClick = event => {
@@ -71,69 +85,75 @@ export default function AssignPack(props) {
     }
 
     return <main className="flex flex-col items-center bg-color_backgroundGrey w-full flex-grow pt-12">
-        <h2 className="text-2xl font-bold mb-6">Assign pack to customer</h2>
+        {showCreateUser ? (
+            <CreateUserByProvider onUserCreated={() => setShowCreateUser(false)} />
+        ) : (
+            <>
+                <h2 className="text-2xl font-bold mb-6">Assign pack to customer</h2>
 
-        <div className="bg-white shadow-md rounded p-6 w-full max-w-4xl">
+                <div className="bg-white shadow-md rounded p-6 w-full max-w-4xl">
 
-            {/* Formulario con grid de dos columnas (en pantallas medianas o superiores) */}
-            <form className="grid grid-cols-1 md:grid-cols-2 gap-6" onSubmit={handleSubmit}>
+                    {/* Formulario con grid de dos columnas (en pantallas medianas o superiores) */}
+                    <form className="grid grid-cols-1 md:grid-cols-2 gap-6" onSubmit={handleSubmit}>
 
-                {/* Columna Izquierda */}
-                <div className="space-y-4">
-                    <Field>
-                        <Label htmlFor="customerSearch">Find customer </Label>
-                        <Input id="customerSearch" personalClasses="border-2 rounded-lg w-full" type="text" placeholder="Use email or username" />
-                    </Field>
+                        {/* Columna Izquierda */}
+                        <div className="space-y-4">
+                            <Field>
+                                <Label htmlFor="customerSearch">Find customer </Label>
+                                <Input id="customerSearch" personalClasses="border-2 rounded-lg w-full" type="text" placeholder="Use email or username" />
+                            </Field>
 
-                    <Field>
-                        <Label htmlFor="selectPack">Select Pack</Label>
-                        <select id="selectPack" name="selectPack" className="border-2 rounded-lg w-full p-2">
-                            {basePacks.map((basePack) => (
-                                <option key={basePack.id} value={basePack.id}>
-                                    {basePack.packName} - {basePack.price}
-                                    {getCurrencySymbol(basePack)}
-                                </option>
-                            ))}
-                        </select>
-                    </Field>
+                            <Field>
+                                <Label htmlFor="selectPack">Select Pack</Label>
+                                <select id="selectPack" name="selectPack" className="border-2 rounded-lg w-full p-2">
+                                    {basePacks.map((basePack) => (
+                                        <option key={basePack.id} value={basePack.id}>
+                                            {basePack.packName} - {basePack.price}
+                                            {getCurrencySymbol(basePack)}
+                                        </option>
+                                    ))}
+                                </select>
+                            </Field>
 
-                    <Field>
-                        <Label htmlFor="description">Description</Label>
-                        <Textarea id="description" placeholder="Description about this pack for this customer" personalClasses="border-2 rounded-lg w-full" />
-                    </Field>
+                            <Field>
+                                <Label htmlFor="description">Description</Label>
+                                <Textarea id="description" placeholder="Description about this pack for this customer" personalClasses="border-2 rounded-lg w-full" />
+                            </Field>
+                        </div>
+
+                        {/* Columna Derecha */}
+                        <div className="space-y-4">
+                            <Field>
+                                <Label htmlFor="payedAmount">Payed Amount</Label>
+                                <Input id="payedAmount" personalClasses="border-2 rounded-lg w-full" type="text" placeholder="0 €" />
+                            </Field>
+
+                            <Field>
+                                <Label htmlFor="paymentReference">Reference</Label>
+                                <Input className="border-2 rounded-lg" type="text" id="paymentReference" placeholder="Payment reference" required={false} />
+                            </Field>
+
+                            <Field>
+                                <Label htmlFor="paymentMethod">Select Payment Method</Label>
+                                <select id="paymentMethod" name="paymentMethod" className="border-2 rounded-lg w-full p-2">
+                                    <option value="card">Card</option>
+                                    <option value="cash">Cash</option>
+                                    <option value="bankTransfer">Bank Transfer</option>
+                                    <option value="paypal">Paypal</option>
+                                    <option value="stripe">Stripe</option>
+                                    <option value="others">Others</option>
+                                </select>
+                            </Field>
+                        </div>
+
+                        {/* Botón al final ocupando el ancho de ambas columnas en pantallas medianas+ */}
+                        <div className="md:col-span-2 flex justify-center">
+                            <Button type="submit">Assign Pack</Button>
+                        </div>
+                    </form>
                 </div>
-
-                {/* Columna Derecha */}
-                <div className="space-y-4">
-                    <Field>
-                        <Label htmlFor="payedAmount">Payed Amount</Label>
-                        <Input id="payedAmount" personalClasses="border-2 rounded-lg w-full" type="text" placeholder="0 €" />
-                    </Field>
-
-                    <Field>
-                        <Label htmlFor="paymentReference">Reference</Label>
-                        <Input className="border-2 rounded-lg" type="text" id="paymentReference" placeholder="Payment reference" required={false} />
-                    </Field>
-
-                    <Field>
-                        <Label htmlFor="paymentMethod">Select Payment Method</Label>
-                        <select id="paymentMethod" name="paymentMethod" className="border-2 rounded-lg w-full p-2">
-                            <option value="card">Card</option>
-                            <option value="cash">Cash</option>
-                            <option value="bankTransfer">Bank Transfer</option>
-                            <option value="paypal">Paypal</option>
-                            <option value="stripe">Stripe</option>
-                            <option value="others">Others</option>
-                        </select>
-                    </Field>
-                </div>
-
-                {/* Botón al final ocupando el ancho de ambas columnas en pantallas medianas+ */}
-                <div className="md:col-span-2 flex justify-center">
-                    <Button type="submit">Assign Pack</Button>
-                </div>
-            </form>
-        </div>
-        <a href="" title="Go back home" onClick={handleHomeClick} className="mt-4 hover:underline">Back to home</a>
+                <a href="" title="Go back home" onClick={handleHomeClick} className="mt-4 hover:underline">Back to home</a>
+            </>
+        )}
     </main>
 }
