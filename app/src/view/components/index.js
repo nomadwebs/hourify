@@ -5,6 +5,7 @@ import Confirm from './Confirm.jsx'
 import UpdateBasePack from './UpdateBasePack.jsx'
 import UpdateCustomerPack from './UpdateCustomerPack.jsx'
 import ActivityTable from './ActivityTable.jsx'
+import CreateUserByProvider from './CreateUserByProvider.jsx'
 
 
 export {
@@ -17,5 +18,6 @@ export {
     UpdateBasePack,
     UpdateCustomerPack,
 
-    ActivityTable
+    ActivityTable,
+    CreateUserByProvider
 }

@@ -6,7 +6,8 @@ import {
     getCustomers,
     getUserDetails,
     updateUser,
-    getCustomerPacks
+    getCustomerPacks,
+    createUserByProvider
 } from './users/index.js'
 
 //PACKS & BASEPACKS
@@ -59,6 +60,7 @@ const logic = {
     getUserDetails,
     updateUser,
     getCustomerPacks,
+    createUserByProvider,
 
 
     //Packs and basebacks

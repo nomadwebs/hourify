@@ -8,7 +8,8 @@ import {
     getCustomersHandler,
     getUserDetailsHandler,
     updateUserHandler,
-    getCustomerPacksHandler
+    getCustomerPacksHandler,
+    createUserByProviderHandler
 } from "./handlers/index.js"
 
 const usersRouter = Router()
@@ -20,7 +21,6 @@ usersRouter.get('/customers', authorizationHandler, getCustomersHandler)
 usersRouter.get('/customerpacks/:customerId', authorizationHandler, getCustomerPacksHandler)
 usersRouter.get('/user/:targetUserId', authorizationHandler, getUserDetailsHandler)
 usersRouter.put('/update/:targetUserId', authorizationHandler, jsonBodyParser, updateUserHandler)
-//usersRouter.get('/images/profile:imageUrl')
-//server.use('/images/profile', express.static('public/images/profile'))
+usersRouter.post('/createByProvider', authorizationHandler, jsonBodyParser, createUserByProviderHandler)
 
-export default usersRouter
+export default usersRouter  

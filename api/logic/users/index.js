@@ -5,6 +5,7 @@ import getCustomers from './getCustomers.js'
 import getUserDetails from './getUserDetails.js'
 import updateUser from './updateUser.js'
 import getCustomerPacks from './getCustomerPacks.js'
+import createUserByProvider from './createUserByProvider.js'
 
 export {
     authenticateUser,
@@ -13,5 +14,6 @@ export {
     getCustomers,
     getUserDetails,
     updateUser,
-    getCustomerPacks
+    getCustomerPacks,
+    createUserByProvider
 }
