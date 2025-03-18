@@ -9,6 +9,7 @@ import TagWARN from "./TagWARN"
 import TagEXTRA from "./TagEXTRA"
 import TagKO from "./TagKO"
 import Card from "./Card"
+import StatusFilter from './StatusFilter'
 
 
 export {
@@ -22,5 +23,6 @@ export {
     TagWARN,
     TagEXTRA,
     TagKO,
-    Card
+    Card,
+    StatusFilter
 }

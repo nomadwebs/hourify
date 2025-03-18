@@ -4,7 +4,7 @@ import { Routes, Route, useNavigate, Navigate } from 'react-router-dom'
 
 import { Login, Register, Home, ManagePacks, ManageCustomers, ManagePurchasedPacks, AssignPack, CreatePack, Tracker, UserProfile, CustomerPacks } from './view'
 
-import { Header, Footer, Alert, Confirm } from './view/components'
+import { Header, Footer, Alert, Confirm, PrivacyPolicy } from './view/components'
 
 import { Context } from './view/useContext'
 
@@ -25,7 +25,6 @@ export default function App() {
   const navigate = useNavigate()
 
   //Navigation functions
-
   const handleHomeClick = () => navigate('/')
 
   const handleUserProfileClick = () => navigate('/user-profile')
@@ -59,7 +58,6 @@ export default function App() {
 
   //Navigation throw Tracking things
   const handleTrackerPacksClick = () => navigate('/tracker')
-
 
 
   //Functions to manage alerts and confirms
@@ -100,7 +98,12 @@ export default function App() {
   }}>
     <div className="flex flex-col min-h-screen">
       {location.pathname !== '/login' && (
-        <Header onHomeClick={handleHomeClick} onLoggedOut={handleUserLoggedOut} onViewProfile={handleUserProfileClick} onTrackerClick={handleTrackerPacksClick} onManagePacksClick={handleManagePacksClick} onManageCustomersClick={handleManageCustomersClick} />
+        <Header onHomeClick={handleHomeClick}
+          onLoggedOut={handleUserLoggedOut}
+          onViewProfile={handleUserProfileClick}
+          onTrackerClick={handleTrackerPacksClick}
+          onManagePacksClick={handleManagePacksClick}
+          onManageCustomersClick={handleManageCustomersClick} />
       )}
       <Routes>
         <Route path="/login" element={logic.isUserLoggedIn() ?
@@ -121,7 +124,7 @@ export default function App() {
             onManagePurchasedPacksClick={handleManagePurchasedPacksClick}
             onTrackerClick={handleTrackerPacksClick}
 
-          /* onAssignPackClick={handleAssignPack} */ /> :
+            /* onAssignPackClick={handleAssignPack} */ /> :
           <Navigate to="/login" />} />
 
         <Route path="/tracker" element={logic.isUserLoggedIn() ? <Tracker onHomeClick={handleHomeClick} /> : <Navigate to="/login" />} />
@@ -157,6 +160,8 @@ export default function App() {
         <Route path="/customer-packs/:customerId" element={logic.isUserLoggedIn() ?
           <CustomerPacks onHomeClick={handleHomeClick} /> :
           <Navigate to="/login" />} />
+
+        <Route path="/privacy-policy" element={<PrivacyPolicy onHomeClick={handleHomeClick} />} />
 
         <Route path="*" element={
           <div className="text-center">
