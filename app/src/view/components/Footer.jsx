@@ -11,6 +11,9 @@ export default function Footer() {
             <p className="text-sm">
                 Contact us at: <a href="mailto:hola@nomadwebs.com" className="text-color_primary hover:underline">hola@nomadwebs.com</a>
             </p>
+            <p className="text-sm">
+                <a href="/privacy-policy" className="text-color_primary hover:underline">Privacy Policy</a>
+            </p>
         </footer>
     )
 }

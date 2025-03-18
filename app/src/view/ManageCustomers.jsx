@@ -32,7 +32,7 @@ export default function ManageCustomers(props) {
 
     if (loading) {
         return (
-            <main className="flex flex-col items-center bg-color_backgroundGrey w-full flex-grow pt-12">
+            <main className="flex flex-col items-center bg-color_backgroundGrey w-full flex-grow pt-12 px-4">
                 <h2 className="text-2xl font-bold mb-6">Manage Customers</h2>
                 <div className="flex justify-center items-center h-full">
                     <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-color_green"></div>
@@ -43,65 +43,66 @@ export default function ManageCustomers(props) {
 
     if (customers.length === 0) {
         return (
-            <main className="flex flex-col items-center bg-color_backgroundGrey w-full flex-grow pt-12">
+            <main className="flex flex-col items-center bg-color_backgroundGrey w-full flex-grow pt-12 px-4">
                 <h2 className="text-2xl font-bold mb-6">Manage Customers</h2>
                 <div className="bg-white shadow-md rounded p-6 w-full max-w-4xl">
                     <p>You should create first a pack and assign it to a customer to see this page</p>
                     <br></br>
-                    <ul>
-                        <li>1. Go Manage packs</li>
-                        <li>2. Clic on create new pack</li>
-                        <li>3. Go to assign pack</li>
+                    <ul className="list-decimal pl-5">
+                        <li>Go Manage packs</li>
+                        <li>Clic on create new pack</li>
+                        <li>Go to assign pack</li>
                     </ul>
                     <br></br>
                     <hr></hr>
                     <p>After this steps you'll can manage it on this page</p>
                 </div>
-
             </main>
         )
     }
 
     return (
-        <main className="flex flex-col items-center bg-color_backgroundGrey w-full flex-grow pt-12">
-            <h1 className="text-3xl">Manage Customers</h1>
-            <p>This will be the page to manage your customers</p>
+        <main className="flex flex-col items-center bg-color_backgroundGrey w-full flex-grow pt-12 px-4">
+            <h1 className="text-3xl font-bold mb-2">Manage Customers</h1>
+            <p className="text-gray-600 mb-6">View and manage your customers</p>
 
-            <table className="table-auto mt-4 w-[80%] bg-white text-black rounded-md">
-                <thead>
-                    <tr className="bg-amarilloCanario">
-                        <th className="border px-4 py-2">Name</th>
-                        <th className="border px-4 py-2">Email</th>
-                        <th className="border px-4 py-2">Active packs</th>
-                        <th className="border px-4 py-2">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {customers.map(customer => (
-                        <tr key={customer.id}>
-                            <td className="border px-4 py-2">
-                                {customer.name} {customer.surname1 ?? ''}
-                            </td>
-                            <td className="border px-4 py-2">{customer.email}</td>
-                            <td className="border px-4 py-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full max-w-6xl">
+                {customers.map(customer => (
+                    <div
+                        key={customer.id}
+                        className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 cursor-pointer border border-transparent hover:border-color_primary"
+                        onClick={() => handleCustomerPacksClick(customer.id, customer.name)}
+                    >
+                        <div className="p-5">
+                            <div className="flex justify-between items-start mb-2">
+                                <h3 className="text-xl font-semibold text-color_darkBlue truncate">
+                                    {customer.name} {customer.surname1 ?? ''}
+                                </h3>
                                 <span className="inline-block bg-gray-200 text-gray-800 text-sm font-semibold rounded-full px-3 py-1">
-                                    {customer.packCount}
+                                    {customer.packCount} {customer.packCount === 1 ? 'pack' : 'packs'}
                                 </span>
-                            </td>
-                            <td className="border px-4 py-2">
-                                <button
-                                    className="inline-block bg-gray-200 text-gray-800 text-xs font-semibold rounded-full px-3 py-1 m-1"
-                                    onClick={() => handleCustomerPacksClick(customer.id, customer.name)}
-                                >
-                                    📑 Customer packs
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+                            </div>
 
-            <a href="" title="Go back home" onClick={handleHomeClick}>
+                            <p className="text-gray-600 mb-4 truncate">
+                                {customer.email}
+                            </p>
+
+                            <button
+                                className="w-full bg-color_primary text-white py-2 px-4 rounded-md hover:bg-color_primaryHover transition-colors duration-300 mt-2"
+                            >
+                                View Customer Packs
+                            </button>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            <a
+                href=""
+                title="Go back home"
+                onClick={handleHomeClick}
+                className="mt-8 text-color_primary hover:underline"
+            >
                 Back to home
             </a>
         </main>

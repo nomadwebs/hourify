@@ -42,6 +42,7 @@ export default function ManagePacks(props) {
 
     const handleDeleteClick = (event, basePackId) => {
         event.preventDefault()
+        if (event) event.stopPropagation()
         confirm('Do you want delete this item? -This action can\'t be reversed', accepted => {
             if (accepted) {
                 try {
@@ -64,6 +65,7 @@ export default function ManagePacks(props) {
 
     const handleUpdateClick = (event, basePack) => {
         event.preventDefault()
+        if (event) event.stopPropagation()
         setSelectedBasePack(basePack) //Guarda el basePack en el estado
         setView(view ? null : 'UpdateBasePack')
     }
@@ -106,62 +108,111 @@ export default function ManagePacks(props) {
     const [basePacks, setPacks] = useState([])
 
     return (
-        <main className="flex flex-col items-center bg-color_backgroundGrey w-full flex-grow pt-12">
-            <h1 className='text-3xl'>Manage Packs</h1>
-            <p>This will be the page to manage basePacks</p>
+        <main className="flex flex-col items-center bg-color_backgroundGrey w-full flex-grow pt-12 px-4">
+            <h1 className="text-3xl font-bold mb-2">Manage Packs</h1>
+            <p className="text-gray-600 mb-6">Create, edit, and assign your service packs</p>
+
+            {/* Quick Action Buttons */}
+            <div className="flex flex-wrap gap-3 mb-8 w-full max-w-6xl">
+                {basePacks.length !== 0 && (
+                    <button
+                        onClick={handleAssignPacks}
+                        className="flex items-center text-sm bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-md transition-colors duration-300"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
+                        </svg>
+                        Assign Pack
+                    </button>
+                )}
+                <button
+                    onClick={handleCreatePacks}
+                    className="flex items-center text-sm bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-md transition-colors duration-300"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+                    </svg>
+                    Create New Pack
+                </button>
+            </div>
 
             {loading ? (
                 <div className="flex justify-center items-center h-full">
                     <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-color_green"></div>
                 </div>
+            ) : basePacks.length === 0 ? (
+                <div className="bg-white shadow-md rounded p-6 w-full max-w-4xl">
+                    <p className="text-lg">No packs found. Create your first pack to get started!</p>
+                </div>
             ) : (
-                <table className="table-auto mt-4 w-[80%] bg-white text-black rounded-md">
-                    <thead>
-                        <tr className='bg-amarilloCanario'>
-                            <th className="border px-4 py-2">Name</th>
-                            <th className="border px-4 py-2">Description</th>
-                            <th className="border px-4 py-2">Price</th>
-                            <th className="border px-4 py-2">Qtt</th>
-                            <th className="border px-4 py-2">In use</th>
-                            <th className="border px-4 py-2">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                <>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full max-w-6xl">
                         {basePacks.map(basePack => (
-                            <tr key={basePack.id}>
-                                <td className='border px-4 py-2'>{basePack.packName}</td>
-                                <td className='border px-4 py-2'>{basePack.description}</td>
-                                <td className='border px-4 py-2'>{basePack.price} {getCurrencySymbol(basePack)}</td>
-                                <td className='border px-4 py-2'>{basePack.quantity} {basePack.unit === 'units' ? 'un' : 'h'} </td>
+                            <div
+                                key={basePack.id}
+                                className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 border border-transparent hover:border-color_primary"
+                            >
+                                <div className="bg-gray-700 text-white py-2 px-4">
+                                    <h3 className="font-semibold truncate">{basePack.packName}</h3>
+                                </div>
+                                <div className="p-4">
+                                    <div className="mb-3 text-sm text-gray-600 line-clamp-2">
+                                        {basePack.description}
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-x-2 gap-y-1 mb-3 text-sm">
+                                        <span className="text-gray-600 font-medium">Price:</span>
+                                        <span className="text-right font-semibold">{basePack.price} {getCurrencySymbol(basePack)}</span>
 
-                                <td className='border px-4 py-2'><span className="inline-block bg-gray-200 text-gray-800 text-sm font-semibold rounded-full px-3 py-1">{basePack.refCount}</span></td>
-                                <td className='border px-4 py-2'>
-                                    <a href="" className="inline-block bg-gray-200 text-gray-800 text-xs font-semibold rounded-full px-3 py-1 m-1" onClick={(event) => handleUpdateClick(event, basePack)}>✏️ Edit</a>
-                                    <a href="" className="inline-block bg-red-100 text-gray-800 text-xs font-semibold rounded-full px-3 py-1 m-1" onClick={(event) => handleDeleteClick(event, basePack.id)}>❌ Delete</a></td>
-                            </tr>
+                                        <span className="text-gray-600 font-medium">Quantity:</span>
+                                        <span className="text-right font-semibold">{basePack.quantity} {basePack.unit === 'units' ? 'un' : 'h'}</span>
+
+                                        <span className="text-gray-600 font-medium">Expire in:</span>
+                                        <span className="text-right font-semibold">{basePack.expiringTime === -1 ? 'Unlimited' : `${basePack.expiringTime} ${basePack.expiringTime === 1 ? 'month' : 'months'}`}</span>
+
+                                        <span className="text-gray-600 font-medium">In Use:</span>
+                                        <span className="text-right">
+                                            <span className="inline-block bg-gray-200 text-gray-800 text-sm font-semibold rounded-full px-3 py-1">{basePack.refCount}</span>
+                                        </span>
+                                    </div>
+                                    <div className="flex justify-between mt-4">
+                                        <button
+                                            className="flex-1 mr-2 bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-3 rounded-md transition-colors duration-200 text-sm font-medium flex items-center justify-center"
+                                            onClick={(event) => handleUpdateClick(event, basePack)}
+                                        >
+                                            <span className="mr-1">✏️</span> Edit
+                                        </button>
+                                        <button
+                                            className="flex-1 ml-2 bg-red-100 hover:bg-red-200 text-gray-800 py-2 px-3 rounded-md transition-colors duration-200 text-sm font-medium flex items-center justify-center"
+                                            onClick={(event) => handleDeleteClick(event, basePack.id)}
+                                        >
+                                            <span className="mr-1">❌</span> Delete
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                         ))}
+                    </div>
 
-                        {view === 'UpdateBasePack' && selectedBasePack && (
-                            <tr ref={updateBasePackView}>
-                                <td colSpan="6" className="border px-4 py-2">
-                                    <UpdateBasePack
-                                        basePack={selectedBasePack}
-                                        onCancelClick={handleCancelClick} // Pasa el evento al hijo
-                                        onUpdated={handleUpdated}
-                                    />
-                                </td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
+                    {view === 'UpdateBasePack' && selectedBasePack && (
+                        <div ref={updateBasePackView} className="mt-8 w-full max-w-6xl bg-white rounded-lg shadow-md p-6">
+                            <UpdateBasePack
+                                basePack={selectedBasePack}
+                                onCancelClick={handleCancelClick}
+                                onUpdated={handleUpdated}
+                            />
+                        </div>
+                    )}
+                </>
             )}
 
-            <div className="flex justify-around ">
-                {basePacks.length !== 0 ? <Button className="btn m-2" onClick={handleAssignPacks}>Assign pack</Button> : ''}
-                <Button className="btn m-2" onClick={handleCreatePacks}>Create new</Button>
-            </div>
-
-            <a href="" title="Go back home" onClick={handleHomeClick}>Back to home</a>
+            <a
+                href=""
+                title="Go back home"
+                onClick={handleHomeClick}
+                className="mt-8 text-color_primary hover:underline"
+            >
+                Back to home
+            </a>
         </main>
     )
 }
