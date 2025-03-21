@@ -44,18 +44,24 @@ export default function ManageCustomers(props) {
     if (customers.length === 0) {
         return (
             <main className="flex flex-col items-center bg-color_backgroundGrey w-full flex-grow pt-12 px-4">
-                <h2 className="text-2xl font-bold mb-6">Manage Customers</h2>
-                <div className="bg-white shadow-md rounded p-6 w-full max-w-4xl">
-                    <p>You should create first a pack and assign it to a customer to see this page</p>
-                    <br></br>
-                    <ul className="list-decimal pl-5">
-                        <li>Go Manage packs</li>
-                        <li>Clic on create new pack</li>
-                        <li>Go to assign pack</li>
-                    </ul>
-                    <br></br>
-                    <hr></hr>
-                    <p>After this steps you'll can manage it on this page</p>
+                <h2 className="text-3xl font-bold mb-2">Manage Customers</h2>
+                <p className="text-gray-600 mb-6">View and manage your customers</p>
+                <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-4xl">
+                    <h2 className="text-xl font-semibold text-color_darkBlue mb-4">No Customers Found</h2>
+                    <p className="text-gray-600 mb-4">You need to create and assign a pack to a customer to see them here.</p>
+
+                    <div className="bg-gray-50 p-4 rounded-md mb-4">
+                        <h3 className="font-medium text-gray-700 mb-2">Follow these steps:</h3>
+                        <ol className="list-decimal pl-5 space-y-2 text-gray-600">
+                            <li>Go to <span className="font-medium">Manage Packs</span></li>
+                            <li>Create a new service pack or select an existing one</li>
+                            <li>Use the <span className="font-medium">Assign Pack</span> option to connect it with a customer</li>
+                        </ol>
+                    </div>
+
+                    <div className="border-t border-gray-200 pt-4 mt-4">
+                        <p className="text-gray-600">After assigning packs to customers, you'll be able to manage them from this page.</p>
+                    </div>
                 </div>
             </main>
         )

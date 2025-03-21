@@ -141,8 +141,22 @@ export default function ManagePacks(props) {
                     <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-color_green"></div>
                 </div>
             ) : basePacks.length === 0 ? (
-                <div className="bg-white shadow-md rounded p-6 w-full max-w-4xl">
-                    <p className="text-lg">No packs found. Create your first pack to get started!</p>
+                <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-4xl">
+                    <h2 className="text-xl font-semibold text-color_darkBlue mb-4">No Packs Available</h2>
+                    <p className="text-gray-600 mb-4">You haven't created any service packs yet.</p>
+
+                    <div className="bg-gray-50 p-4 rounded-md mb-4">
+                        <h3 className="font-medium text-gray-700 mb-2">Getting Started:</h3>
+                        <ol className="list-decimal pl-5 space-y-2 text-gray-600">
+                            <li>Click the <span className="font-medium">"Create New Pack"</span> button above</li>
+                            <li>Define your service details (name, price, quantity, etc.)</li>
+                            <li>Save your pack to make it available for assignment to customers</li>
+                        </ol>
+                    </div>
+
+                    <div className="border-t border-gray-200 pt-4 mt-4">
+                        <p className="text-gray-600">Service packs allow you to define your offerings and track time or units for customers.</p>
+                    </div>
                 </div>
             ) : (
                 <>
