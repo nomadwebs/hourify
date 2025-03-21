@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 //import { useRef } from 'react'
 import logic from '../logic'
 import { errors } from 'com'
+import { getDecimalToTimeFormat } from "../logic/helpers"
 
 import useContex from './useContext'
 import { Button, Field, Label } from '../library/index'
@@ -330,31 +331,33 @@ export default function Tracker(props) {
         return Math.floor((Date.now() - new Date(timerActivated)) / 1000)
     }
 
-
     if (customers.length === 0) {
         return (
-            <main className="flex flex-col items-center bg-color_backgroundGrey w-full flex-grow pt-12">
-                <h2 className="text-2xl font-bold mb-6">Tracker</h2>
+            <main className="flex flex-col items-center bg-color_backgroundGrey w-full flex-grow pt-12 px-4">
+                <h1 className="text-3xl font-bold mb-2">Time Tracker</h1>
+                <p className="text-gray-600 mb-6">Track time and manage your projects</p>
 
                 {loading ? (
-
                     <div className="flex justify-center items-center h-full">
                         <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-color_green"></div>
                     </div>
-
                 ) : (
+                    <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-4xl">
+                        <h2 className="text-xl font-semibold text-color_darkBlue mb-4">No Packs Available</h2>
+                        <p className="text-gray-600 mb-4">You need to create a pack and assign it to a customer to use the time tracker.</p>
 
-                    <div className="bg-white shadow-md rounded p-6 w-full max-w-4xl">
-                        <p>You should create first a pack and assign it to a customer to see this page</p>
-                        <br></br>
-                        <ul>
-                            <li>1. Go Manage packs</li>
-                            <li>2. Clic on create new pack</li>
-                            <li>3. Go to assign pack</li>
-                        </ul>
-                        <br></br>
-                        <hr></hr>
-                        <p>After this steps you'll can manage it on this page</p>
+                        <div className="bg-gray-50 p-4 rounded-md mb-4">
+                            <h3 className="font-medium text-gray-700 mb-2">Follow these steps:</h3>
+                            <ol className="list-decimal pl-5 space-y-2 text-gray-600">
+                                <li>Go to Manage Packs</li>
+                                <li>Click on Create New Pack</li>
+                                <li>Go to Assign Pack to assign it to a customer</li>
+                            </ol>
+                        </div>
+
+                        <div className="border-t border-gray-200 pt-4 mt-4">
+                            <p className="text-gray-600">After completing these steps, you'll be able to track time for your projects.</p>
+                        </div>
                     </div>
                 )}
             </main>
@@ -362,100 +365,185 @@ export default function Tracker(props) {
     }
 
     return (
-        <main className="flex flex-col  items-center bg-color_backgroundGrey w-full flex-grow pt-12">
-            <h2 className="text-2xl font-bold mb-6">Tracker</h2>
-            <p>This will be the page to track your projects</p>
-            <div className="flex flex-col justify-around">
-                <h3 className="text-2xl pt-10">Customer and Pack</h3>
+        <main className="flex flex-col items-center bg-color_backgroundGrey w-full flex-grow pt-12 px-4">
+            <h1 className="text-3xl font-bold mb-2">Time Tracker</h1>
+            <p className="text-gray-600 mb-6">Track time and manage your projects</p>
 
-                <form className="flex flex-col justify-items-start">
-                    {/* Select Customer */}
-                    <Field className="mb-4">
-                        <Label htmlFor="selectCustomer">Select Customer</Label>
-                        <select id="selectCustomer" name="selectCustomer" className="border-2 rounded-lg w-full p-2" onChange={handleCustomerChange}>
-                            {customers.map((customer) => (
-                                <option key={customer.id} value={customer.id}>{customer.name}</option>
-                            ))}
-                        </select>
-                    </Field>
+            <div className="w-full max-w-6xl">
+                {/* Main Content Card */}
+                <div className="bg-white shadow-md rounded-lg p-6 mb-6">
+                    <h2 className="text-xl font-semibold text-color_darkBlue mb-4">Select Customer & Pack</h2>
 
-                    {/* Select Pack */}
-                    <Field className="mb-4">
-                        <Label htmlFor="selectPack">Select Pack</Label>
-                        <select id="selectPack" name="selectPack" className="border-2 rounded-lg w-full p-2" disabled={!filteredPacks.length} onChange={handlePackChange}>
-                            {filteredPacks.map((pack) => (
-                                <option key={pack.id} value={pack.id}>{pack.status === 'Active' ? ' 🟢 ' : ' 🔴 '}{pack.status} - {pack.description} - {pack.originalQuantity}{pack.unit}</option>
-                            ))}
-                        </select>
-                    </Field>
-
-                    {/* Description and Timer Section */}
-                    <div className="flex flex-wrap gap-4 mt-4 items-start">
-                        {/* Description Field */}
-                        <Field className="flex-1">
-                            <Label htmlFor="description">Description</Label>
-                            <textarea id="description" name="description" rows="3" className="border-2 rounded-lg w-full p-2" placeholder="Add a description..." value={selectedPack?.descriptionActivityTemp} onChange={handleDescriptionChange}></textarea>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                        {/* Select Customer */}
+                        <Field>
+                            <Label htmlFor="selectCustomer" className="text-gray-700 font-medium mb-1 block">Customer</Label>
+                            <select
+                                id="selectCustomer"
+                                name="selectCustomer"
+                                className="border-2 border-gray-300 rounded-lg w-full p-2 focus:border-color_primary focus:ring-1 focus:ring-color_primary transition-colors"
+                                onChange={handleCustomerChange}
+                            >
+                                {customers.map((customer) => (
+                                    <option key={customer.id} value={customer.id}>{customer.name}</option>
+                                ))}
+                            </select>
                         </Field>
 
-                        <div className="flex flex-col">
-                            {/* Sección para packs de tiempo */}
-                            {selectedPack?.unit === 'hours' && (
-                                <div className="flex items-center">
-                                    {/* Visualización del temporizador */}
-                                    <div className="border-2 rounded-lg p-3 w-44 text-center text-lg font-semibold">
+                        {/* Select Pack */}
+                        <Field>
+                            <Label htmlFor="selectPack" className="text-gray-700 font-medium mb-1 block">Pack</Label>
+                            <select
+                                id="selectPack"
+                                name="selectPack"
+                                className="border-2 border-gray-300 rounded-lg w-full p-2 focus:border-color_primary focus:ring-1 focus:ring-color_primary transition-colors"
+                                disabled={!filteredPacks.length}
+                                onChange={handlePackChange}
+                            >
+                                {filteredPacks.map((pack) => (
+                                    <option key={pack.id} value={pack.id}>
+                                        {pack.status === 'Active' ? ' 🟢 ' : ' 🔴 '}{pack.status} - {pack.description} - {pack.originalQuantity}{pack.unit}
+                                    </option>
+                                ))}
+                            </select>
+                        </Field>
+                    </div>
+
+                    {/* Selected Pack Status Card */}
+                    {selectedPack && (
+                        <div className={`mb-6 p-4 rounded-lg border-l-4 ${selectedPack.timerActivated ? 'bg-green-50 border-green-500' : 'bg-gray-50 border-gray-300'}`}>
+                            <div className="flex flex-wrap justify-between items-center">
+                                <div>
+                                    <h3 className="font-semibold text-gray-800">{selectedPack.description}</h3>
+                                    <p className="text-sm text-gray-600">Remaining: {selectedPack.unit === 'hours'
+                                        ? `${getDecimalToTimeFormat(selectedPack.remainingQuantity)} h`
+                                        : `${selectedPack.remainingQuantity} un.`}
+                                    </p>
+                                </div>
+                                {selectedPack.timerActivated && (
+                                    <div className="flex items-center mt-2 sm:mt-0">
+                                        <span className="inline-block w-2 h-2 rounded-full bg-green-500 animate-pulse mr-2"></span>
+                                        <span className="text-sm font-medium text-green-800">Timer Active</span>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Description Field */}
+                    <div className="mb-6">
+                        <Label htmlFor="description" className="text-gray-700 font-medium mb-1 block">Activity Description</Label>
+                        <textarea
+                            id="description"
+                            name="description"
+                            rows="3"
+                            className="border-2 border-gray-300 rounded-lg w-full p-3 focus:border-color_primary focus:ring-1 focus:ring-color_primary transition-colors"
+                            placeholder="Describe what you're working on..."
+                            value={description}
+                            onChange={handleDescriptionChange}
+                        ></textarea>
+                    </div>
+
+                    {/* Time Tracking Controls */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {/* Timer & Start/Stop Button Section */}
+                        {selectedPack?.unit === 'hours' && (
+                            <div className="bg-gray-50 p-4 rounded-lg">
+                                <h3 className="text-sm font-medium text-gray-700 mb-3">Timer Control</h3>
+                                <div className="flex flex-col sm:flex-row gap-3">
+                                    {/* Timer Display */}
+                                    <div className="border-2 border-gray-300 bg-white rounded-lg p-3 text-center text-xl font-mono font-semibold flex-grow sm:flex-grow-0 sm:w-44">
                                         {new Date(elapsedTime * 1000).toISOString().substr(11, 8)}
                                     </div>
 
-                                    {/* Botón Start/Stop */}
+                                    {/* Start/Stop Button */}
                                     <Button
                                         type="button"
-                                        className={`flex-shrink-0 px-6 py-3 text-lg font-semibold ${!selectedPack?.timerActivated ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'
-                                            } text-white rounded-lg w-32 h-12 flex items-center justify-center`}
-                                        onClick={handleToggleTrackButton}>
-                                        {!selectedPack?.timerActivated ? 'Start' : 'Stop'}
+                                        className={`flex items-center justify-center rounded-lg py-3 px-6 text-white font-medium transition-colors duration-300 flex-grow sm:flex-grow-0 ${!selectedPack?.timerActivated ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'}`}
+                                        onClick={handleToggleTrackButton}
+                                    >
+                                        {!selectedPack?.timerActivated ? (
+                                            <>
+                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
+                                                </svg>
+                                                Start Timer
+                                            </>
+                                        ) : (
+                                            <>
+                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8 7a1 1 0 00-1 1v4a1 1 0 001 1h4a1 1 0 001-1V8a1 1 0 00-1-1H8z" clipRule="evenodd" />
+                                                </svg>
+                                                Stop Timer
+                                            </>
+                                        )}
                                     </Button>
                                 </div>
-                            )}
+                            </div>
+                        )}
 
-                            {/* Sección para ajustes manuales */}
-                            <div className="flex items-center">
-
-                                {/* Input para packs de tiempo */}
-                                {selectedPack?.unit === 'hours' && !selectedPack?.timerActivated && (
-                                    <Field>
-                                        <input type="text" id="timerAdjust" name="timerAdjust" placeholder="-01:00:00" defaultValue="-01:00:00" className="border-2 rounded-lg p-3 w-44 text-center text-lg" />
-                                    </Field>
+                        {/* Manual Time Entry Section */}
+                        <div className="bg-gray-50 p-4 rounded-lg">
+                            <h3 className="text-sm font-medium text-gray-700 mb-3">
+                                {selectedPack?.unit === 'hours' ? 'Manual Time Entry' : 'Register Units'}
+                            </h3>
+                            <div className="flex flex-col sm:flex-row gap-3">
+                                {/* Input for time or units */}
+                                {selectedPack?.unit === 'hours' && !selectedPack?.timerActivated ? (
+                                    <input
+                                        type="text"
+                                        id="timerAdjust"
+                                        name="timerAdjust"
+                                        placeholder="-01:00:00"
+                                        defaultValue="-01:00:00"
+                                        className="border-2 border-gray-300 bg-white rounded-lg p-3 text-center flex-grow sm:flex-grow-0 sm:w-44"
+                                    />
+                                ) : selectedPack?.unit === 'units' && (
+                                    <input
+                                        type="number"
+                                        id="unitsAdjust"
+                                        name="unitsAdjust"
+                                        placeholder="-1"
+                                        defaultValue="-1"
+                                        className="border-2 border-gray-300 bg-white rounded-lg p-3 text-center flex-grow sm:flex-grow-0 sm:w-44"
+                                    />
                                 )}
 
-                                {/* Input para packs de unidades */}
-                                {selectedPack?.unit === 'units' && (
-                                    <Field>
-                                        <input type="number" id="unitsAdjust" name="unitsAdjust" placeholder="-1" defaultValue="-1" className="border-2 rounded-lg p-3 w-32 text-center text-lg" />
-                                    </Field>
-                                )}
-
-                                {/* Botón Adjust Manual */}
-                                {selectedPack?.unit === 'units' ? (
-                                    <Field>
-                                        <Button className="flex-shrink-0 px-6 py-3 text-lg font-semibold bg-blue-500 hover:bg-blue-700 text-white rounded-lg w-32 h-12 flex items-center justify-center" onClick={handleAdjustManualUnits}> Register Sesion </Button>
-                                    </Field>
-                                ) : !selectedPack?.timerActivated && (
-                                    <Field>
-                                        <Button className="flex-shrink-0 px-6 py-3 text-lg font-semibold bg-blue-500 hover:bg-blue-700 text-white rounded-lg w-32 h-12 flex items-center justify-center"
-                                            onClick={handleAdjustManualTime}> Register Time </Button>
-                                    </Field>
+                                {/* Register button */}
+                                {(selectedPack?.unit === 'units' || (selectedPack?.unit === 'hours' && !selectedPack?.timerActivated)) && (
+                                    <Button
+                                        className="flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white rounded-lg py-3 px-6 font-medium transition-colors duration-300 flex-grow sm:flex-grow-0"
+                                        onClick={selectedPack?.unit === 'units' ? handleAdjustManualUnits : handleAdjustManualTime}
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                            <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" />
+                                        </svg>
+                                        {selectedPack?.unit === 'units' ? 'Register Units' : 'Register Time'}
+                                    </Button>
                                 )}
                             </div>
                         </div>
                     </div>
-                </form>
+                </div>
+
+                {/* Activity History Section */}
+                <div className="bg-white shadow-md rounded-lg p-6 mb-6">
+                    <h2 className="text-xl font-semibold text-color_darkBlue mb-4">Activity History</h2>
+                    <ActivityTable activities={packActivities} packInfo={selectedPack} />
+                </div>
             </div>
 
-            <h2 className='text-2xl'>History</h2>
-
-            <ActivityTable activities={packActivities} packInfo={selectedPack} />
-
-            <a href="" title="Go back home" onClick={handleHomeClick} className="mt-4 mb-4 hover:underline">Back to home</a>
+            <a
+                href=""
+                title="Go back home"
+                onClick={handleHomeClick}
+                className="mt-6 text-color_primary hover:underline flex items-center"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
+                </svg>
+                Back to home
+            </a>
         </main>
     )
 }

@@ -400,12 +400,117 @@ const payment = new Schema({
 }, { versionKey: false })
 
 
+//Model for task management
+const task = new Schema({
+    description: {
+        type: String,
+        required: true,
+        maxLength: 500
+    },
+
+    createdDate: {
+        type: Date,
+        required: true,
+        default: Date.now
+    },
+
+    dueDate: {
+        type: Date,
+        required: false
+    },
+
+    userOwner: {
+        type: ObjectId,
+        ref: 'User',
+        required: true
+    },
+
+    // Customer can be optionally assigned to a task, regardless of pack relationship
+    customer: {
+        type: ObjectId,
+        ref: 'User',
+        required: false
+    },
+
+    relatedPack: {
+        type: ObjectId,
+        ref: 'Pack',
+        required: false
+    },
+
+    completed: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+
+    completedDate: {
+        type: Date,
+        required: false
+    },
+
+    priority: {
+        type: String,
+        required: true,
+        enum: ['Low', 'Medium', 'High', 'Urgent'],
+        default: 'Medium'
+    },
+
+    status: {
+        type: String,
+        required: true,
+        enum: ['Pending', 'In Progress', 'On Hold', 'Completed', 'Cancelled'],
+        default: 'Pending'
+    },
+
+    notes: {
+        type: String,
+        required: false,
+        maxLength: 1000
+    },
+
+    lastModified: {
+        type: Date,
+        default: Date.now
+    }
+
+    /* Fields for future implementation */
+    /*
+    estimatedHours: {
+        type: Number,
+        required: false
+    },
+
+    actualHours: {
+        type: Number,
+        required: false
+    },
+    */
+
+    /* Additional fields for future implementation */
+    /*
+    tags: [{
+        type: String,
+        maxLength: 30
+    }],
+
+    attachments: [{
+        name: String,
+        path: String,
+        uploadDate: {
+            type: Date,
+            default: Date.now
+        }
+    }],
+    */
+}, { versionKey: false })
 
 const User = model('User', user)
 const BasePack = model('BasePack', basePack)
 const Pack = model('Pack', pack)
 const Activity = model('Activity', activity)
 const Payment = model('Payment', payment)
+const Task = model('Task', task)
 
 
 export {
@@ -413,5 +518,6 @@ export {
     BasePack,
     Pack,
     Activity,
-    Payment
+    Payment,
+    Task
 }

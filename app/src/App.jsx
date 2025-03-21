@@ -4,7 +4,7 @@ import { Routes, Route, useNavigate, Navigate } from 'react-router-dom'
 
 import { Login, Register, Home, ManagePacks, ManageCustomers, ManagePurchasedPacks, AssignPack, CreatePack, Tracker, UserProfile, CustomerPacks } from './view'
 
-import { Header, Footer, Alert, Confirm, PrivacyPolicy } from './view/components'
+import { Header, Footer, Alert, Confirm, /* PrivacyPolicy */ } from './view/components'
 
 import { Context } from './view/useContext'
 
@@ -161,8 +161,8 @@ export default function App() {
           <CustomerPacks onHomeClick={handleHomeClick} /> :
           <Navigate to="/login" />} />
 
-        <Route path="/privacy-policy" element={<PrivacyPolicy onHomeClick={handleHomeClick} />} />
-
+        {/* <Route path="/privacy-policy" element={<PrivacyPolicy onHomeClick={handleHomeClick} />} />
+ */}
         <Route path="*" element={
           <div className="text-center">
             <h1 className="text-red-600 text-2xl font-bold">Error 404</h1>
