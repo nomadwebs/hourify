@@ -155,6 +155,20 @@ const validateTimeFormat = time => {
         throw new ValidationError('invalid time format (+/-)hh:mm:ss')
 }
 
+const validateTaskStatus = status => {
+    if (typeof status !== 'string') throw new ValidationError('invalid status')
+    const validStatuses = ['Pending', 'In Progress', 'On Hold', 'Completed', 'Cancelled']
+    if (!validStatuses.includes(status)) throw new ValidationError('Invalid status value')
+}
+
+const validateTaskPriority = priority => {
+    if (typeof priority !== 'string') throw new ValidationError('invalid priority')
+    const validPriorities = ['Low', 'Medium', 'High', 'Urgent']
+    if (!validPriorities.includes(priority)) throw new ValidationError('Invalid priority value')
+}
+
+
+
 const validate = {
     name: validateName,
     packName: validatePackName,
@@ -182,7 +196,9 @@ const validate = {
     status: validateStatus,
     payedAmount: validatePayedAmount,
     paymentMethod: validatePaymentMethod,
-    timeFormat: validateTimeFormat
+    timeFormat: validateTimeFormat,
+    taskStatus: validateTaskStatus,
+    taskPriority: validateTaskPriority
 }
 
 export default validate

@@ -1,6 +1,6 @@
 import { connect, disconnect } from 'mongoose'
 
-import { BasePack, User, Pack, Activity, Payment } from './model.js'
+import { BasePack, User, Pack, Activity, Payment, Task } from './model.js'
 
 import './boost-mongoose.js'
 
@@ -16,5 +16,6 @@ export {
     User,
     Pack,
     Activity,
-    Payment
+    Payment,
+    Task,
 }
