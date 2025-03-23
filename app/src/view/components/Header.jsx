@@ -4,12 +4,17 @@ import { useLocation } from 'react-router-dom'
 import useContext from '../useContext'
 import logic from '../../logic'
 
-export default function Header({ onHomeClick, onLoggedOut, onViewProfile, onTrackerClick, onManagePacksClick, onManageCustomersClick }) {
+export default function Header({ onHomeClick,
+    onLoggedOut,
+    onViewProfile,
+    onTrackerClick,
+    onManagePacksClick,
+    onManageCustomersClick,
+    onTasksClick }) {
     const [name, setName] = useState(null)
     const [userDetails, setUserDetails] = useState(null)
     const location = useLocation()
     const { alert, confirm } = useContext()
-
 
     useEffect(() => {
 
@@ -74,6 +79,11 @@ export default function Header({ onHomeClick, onLoggedOut, onViewProfile, onTrac
         onManageCustomersClick()
     };
 
+    const handleTasksClick = event => {
+        event.preventDefault()
+        onTasksClick()
+    }
+
     const profileImageUrl = logic.getProfileImage(userDetails)
 
     const isActive = (path) => location.pathname === path ? 'text-color_green font-bold' : 'hover:underline';
@@ -85,9 +95,10 @@ export default function Header({ onHomeClick, onLoggedOut, onViewProfile, onTrac
         <nav className="hidden sm:flex mx-6 space-x-6">
             {logic.isUserLoggedIn() && (
                 <>
-                    <a href="#" className="hover:underline" onClick={handleTrackerClick}>Time Tracker</a>
-                    <a href="#" className="hover:underline" onClick={handleManagePacks}>Manage Packs</a>
-                    <a href="#" className="hover:underline" onClick={handleManageCustomers}>Manage Customers</a>
+                    <a href="#" className={`hover:underline ${location.pathname === '/tracker' ? 'text-color_green font-bold' : ''}`} onClick={handleTrackerClick}>Time Tracker</a>
+                    <a href="#" className={`hover:underline ${location.pathname === '/manage-packs' ? 'text-color_green font-bold' : ''}`} onClick={handleManagePacks}>Manage Packs</a>
+                    <a href="#" className={`hover:underline ${location.pathname === '/manage-customers' ? 'text-color_green font-bold' : ''}`} onClick={handleManageCustomers}>Manage Customers</a>
+                    <a href="#" className={`hover:underline ${location.pathname === '/tasks' ? 'text-color_green font-bold' : ''}`} onClick={handleTasksClick}>Tasks</a>
                 </>
             )}
         </nav>
@@ -105,6 +116,7 @@ export default function Header({ onHomeClick, onLoggedOut, onViewProfile, onTrac
                         <a href="#" className="block px-4 py-2 hover:bg-gray-100" onClick={handleTrackerClick}>⏱️ Time Tracker</a>
                         <a href="#" className="block px-4 py-2 hover:bg-gray-100" onClick={handleManagePacks}>📑 Packs</a>
                         <a href="#" className="block px-4 py-2 hover:bg-gray-100" onClick={handleManageCustomers}>👥 Customers</a>
+                        <a href="#" className="block px-4 py-2 hover:bg-gray-100" onClick={handleTasksClick}>📝 Tasks</a>
                         <a href="#" className="block px-4 py-2 hover:bg-gray-100" onClick={handleProfileClick}>👤 User profile</a>
                         <a href="#" className="block px-4 py-2 hover:bg-gray-100" onClick={handleLogout}>👋 Logout</a>
                     </div>

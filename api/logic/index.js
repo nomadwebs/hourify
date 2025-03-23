@@ -44,6 +44,11 @@ import {
 
 } from './activity/index.js'
 
+//TASKS
+import {
+    addTask
+} from './tasks/index.js'
+
 
 import {
     addPayment,
@@ -92,7 +97,10 @@ const logic = {
     //Payments
     addPayment,
     getPayments,
-    deletePayment
+    deletePayment,
+
+    //Tasks
+    addTask
 }
 
 export default logic

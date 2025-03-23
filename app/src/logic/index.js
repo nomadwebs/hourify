@@ -44,6 +44,10 @@ import {
 } from './payments'
 
 import {
+    addTask
+} from './tasks'
+
+import {
     getDecimalToTimeFormat,
     getTimeFormatFromDecimal,
     getProfileImage,
@@ -96,6 +100,9 @@ const logic = {
     getPayments,
     addPayment,
     deletePayment,
+
+    //Tasks
+    addTask,
 
     //Home
     getUserStats

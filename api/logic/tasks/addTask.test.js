@@ -7,10 +7,10 @@ import addTask from './addTask.js'
 await db.connect(process.env.MONGO_URL)
 
 // Test data - use valid ObjectId format for MongoDB
-const userId = '67d2bfddca4bb5c9ebd77a2d'       // User owner of the task
-const customerId = '67d2921096a2903499fe4e61'   // Optional customer related to the task
-const ownedPackId = '6794119f31f2834e80a3a5c7'  // Pack owned by the test user
-const otherUserPackId = '67d2c02dca4bb5c9ebd77a31' // Pack owned by another user
+const userId = '67dde0d2985ba3a1a04fe1a4'       // User owner of the task
+const customerId = '67dde4cc985ba3a1a04fe1db'   // Optional customer related to the task
+const packId = '67dde4e5985ba3a1a04fe1e0'  // Pack owned by the test user
+const otherUserPackId = '67dde6b4985ba3a1a04fe292' // Pack owned by another user
 const description = 'Complete project documentation'
 const dueDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days from now
 const priority = 'Medium'
@@ -20,7 +20,7 @@ const notes = 'Should include diagrams and API documentation'
 try {
     // Test case 1: Task creation with all parameters and owned pack
     console.log('Test case 1: Task creation with all parameters and owned pack')
-    const task = await addTask(userId, description, dueDate, priority, status, customerId, ownedPackId, notes)
+    const task = await addTask(userId, description, dueDate, priority, status, customerId, packId, notes)
     console.log('Task created successfully:', task.id)
 
     // Test case 2: Task creation with only required parameters (no pack)

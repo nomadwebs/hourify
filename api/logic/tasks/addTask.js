@@ -12,11 +12,12 @@ const { SystemError, NotFoundError, ValidationError, OwnershipError } = errors
  * @param {string} priority - Priority level: 'Low', 'Medium', 'High', 'Urgent'
  * @param {string} status - Status: 'Pending', 'In Progress', 'On Hold', 'Completed', 'Cancelled'
  * @param {string} customerId - Optional ID of the customer associated with the task
- * @param {string} relatedPackId - Optional ID of the pack related to the task
+ * @param {string} packId - Optional ID of the pack related to the task
  * @param {string} notes - Optional additional notes about the task
  * @returns {Promise<Object>} - The created task
  */
-export default (userId, description, dueDate, priority, status, customerId = null, relatedPackId = null, notes = null) => {
+
+export default (userId, description, dueDate, priority, status, customerId = null, packId = null, notes = null) => {
     // Validate required fields
     validate.id(userId, 'userId')
     validate.text(description, 'description')
@@ -25,7 +26,7 @@ export default (userId, description, dueDate, priority, status, customerId = nul
 
     // Validate optional fields if provided
     if (customerId) validate.id(customerId, 'customerId')
-    if (relatedPackId) validate.id(relatedPackId, 'relatedPackId')
+    if (packId) validate.id(packId, 'packId')
     if (notes) validate.text(notes, 'notes')
 
     // Parse and validate dueDate if provided
@@ -59,15 +60,15 @@ export default (userId, description, dueDate, priority, status, customerId = nul
                     })
                 : Promise.resolve(null)
 
-            // If relatedPackId provided, verify pack exists and check ownership
-            const packPromise = relatedPackId
-                ? Pack.findById(relatedPackId).lean()
+            // If packId provided, verify pack exists and check ownership
+            const packPromise = packId
+                ? Pack.findById(packId).lean()
                     .catch(error => { throw new SystemError(error.message) })
                     .then(pack => {
                         if (!pack) throw new NotFoundError('pack not found')
 
                         // Verify pack ownership - user must own the pack
-                        if (pack.userOwner.toString() !== userId.toString()) {
+                        if (pack.provider.toString() !== userId.toString()) {
                             throw new OwnershipError('user does not own this pack')
                         }
 
@@ -84,7 +85,7 @@ export default (userId, description, dueDate, priority, status, customerId = nul
                         dueDate: parsedDueDate,
                         userOwner: userId,
                         customer: customerId,
-                        relatedPack: relatedPackId,
+                        relatedPack: packId,
                         priority,
                         status,
                         notes,

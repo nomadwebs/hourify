@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 import { Routes, Route, useNavigate, Navigate } from 'react-router-dom'
 
-import { Login, Register, Home, ManagePacks, ManageCustomers, ManagePurchasedPacks, AssignPack, CreatePack, Tracker, UserProfile, CustomerPacks } from './view'
+import { Login, Register, Home, ManagePacks, ManageCustomers, ManagePurchasedPacks, AssignPack, CreatePack, Tracker, UserProfile, CustomerPacks, Tasks } from './view'
 
 import { Header, Footer, Alert, Confirm, /* PrivacyPolicy */ } from './view/components'
 
@@ -59,6 +59,14 @@ export default function App() {
   //Navigation throw Tracking things
   const handleTrackerPacksClick = () => navigate('/tracker')
 
+  //Navigation throw Tasks things
+  const handleTasksClick = () => navigate('/tasks')
+
+  const handleAddTaskClick = () => {
+    navigate('/tasks');
+    // When navigating to the tasks page, we want the add task form to be shown
+    // This will be handled within the Tasks component
+  }
 
   //Functions to manage alerts and confirms
   const handleAlertAccepted = () => setAlert({
@@ -103,7 +111,8 @@ export default function App() {
           onViewProfile={handleUserProfileClick}
           onTrackerClick={handleTrackerPacksClick}
           onManagePacksClick={handleManagePacksClick}
-          onManageCustomersClick={handleManageCustomersClick} />
+          onManageCustomersClick={handleManageCustomersClick}
+          onTasksClick={handleTasksClick} />
       )}
       <Routes>
         <Route path="/login" element={logic.isUserLoggedIn() ?
@@ -159,6 +168,10 @@ export default function App() {
 
         <Route path="/customer-packs/:customerId" element={logic.isUserLoggedIn() ?
           <CustomerPacks onHomeClick={handleHomeClick} /> :
+          <Navigate to="/login" />} />
+
+        <Route path="/tasks" element={logic.isUserLoggedIn() ?
+          <Tasks onHomeClick={handleHomeClick} /> :
           <Navigate to="/login" />} />
 
         {/* <Route path="/privacy-policy" element={<PrivacyPolicy onHomeClick={handleHomeClick} />} />
