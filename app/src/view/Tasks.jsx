@@ -10,67 +10,10 @@ import useContext from './useContext'
 
 const { SystemError } = errors
 
-// Sample dummy tasks to showcase the design
-const dummyTasks = [
-    {
-        id: '1',
-        description: 'Design new website homepage',
-        dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days from now
-        priority: 'High',
-        status: 'In Progress',
-        customer: 'Acme Corporation',
-        notes: 'Need to create responsive design that works on all devices. Include new branding elements and color scheme.'
-    },
-    {
-        id: '2',
-        description: 'Update client invoice system',
-        dueDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(), // 3 days from now
-        priority: 'Urgent',
-        status: 'Pending',
-        customer: 'TechSolutions Inc',
-        notes: 'Add automated reminders for overdue payments and integrate with payment gateway.'
-    },
-    {
-        id: '3',
-        description: 'Weekly team meeting',
-        dueDate: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000).toISOString(), // tomorrow
-        priority: 'Medium',
-        status: 'Pending',
-        customer: null,
-        notes: 'Prepare agenda and project status update. Discuss upcoming deadlines and resource allocation.'
-    },
-    {
-        id: '4',
-        description: 'Review and test mobile app',
-        dueDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), // 2 days ago (overdue)
-        priority: 'High',
-        status: 'Completed',
-        customer: 'MobileFirst Solutions',
-        notes: 'Test on iOS and Android devices. Focus on user experience and performance issues.'
-    },
-    {
-        id: '5',
-        description: 'Prepare quarterly tax documents',
-        dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(), // 14 days from now
-        priority: 'Low',
-        status: 'On Hold',
-        customer: null,
-        notes: 'Waiting for final financial reports from accounting department.'
-    },
-    {
-        id: '6',
-        description: 'Client onboarding call',
-        dueDate: null, // No due date
-        priority: 'Medium',
-        status: 'Pending',
-        customer: 'New Horizons LLC',
-        notes: 'Introduce team members, explain project timeline, and gather initial requirements.'
-    }
-];
-
 export default function Tasks(props) {
     const [loading, setLoading] = useState(true)
     const [tasks, setTasks] = useState([])
+    const [filteredTasks, setFilteredTasks] = useState([])
     const [view, setView] = useState(null)
     const [customers, setCustomers] = useState([])
     const [packs, setPacks] = useState([])
@@ -80,6 +23,18 @@ export default function Tasks(props) {
     const { alert, confirm } = useContext()
     const navigate = useNavigate()
     const [expandedTaskId, setExpandedTaskId] = useState(null)
+
+    // Filters and sorting
+    const [filters, setFilters] = useState({
+        status: '',
+        priority: '',
+        customerFilter: '',
+        search: ''
+    })
+    const [sortConfig, setSortConfig] = useState({
+        key: 'dueDate',
+        direction: 'asc'
+    })
 
     const [formData, setFormData] = useState({
         description: '',
@@ -92,16 +47,22 @@ export default function Tasks(props) {
     })
 
     useEffect(() => {
-        // Load dummy tasks to showcase the design
-        setTasks(dummyTasks);
-
-        // Fetch customers for the dropdown selector
+        // Fetch tasks, customers and other data
         const fetchData = async () => {
             try {
                 setLoading(true)
-                const customers = await logic.getCustomers()
-                setCustomers(customers)
-                // Don't load packs yet - will be loaded when customer is selected
+
+                // Get user ID
+                const userId = logic.getUserId()
+
+                // Fetch tasks in parallel with customers for better performance
+                const [tasksResponse, customersResponse] = await Promise.all([
+                    logic.getTasks(userId),
+                    logic.getCustomers()
+                ])
+
+                setTasks(tasksResponse)
+                setCustomers(customersResponse)
             } catch (error) {
                 console.error('Error fetching data:', error)
                 alert(error.message)
@@ -138,6 +99,72 @@ export default function Tasks(props) {
             taskFormRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
         }
     }, [view])
+
+    // Apply filters and sorting to tasks
+    useEffect(() => {
+        let result = [...tasks]
+
+        // Apply status filter
+        if (filters.status) {
+            result = result.filter(task => task.status === filters.status)
+        }
+
+        // Apply priority filter
+        if (filters.priority) {
+            result = result.filter(task => task.priority === filters.priority)
+        }
+
+        // Apply customer filter
+        if (filters.customerFilter) {
+            result = result.filter(task => task.customer === filters.customerFilter)
+        }
+
+        // Apply search filter
+        if (filters.search) {
+            const searchLower = filters.search.toLowerCase()
+            result = result.filter(task =>
+                task.description.toLowerCase().includes(searchLower) ||
+                (task.notes && task.notes.toLowerCase().includes(searchLower))
+            )
+        }
+
+        // Apply sorting
+        if (sortConfig.key) {
+            result.sort((a, b) => {
+                if (!a[sortConfig.key] && !b[sortConfig.key]) return 0
+                if (!a[sortConfig.key]) return 1
+                if (!b[sortConfig.key]) return -1
+
+                // Special handling for dates
+                if (sortConfig.key === 'dueDate') {
+                    const dateA = a.dueDate ? new Date(a.dueDate) : null
+                    const dateB = b.dueDate ? new Date(b.dueDate) : null
+
+                    if (!dateA && !dateB) return 0
+                    if (!dateA) return 1
+                    if (!dateB) return -1
+
+                    return sortConfig.direction === 'asc'
+                        ? dateA.getTime() - dateB.getTime()
+                        : dateB.getTime() - dateA.getTime()
+                }
+
+                // Normal string comparison
+                const valueA = String(a[sortConfig.key]).toLowerCase()
+                const valueB = String(b[sortConfig.key]).toLowerCase()
+
+                if (valueA < valueB) {
+                    return sortConfig.direction === 'asc' ? -1 : 1
+                }
+                if (valueA > valueB) {
+                    return sortConfig.direction === 'asc' ? 1 : -1
+                }
+                return 0
+            })
+        }
+
+        setFilteredTasks(result)
+    }, [tasks, filters, sortConfig])
 
     const handleInputChange = (e) => {
         const { name, value } = e.target
@@ -199,8 +226,10 @@ export default function Tasks(props) {
             setPacks([])
             setView(null)
 
-            // Refresh task list - would be implemented when getTasks is available
-            // For now, just set loading to false
+            // Refresh task list with the latest data
+            const refreshedTasks = await logic.getTasks(userId)
+            setTasks(refreshedTasks)
+
             setLoading(false)
         } catch (error) {
             alert(error.message)
@@ -239,6 +268,23 @@ export default function Tasks(props) {
     const handleEditClick = (event, task) => {
         event.preventDefault()
         event.stopPropagation()
+
+        // Set the form data with the task details
+        setSelectedTask(task)
+        setFormData({
+            description: task.description,
+            dueDate: task.dueDate ? formatDate(task.dueDate) : '',
+            priority: task.priority,
+            status: task.status,
+            customerId: task.customer || '',
+            packId: task.packId || '',
+            notes: task.notes || ''
+        })
+
+        if (task.customer) {
+            setSelectedCustomerId(task.customer)
+        }
+
         // This would be implemented when the edit task functionality is available
         alert('Edit task functionality will be implemented soon')
     }
@@ -246,10 +292,26 @@ export default function Tasks(props) {
     const handleDeleteClick = (event, taskId) => {
         event.preventDefault()
         event.stopPropagation()
-        // This would be implemented when the delete task functionality is available
-        confirm('Do you want to delete this task? This action cannot be undone.', accepted => {
+
+        confirm('Do you want to delete this task? This action cannot be undone.', async (accepted) => {
             if (accepted) {
-                alert('Delete task functionality will be implemented soon')
+                try {
+                    setLoading(true)
+
+                    // In a real implementation, this would call an API endpoint to delete the task
+                    // For now, we'll just show an alert and remove it from the local state
+                    alert('Delete task functionality will be implemented soon', 'info')
+
+                    // Remove the task from the local state to demonstrate the UI change
+                    const updatedTasks = tasks.filter(task => task.id !== taskId)
+                    setTasks(updatedTasks)
+
+                    setLoading(false)
+                } catch (error) {
+                    console.error('Error deleting task:', error)
+                    alert(error.message)
+                    setLoading(false)
+                }
             }
         }, 'warn')
     }
@@ -259,7 +321,7 @@ export default function Tasks(props) {
         setExpandedTaskId(expandedTaskId === taskId ? null : taskId)
     }
 
-    const handleStatusClick = (event, task) => {
+    const handleStatusClick = async (event, task) => {
         event.preventDefault()
         event.stopPropagation()
 
@@ -269,8 +331,28 @@ export default function Tasks(props) {
         const nextIndex = (currentIndex + 1) % statusOptions.length
         const nextStatus = statusOptions[nextIndex]
 
-        // In a real implementation, this would update the task on the server
-        alert(`Status would change from "${task.status}" to "${nextStatus}". This functionality will be fully implemented soon.`)
+        try {
+            setLoading(true)
+
+            // In a real implementation, this would call an API endpoint to update the task status
+            // For now, we'll just show an alert indicating this would be implemented soon
+            alert(`Status would change from "${task.status}" to "${nextStatus}". This functionality will be fully implemented soon.`)
+
+            // Update the task in the local state to demonstrate the UI change
+            const updatedTasks = tasks.map(t => {
+                if (t.id === task.id) {
+                    return { ...t, status: nextStatus }
+                }
+                return t
+            })
+
+            setTasks(updatedTasks)
+            setLoading(false)
+        } catch (error) {
+            console.error('Error updating task status:', error)
+            alert(error.message)
+            setLoading(false)
+        }
     }
 
     const getPriorityColor = (priority) => {
@@ -298,6 +380,31 @@ export default function Tasks(props) {
         if (!dateString) return 'No due date'
         const date = new Date(dateString)
         return date.toISOString().split('T')[0]
+    }
+
+    const getUserName = (customerId) => {
+        const customer = customers.find(c => c.id === customerId)
+        return customer ? customer.name : 'Unknown Customer'
+    }
+
+    const getPackName = (packId) => {
+        const pack = packs.find(p => p.id === packId)
+        return pack ? pack.name : 'Unknown Pack'
+    }
+
+    const handleFilterChange = (e) => {
+        const { name, value } = e.target
+        setFilters(prev => ({
+            ...prev,
+            [name]: value
+        }))
+    }
+
+    const handleSort = (key) => {
+        setSortConfig(prev => ({
+            key,
+            direction: prev.key === key && prev.direction === 'asc' ? 'desc' : 'asc'
+        }))
     }
 
     return (
@@ -343,151 +450,299 @@ export default function Tasks(props) {
                         </div>
                     </div>
                 ) : (
-                    <div className="bg-white shadow-md rounded-lg overflow-hidden">
-                        {/* Table Header - Only show on tablet and up */}
-                        <div className="bg-gray-50 border-b hidden sm:block">
-                            <div className="grid grid-cols-12 py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                <div className="col-span-6">Description</div>
-                                <div className="col-span-2 hidden md:block">Due Date</div>
-                                <div className="col-span-2 text-center">Priority</div>
-                                <div className="col-span-2 text-center">Status</div>
+                    <>
+                        {/* Filters - collapsible on mobile */}
+                        <div className="bg-white shadow-md rounded-lg p-4 mb-4">
+                            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                                <div>
+                                    <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-1">Search</label>
+                                    <input
+                                        type="text"
+                                        id="search"
+                                        name="search"
+                                        value={filters.search}
+                                        onChange={handleFilterChange}
+                                        placeholder="Search tasks..."
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                                    <select
+                                        id="status"
+                                        name="status"
+                                        value={filters.status}
+                                        onChange={handleFilterChange}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                    >
+                                        <option value="">All Statuses</option>
+                                        <option value="Pending">Pending</option>
+                                        <option value="In Progress">In Progress</option>
+                                        <option value="On Hold">On Hold</option>
+                                        <option value="Completed">Completed</option>
+                                        <option value="Cancelled">Cancelled</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label htmlFor="priority" className="block text-sm font-medium text-gray-700 mb-1">Priority</label>
+                                    <select
+                                        id="priority"
+                                        name="priority"
+                                        value={filters.priority}
+                                        onChange={handleFilterChange}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                    >
+                                        <option value="">All Priorities</option>
+                                        <option value="Low">Low</option>
+                                        <option value="Medium">Medium</option>
+                                        <option value="High">High</option>
+                                        <option value="Urgent">Urgent</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label htmlFor="customerFilter" className="block text-sm font-medium text-gray-700 mb-1">Customer</label>
+                                    <select
+                                        id="customerFilter"
+                                        name="customerFilter"
+                                        value={filters.customerFilter}
+                                        onChange={handleFilterChange}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                    >
+                                        <option value="">All Customers</option>
+                                        {customers.map(customer => (
+                                            <option key={customer.id} value={customer.id}>{customer.name}</option>
+                                        ))}
+                                    </select>
+                                </div>
                             </div>
                         </div>
 
-                        {/* Tasks List */}
-                        <div className="divide-y divide-gray-200">
-                            {tasks.map(task => (
-                                <div key={task.id}>
-                                    {/* Main row - clickable */}
+                        <div className="bg-white shadow-md rounded-lg overflow-hidden">
+                            {/* Table Header - Only show on tablet and up */}
+                            <div className="bg-gray-50 border-b hidden sm:block">
+                                <div className="grid grid-cols-12 py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     <div
-                                        onClick={() => handleTaskClick(task.id)}
-                                        className="hover:bg-gray-50 p-4 cursor-pointer transition-colors"
+                                        className="col-span-3 md:col-span-4 cursor-pointer hover:text-gray-700"
+                                        onClick={() => handleSort('description')}
                                     >
-                                        {/* Mobile View */}
-                                        <div className="sm:hidden">
-                                            <div className="mb-2">
-                                                <h3 className="font-medium text-gray-900">{task.description}</h3>
-                                            </div>
-                                            <div className="grid grid-cols-2 gap-y-2 text-sm">
-                                                <div className="text-gray-500">Priority:</div>
-                                                <div>
-                                                    <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getPriorityColor(task.priority)}`}>
-                                                        {task.priority}
-                                                    </span>
-                                                </div>
-                                                <div className="text-gray-500">Status:</div>
-                                                <div onClick={(e) => handleStatusClick(e, task)}>
-                                                    <span className={`px-2 py-1 text-xs font-semibold rounded-full cursor-pointer hover:opacity-80 ${getStatusColor(task.status)}`}>
-                                                        {task.status}
-                                                    </span>
-                                                </div>
-                                                <div className="text-gray-500">Due:</div>
-                                                <div className="text-gray-700">{formatDate(task.dueDate)}</div>
-                                            </div>
-                                        </div>
-
-                                        {/* Desktop View */}
-                                        <div className="hidden sm:grid sm:grid-cols-12 sm:items-center">
-                                            <div className="col-span-6 font-medium text-gray-900 truncate" title={task.description}>
-                                                {task.description}
-                                            </div>
-                                            <div className="col-span-2 text-sm text-gray-500 hidden md:block">
-                                                {formatDate(task.dueDate)}
-                                            </div>
-                                            <div className="col-span-2 flex justify-center">
-                                                <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getPriorityColor(task.priority)}`}>
-                                                    {task.priority}
-                                                </span>
-                                            </div>
-                                            <div className="col-span-2 flex justify-center">
-                                                <span
-                                                    className={`px-2 py-1 text-xs font-semibold rounded-full cursor-pointer hover:opacity-80 ${getStatusColor(task.status)}`}
-                                                    onClick={(e) => handleStatusClick(e, task)}
-                                                >
-                                                    {task.status}
-                                                </span>
-                                            </div>
-                                        </div>
+                                        Description
+                                        {sortConfig.key === 'description' && (
+                                            <span className="ml-1">
+                                                {sortConfig.direction === 'asc' ? '↑' : '↓'}
+                                            </span>
+                                        )}
                                     </div>
+                                    <div
+                                        className="col-span-2 hidden md:block cursor-pointer hover:text-gray-700"
+                                        onClick={() => handleSort('dueDate')}
+                                    >
+                                        Due Date
+                                        {sortConfig.key === 'dueDate' && (
+                                            <span className="ml-1">
+                                                {sortConfig.direction === 'asc' ? '↑' : '↓'}
+                                            </span>
+                                        )}
+                                    </div>
+                                    <div className="col-span-2 hidden lg:block">Customer</div>
+                                    <div
+                                        className="col-span-2 text-center cursor-pointer hover:text-gray-700"
+                                        onClick={() => handleSort('priority')}
+                                    >
+                                        Priority
+                                        {sortConfig.key === 'priority' && (
+                                            <span className="ml-1">
+                                                {sortConfig.direction === 'asc' ? '↑' : '↓'}
+                                            </span>
+                                        )}
+                                    </div>
+                                    <div
+                                        className="col-span-2 text-center cursor-pointer hover:text-gray-700"
+                                        onClick={() => handleSort('status')}
+                                    >
+                                        Status
+                                        {sortConfig.key === 'status' && (
+                                            <span className="ml-1">
+                                                {sortConfig.direction === 'asc' ? '↑' : '↓'}
+                                            </span>
+                                        )}
+                                    </div>
+                                    <div className="col-span-1 md:col-span-2 hidden md:block">Pack</div>
+                                </div>
+                            </div>
 
-                                    {/* Expanded details area */}
-                                    {expandedTaskId === task.id && (
-                                        <div className="p-4 bg-gray-50 border-t border-gray-200">
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                {/* Details */}
-                                                <div>
-                                                    <h3 className="font-medium text-sm text-gray-500 mb-2">Details</h3>
-                                                    <dl className="grid grid-cols-3 gap-2 text-sm">
-                                                        <dt className="col-span-1 text-gray-500">Description:</dt>
-                                                        <dd className="col-span-2 text-gray-900">{task.description}</dd>
-
-                                                        <dt className="col-span-1 text-gray-500">Due Date:</dt>
-                                                        <dd className="col-span-2 text-gray-900">{formatDate(task.dueDate)}</dd>
-
-                                                        <dt className="col-span-1 text-gray-500">Priority:</dt>
-                                                        <dd className="col-span-2">
+                            {/* Tasks List */}
+                            <div className="divide-y divide-gray-200">
+                                {filteredTasks.length === 0 ? (
+                                    <div className="p-4 text-center text-gray-500">
+                                        No tasks match your filters. Try adjusting your search criteria.
+                                    </div>
+                                ) : (
+                                    filteredTasks.map(task => (
+                                        <div key={task.id}>
+                                            {/* Main row - clickable */}
+                                            <div
+                                                onClick={() => handleTaskClick(task.id)}
+                                                className="hover:bg-gray-50 p-4 cursor-pointer transition-colors"
+                                            >
+                                                {/* Mobile View */}
+                                                <div className="sm:hidden">
+                                                    <div className="mb-2">
+                                                        <h3 className="font-medium text-gray-900">{task.description}</h3>
+                                                    </div>
+                                                    <div className="grid grid-cols-2 gap-y-2 text-sm">
+                                                        <div className="text-gray-500">Priority:</div>
+                                                        <div>
                                                             <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getPriorityColor(task.priority)}`}>
                                                                 {task.priority}
                                                             </span>
-                                                        </dd>
-
-                                                        <dt className="col-span-1 text-gray-500">Status:</dt>
-                                                        <dd className="col-span-2">
-                                                            <span
-                                                                className={`px-2 py-1 text-xs font-semibold rounded-full cursor-pointer hover:opacity-80 ${getStatusColor(task.status)}`}
-                                                                onClick={(e) => handleStatusClick(e, task)}
-                                                            >
+                                                        </div>
+                                                        <div className="text-gray-500">Status:</div>
+                                                        <div onClick={(e) => handleStatusClick(e, task)}>
+                                                            <span className={`px-2 py-1 text-xs font-semibold rounded-full cursor-pointer hover:opacity-80 ${getStatusColor(task.status)}`}>
                                                                 {task.status}
                                                             </span>
-                                                        </dd>
-
+                                                        </div>
+                                                        <div className="text-gray-500">Due:</div>
+                                                        <div className="text-gray-700">{formatDate(task.dueDate)}</div>
                                                         {task.customer && (
                                                             <>
-                                                                <dt className="col-span-1 text-gray-500">Customer:</dt>
-                                                                <dd className="col-span-2 text-gray-900">{task.customer}</dd>
+                                                                <div className="text-gray-500">Customer:</div>
+                                                                <div className="text-gray-700 truncate">
+                                                                    {getUserName(task.customer)}
+                                                                </div>
                                                             </>
                                                         )}
-
-                                                        {task.notes && (
+                                                        {task.packId && (
                                                             <>
-                                                                <dt className="col-span-1 text-gray-500">Notes:</dt>
-                                                                <dd className="col-span-2 text-gray-900 whitespace-pre-wrap">{task.notes}</dd>
+                                                                <div className="text-gray-500">Pack:</div>
+                                                                <div className="text-gray-700 truncate">
+                                                                    {getPackName(task.packId)}
+                                                                </div>
                                                             </>
                                                         )}
-                                                    </dl>
+                                                    </div>
                                                 </div>
 
-                                                {/* Actions */}
-                                                <div className="flex flex-col justify-start space-y-2">
-                                                    <h3 className="font-medium text-sm text-gray-500 mb-2">Actions</h3>
-                                                    <div className="flex flex-wrap gap-2">
-                                                        <button
-                                                            onClick={(event) => handleEditClick(event, task)}
-                                                            className="flex items-center bg-white hover:bg-gray-100 text-gray-700 border border-gray-300 px-3 py-1 rounded-md transition-colors text-sm"
+                                                {/* Desktop View */}
+                                                <div className="hidden sm:grid sm:grid-cols-12 sm:items-center">
+                                                    <div className="col-span-3 md:col-span-4 font-medium text-gray-900 truncate" title={task.description}>
+                                                        {task.description}
+                                                    </div>
+                                                    <div className="col-span-2 text-sm text-gray-500 hidden md:block">
+                                                        {formatDate(task.dueDate)}
+                                                    </div>
+                                                    <div className="col-span-2 text-sm text-gray-500 hidden lg:block truncate" title={task.customer ? getUserName(task.customer) : ''}>
+                                                        {task.customer ? getUserName(task.customer) : '-'}
+                                                    </div>
+                                                    <div className="col-span-2 flex justify-center">
+                                                        <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getPriorityColor(task.priority)}`}>
+                                                            {task.priority}
+                                                        </span>
+                                                    </div>
+                                                    <div className="col-span-2 flex justify-center">
+                                                        <span
+                                                            className={`px-2 py-1 text-xs font-semibold rounded-full cursor-pointer hover:opacity-80 ${getStatusColor(task.status)}`}
+                                                            onClick={(e) => handleStatusClick(e, task)}
                                                         >
-                                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                                                                <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                                                            </svg>
-                                                            Edit Task
-                                                        </button>
-                                                        <button
-                                                            onClick={(event) => handleDeleteClick(event, task.id)}
-                                                            className="flex items-center bg-white hover:bg-red-50 text-red-600 border border-red-300 px-3 py-1 rounded-md transition-colors text-sm"
-                                                        >
-                                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                                                                <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
-                                                            </svg>
-                                                            Delete Task
-                                                        </button>
+                                                            {task.status}
+                                                        </span>
+                                                    </div>
+                                                    <div className="col-span-1 md:col-span-2 text-sm text-gray-500 hidden md:block truncate" title={task.packId ? getPackName(task.packId) : ''}>
+                                                        {task.packId ? getPackName(task.packId) : '-'}
                                                     </div>
                                                 </div>
                                             </div>
+
+                                            {/* Expanded details area */}
+                                            {expandedTaskId === task.id && (
+                                                <div className="p-4 bg-gray-50 border-t border-gray-200">
+                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                        {/* Details */}
+                                                        <div>
+                                                            <h3 className="font-medium text-sm text-gray-500 mb-2">Details</h3>
+                                                            <dl className="grid grid-cols-3 gap-2 text-sm">
+                                                                <dt className="col-span-1 text-gray-500">Description:</dt>
+                                                                <dd className="col-span-2 text-gray-900">{task.description}</dd>
+
+                                                                <dt className="col-span-1 text-gray-500">Due Date:</dt>
+                                                                <dd className="col-span-2 text-gray-900">{formatDate(task.dueDate)}</dd>
+
+                                                                <dt className="col-span-1 text-gray-500">Priority:</dt>
+                                                                <dd className="col-span-2">
+                                                                    <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getPriorityColor(task.priority)}`}>
+                                                                        {task.priority}
+                                                                    </span>
+                                                                </dd>
+
+                                                                <dt className="col-span-1 text-gray-500">Status:</dt>
+                                                                <dd className="col-span-2">
+                                                                    <span
+                                                                        className={`px-2 py-1 text-xs font-semibold rounded-full cursor-pointer hover:opacity-80 ${getStatusColor(task.status)}`}
+                                                                        onClick={(e) => handleStatusClick(e, task)}
+                                                                    >
+                                                                        {task.status}
+                                                                    </span>
+                                                                </dd>
+
+                                                                {task.customer && (
+                                                                    <>
+                                                                        <dt className="col-span-1 text-gray-500">Customer:</dt>
+                                                                        <dd className="col-span-2 text-gray-900">{getUserName(task.customer)}</dd>
+                                                                    </>
+                                                                )}
+
+                                                                {task.packId && (
+                                                                    <>
+                                                                        <dt className="col-span-1 text-gray-500">Pack:</dt>
+                                                                        <dd className="col-span-2 text-gray-900">{getPackName(task.packId)}</dd>
+                                                                    </>
+                                                                )}
+
+                                                                {task.notes && (
+                                                                    <>
+                                                                        <dt className="col-span-1 text-gray-500">Notes:</dt>
+                                                                        <dd className="col-span-2 text-gray-900 whitespace-pre-wrap">{task.notes}</dd>
+                                                                    </>
+                                                                )}
+                                                            </dl>
+                                                        </div>
+
+                                                        {/* Actions */}
+                                                        <div className="flex flex-col justify-start space-y-2">
+                                                            <h3 className="font-medium text-sm text-gray-500 mb-2">Actions</h3>
+                                                            <div className="flex flex-wrap gap-2">
+                                                                <button
+                                                                    onClick={(event) => handleEditClick(event, task)}
+                                                                    className="flex items-center bg-white hover:bg-gray-100 text-gray-700 border border-gray-300 px-3 py-1 rounded-md transition-colors text-sm"
+                                                                >
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                                                        <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                                                                    </svg>
+                                                                    Edit Task
+                                                                </button>
+                                                                <button
+                                                                    onClick={(event) => handleDeleteClick(event, task.id)}
+                                                                    className="flex items-center bg-white hover:bg-red-50 text-red-600 border border-red-300 px-3 py-1 rounded-md transition-colors text-sm"
+                                                                >
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                                                        <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                                                                    </svg>
+                                                                    Delete Task
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
                                         </div>
-                                    )}
-                                </div>
-                            ))}
+                                    ))
+                                )}
+                            </div>
                         </div>
-                    </div>
+                    </>
                 )}
 
                 {view === 'AddTask' && (

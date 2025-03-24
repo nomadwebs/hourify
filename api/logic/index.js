@@ -22,7 +22,8 @@ import {
     checkPackAndUpdate,
     updatePack,
     getCustomerBoughtPacks,
-    getProviderSoldPacks
+    getProviderSoldPacks,
+    getPackDetails
 } from './packs/index.js'
 
 //EMAILING
@@ -46,7 +47,8 @@ import {
 
 //TASKS
 import {
-    addTask
+    addTask,
+    getTasks
 } from './tasks/index.js'
 
 
@@ -80,6 +82,7 @@ const logic = {
     updatePack,
     getCustomerBoughtPacks,
     getProviderSoldPacks,
+    getPackDetails,
 
     //emailing
     emailRegisterWelcome,
@@ -100,7 +103,8 @@ const logic = {
     deletePayment,
 
     //Tasks
-    addTask
+    addTask,
+    getTasks
 }
 
 export default logic

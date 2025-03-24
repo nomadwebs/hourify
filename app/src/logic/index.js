@@ -44,7 +44,8 @@ import {
 } from './payments'
 
 import {
-    addTask
+    addTask,
+    getTasks
 } from './tasks'
 
 import {
@@ -103,6 +104,7 @@ const logic = {
 
     //Tasks
     addTask,
+    getTasks,
 
     //Home
     getUserStats
