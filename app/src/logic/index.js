@@ -23,6 +23,7 @@ import {
     updatePack,
     getProviderSoldPacks,
     getCustomerBoughtPacks,
+    getPackDetails
 } from './packs'
 
 import {
@@ -45,7 +46,8 @@ import {
 
 import {
     addTask,
-    getTasks
+    getTasks,
+    deleteTask
 } from './tasks'
 
 import {
@@ -82,6 +84,7 @@ const logic = {
     updatePack,
     getProviderSoldPacks,
     getCustomerBoughtPacks,
+    getPackDetails,
 
     //Activities
     getActivitiesByPackId,
@@ -105,6 +108,7 @@ const logic = {
     //Tasks
     addTask,
     getTasks,
+    deleteTask,
 
     //Home
     getUserStats

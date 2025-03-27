@@ -5,12 +5,13 @@ const { SystemError } = errors
 export default (userId, description, dueDate, priority, status, customerId = null, packId = null, notes = null) => {
     validate.id(userId)
     validate.text(description, 'description')
-    validate.date(dueDate, 'dueDate')
-    /* validate.priority(priority, 'priority') */
     validate.taskStatus(status, 'status')
-    validate.id(customerId, 'customerId')
-    validate.id(packId, 'packId')
-    validate.text(notes, 'notes')
+
+    if (notes) validate.text(notes, 'notes')
+    if (customerId) validate.id(customerId, 'customerId')
+    if (packId) validate.id(packId, 'packId')
+    if (dueDate) validate.date(dueDate)
+
 
     return fetch(`${import.meta.env.VITE_API_URL}/tasks/add-task`, {
         method: 'POST',

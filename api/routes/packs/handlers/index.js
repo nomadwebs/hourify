@@ -8,6 +8,8 @@ import getAdquiredPacksHandler from './getAdquiredPacksHandler.js'
 import updatePackHandler from './updatePackHandler.js'
 import getProviderSoldPacksHandler from './getProviderSoldPacksHandler.js'
 import getCustomerBoughtPacksHandler from './getCustomerBoughtPacksHandler.js'
+import getPackDetailsHandler from './getPackDetailsHandler.js'
+
 export {
     createBasePackHandlers,
     assingPackHandlers,
@@ -18,5 +20,6 @@ export {
     getAdquiredPacksHandler,
     updatePackHandler,
     getProviderSoldPacksHandler,
-    getCustomerBoughtPacksHandler
+    getCustomerBoughtPacksHandler,
+    getPackDetailsHandler
 }

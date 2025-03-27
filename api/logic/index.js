@@ -48,7 +48,8 @@ import {
 //TASKS
 import {
     addTask,
-    getTasks
+    getTasks,
+    deleteTask
 } from './tasks/index.js'
 
 
@@ -104,7 +105,8 @@ const logic = {
 
     //Tasks
     addTask,
-    getTasks
+    getTasks,
+    deleteTask
 }
 
 export default logic

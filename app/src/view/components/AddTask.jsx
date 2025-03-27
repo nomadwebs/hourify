@@ -6,7 +6,6 @@ export default function AddTask({
     handleAddTask,
     handleCancelClick,
     customers,
-    packs,
     selectedCustomerId,
     taskFormRef
 }) {
@@ -109,33 +108,6 @@ export default function AddTask({
                 </div>
 
                 <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="packId">
-                        Related Pack
-                    </label>
-                    <select
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="packId"
-                        name="packId"
-                        value={formData.packId}
-                        onChange={handleInputChange}
-                        disabled={!selectedCustomerId || packs.length === 0}
-                    >
-                        <option value="">-- Select Pack --</option>
-                        {packs.map(pack => (
-                            <option key={pack.id} value={pack.id}>
-                                {pack.status === 'Active' ? ' 🟢 ' : ' 🔴 '}{pack.status} - {pack.description}
-                            </option>
-                        ))}
-                    </select>
-                    {selectedCustomerId && packs.length === 0 && (
-                        <p className="text-sm text-gray-500 mt-1">No packs available for this customer</p>
-                    )}
-                    {!selectedCustomerId && (
-                        <p className="text-sm text-gray-500 mt-1">Select a customer to see available packs</p>
-                    )}
-                </div>
-
-                <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="notes">
                         Notes
                     </label>
@@ -160,7 +132,7 @@ export default function AddTask({
                     </button>
                     <button
                         type="submit"
-                        className="bg-color_primary hover:bg-color_primaryHover text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        className="bg-gray-800 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     >
                         Create Task
                     </button>

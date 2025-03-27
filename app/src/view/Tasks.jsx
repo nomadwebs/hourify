@@ -4,7 +4,6 @@ import { AddTask } from './components'
 import logic from '../logic'
 
 import { errors } from 'com'
-import { Button } from '../library/index'
 
 import useContext from './useContext'
 
@@ -16,7 +15,6 @@ export default function Tasks(props) {
     const [filteredTasks, setFilteredTasks] = useState([])
     const [view, setView] = useState(null)
     const [customers, setCustomers] = useState([])
-    const [packs, setPacks] = useState([])
     const [selectedCustomerId, setSelectedCustomerId] = useState('')
     const [selectedTask, setSelectedTask] = useState(null)
     const taskFormRef = useRef(null)
@@ -73,26 +71,6 @@ export default function Tasks(props) {
 
         fetchData()
     }, [])
-
-    // Load packs when a customer is selected
-    useEffect(() => {
-        if (selectedCustomerId) {
-            const loadPacksForCustomer = async () => {
-                try {
-                    const customerPacks = await logic.getAdquiredPacks(selectedCustomerId)
-                    setPacks(customerPacks)
-                } catch (error) {
-                    console.error('Error fetching packs:', error)
-                    alert(error.message)
-                    setPacks([])
-                }
-            }
-
-            loadPacksForCustomer()
-        } else {
-            setPacks([])
-        }
-    }, [selectedCustomerId])
 
     useEffect(() => {
         if (view === 'AddTask' && taskFormRef.current) {
@@ -223,8 +201,6 @@ export default function Tasks(props) {
             })
 
             setSelectedCustomerId('')
-            setPacks([])
-            setView(null)
 
             // Refresh task list with the latest data
             const refreshedTasks = await logic.getTasks(userId)
@@ -242,7 +218,6 @@ export default function Tasks(props) {
         setView(null)
         setSelectedTask(null)
         setSelectedCustomerId('')
-        setPacks([])
 
         // Reset form
         setFormData({
@@ -298,61 +273,31 @@ export default function Tasks(props) {
                 try {
                     setLoading(true)
 
-                    // In a real implementation, this would call an API endpoint to delete the task
-                    // For now, we'll just show an alert and remove it from the local state
-                    alert('Delete task functionality will be implemented soon', 'info')
+                    await logic.deleteTask(taskId)
 
-                    // Remove the task from the local state to demonstrate the UI change
+                    // Only remove the task from state and show success if we get here
+                    // (if the API had issues, the catch block would handle it)
                     const updatedTasks = tasks.filter(task => task.id !== taskId)
                     setTasks(updatedTasks)
 
-                    setLoading(false)
+                    // Show success message after confirming the task was deleted
+                    alert('Task deleted successfully!', 'success')
                 } catch (error) {
                     console.error('Error deleting task:', error)
-                    alert(error.message)
+
+                    // Show the specific error from the API
+                    alert(error.message || 'Failed to delete task. Please try again.', 'error')
+                } finally {
                     setLoading(false)
                 }
             }
         }, 'warn')
     }
 
-    const handleTaskClick = (taskId) => {
+    const handleTaskClick = async (taskId) => {
         // Toggle expanded state
-        setExpandedTaskId(expandedTaskId === taskId ? null : taskId)
-    }
-
-    const handleStatusClick = async (event, task) => {
-        event.preventDefault()
-        event.stopPropagation()
-
-        // Define the status rotation
-        const statusOptions = ['Pending', 'In Progress', 'On Hold', 'Completed', 'Cancelled']
-        const currentIndex = statusOptions.indexOf(task.status)
-        const nextIndex = (currentIndex + 1) % statusOptions.length
-        const nextStatus = statusOptions[nextIndex]
-
-        try {
-            setLoading(true)
-
-            // In a real implementation, this would call an API endpoint to update the task status
-            // For now, we'll just show an alert indicating this would be implemented soon
-            alert(`Status would change from "${task.status}" to "${nextStatus}". This functionality will be fully implemented soon.`)
-
-            // Update the task in the local state to demonstrate the UI change
-            const updatedTasks = tasks.map(t => {
-                if (t.id === task.id) {
-                    return { ...t, status: nextStatus }
-                }
-                return t
-            })
-
-            setTasks(updatedTasks)
-            setLoading(false)
-        } catch (error) {
-            console.error('Error updating task status:', error)
-            alert(error.message)
-            setLoading(false)
-        }
+        const isExpanding = expandedTaskId !== taskId;
+        setExpandedTaskId(expandedTaskId === taskId ? null : taskId);
     }
 
     const getPriorityColor = (priority) => {
@@ -385,11 +330,6 @@ export default function Tasks(props) {
     const getUserName = (customerId) => {
         const customer = customers.find(c => c.id === customerId)
         return customer ? customer.name : 'Unknown Customer'
-    }
-
-    const getPackName = (packId) => {
-        const pack = packs.find(p => p.id === packId)
-        return pack ? pack.name : 'Unknown Pack'
     }
 
     const handleFilterChange = (e) => {
@@ -521,11 +461,11 @@ export default function Tasks(props) {
                         </div>
 
                         <div className="bg-white shadow-md rounded-lg overflow-hidden">
-                            {/* Table Header - Only show on tablet and up */}
-                            <div className="bg-gray-50 border-b hidden sm:block">
+                            {/* Table Header */}
+                            <div className="bg-gray-50 border-b">
                                 <div className="grid grid-cols-12 py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     <div
-                                        className="col-span-3 md:col-span-4 cursor-pointer hover:text-gray-700"
+                                        className="col-span-5 cursor-pointer hover:text-gray-700"
                                         onClick={() => handleSort('description')}
                                     >
                                         Description
@@ -536,7 +476,7 @@ export default function Tasks(props) {
                                         )}
                                     </div>
                                     <div
-                                        className="col-span-2 hidden md:block cursor-pointer hover:text-gray-700"
+                                        className="col-span-2 cursor-pointer hover:text-gray-700"
                                         onClick={() => handleSort('dueDate')}
                                     >
                                         Due Date
@@ -546,9 +486,9 @@ export default function Tasks(props) {
                                             </span>
                                         )}
                                     </div>
-                                    <div className="col-span-2 hidden lg:block">Customer</div>
+                                    <div className="col-span-3">Customer</div>
                                     <div
-                                        className="col-span-2 text-center cursor-pointer hover:text-gray-700"
+                                        className="col-span-1 text-center cursor-pointer hover:text-gray-700"
                                         onClick={() => handleSort('priority')}
                                     >
                                         Priority
@@ -559,7 +499,7 @@ export default function Tasks(props) {
                                         )}
                                     </div>
                                     <div
-                                        className="col-span-2 text-center cursor-pointer hover:text-gray-700"
+                                        className="col-span-1 text-center cursor-pointer hover:text-gray-700"
                                         onClick={() => handleSort('status')}
                                     >
                                         Status
@@ -569,7 +509,6 @@ export default function Tasks(props) {
                                             </span>
                                         )}
                                     </div>
-                                    <div className="col-span-1 md:col-span-2 hidden md:block">Pack</div>
                                 </div>
                             </div>
 
@@ -587,71 +526,25 @@ export default function Tasks(props) {
                                                 onClick={() => handleTaskClick(task.id)}
                                                 className="hover:bg-gray-50 p-4 cursor-pointer transition-colors"
                                             >
-                                                {/* Mobile View */}
-                                                <div className="sm:hidden">
-                                                    <div className="mb-2">
-                                                        <h3 className="font-medium text-gray-900">{task.description}</h3>
-                                                    </div>
-                                                    <div className="grid grid-cols-2 gap-y-2 text-sm">
-                                                        <div className="text-gray-500">Priority:</div>
-                                                        <div>
-                                                            <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getPriorityColor(task.priority)}`}>
-                                                                {task.priority}
-                                                            </span>
-                                                        </div>
-                                                        <div className="text-gray-500">Status:</div>
-                                                        <div onClick={(e) => handleStatusClick(e, task)}>
-                                                            <span className={`px-2 py-1 text-xs font-semibold rounded-full cursor-pointer hover:opacity-80 ${getStatusColor(task.status)}`}>
-                                                                {task.status}
-                                                            </span>
-                                                        </div>
-                                                        <div className="text-gray-500">Due:</div>
-                                                        <div className="text-gray-700">{formatDate(task.dueDate)}</div>
-                                                        {task.customer && (
-                                                            <>
-                                                                <div className="text-gray-500">Customer:</div>
-                                                                <div className="text-gray-700 truncate">
-                                                                    {getUserName(task.customer)}
-                                                                </div>
-                                                            </>
-                                                        )}
-                                                        {task.packId && (
-                                                            <>
-                                                                <div className="text-gray-500">Pack:</div>
-                                                                <div className="text-gray-700 truncate">
-                                                                    {getPackName(task.packId)}
-                                                                </div>
-                                                            </>
-                                                        )}
-                                                    </div>
-                                                </div>
-
-                                                {/* Desktop View */}
-                                                <div className="hidden sm:grid sm:grid-cols-12 sm:items-center">
-                                                    <div className="col-span-3 md:col-span-4 font-medium text-gray-900 truncate" title={task.description}>
+                                                <div className="grid grid-cols-12 items-center">
+                                                    <div className="col-span-5 font-medium text-gray-900 truncate" title={task.description}>
                                                         {task.description}
                                                     </div>
-                                                    <div className="col-span-2 text-sm text-gray-500 hidden md:block">
+                                                    <div className="col-span-2 text-sm text-gray-500">
                                                         {formatDate(task.dueDate)}
                                                     </div>
-                                                    <div className="col-span-2 text-sm text-gray-500 hidden lg:block truncate" title={task.customer ? getUserName(task.customer) : ''}>
+                                                    <div className="col-span-3 text-sm text-gray-500 truncate" title={task.customer ? getUserName(task.customer) : ''}>
                                                         {task.customer ? getUserName(task.customer) : '-'}
                                                     </div>
-                                                    <div className="col-span-2 flex justify-center">
+                                                    <div className="col-span-1 flex justify-center">
                                                         <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getPriorityColor(task.priority)}`}>
                                                             {task.priority}
                                                         </span>
                                                     </div>
-                                                    <div className="col-span-2 flex justify-center">
-                                                        <span
-                                                            className={`px-2 py-1 text-xs font-semibold rounded-full cursor-pointer hover:opacity-80 ${getStatusColor(task.status)}`}
-                                                            onClick={(e) => handleStatusClick(e, task)}
-                                                        >
+                                                    <div className="col-span-1 flex justify-center">
+                                                        <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(task.status)}`}>
                                                             {task.status}
                                                         </span>
-                                                    </div>
-                                                    <div className="col-span-1 md:col-span-2 text-sm text-gray-500 hidden md:block truncate" title={task.packId ? getPackName(task.packId) : ''}>
-                                                        {task.packId ? getPackName(task.packId) : '-'}
                                                     </div>
                                                 </div>
                                             </div>
@@ -659,7 +552,7 @@ export default function Tasks(props) {
                                             {/* Expanded details area */}
                                             {expandedTaskId === task.id && (
                                                 <div className="p-4 bg-gray-50 border-t border-gray-200">
-                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                    <div className="grid grid-cols-2 gap-4">
                                                         {/* Details */}
                                                         <div>
                                                             <h3 className="font-medium text-sm text-gray-500 mb-2">Details</h3>
@@ -679,10 +572,7 @@ export default function Tasks(props) {
 
                                                                 <dt className="col-span-1 text-gray-500">Status:</dt>
                                                                 <dd className="col-span-2">
-                                                                    <span
-                                                                        className={`px-2 py-1 text-xs font-semibold rounded-full cursor-pointer hover:opacity-80 ${getStatusColor(task.status)}`}
-                                                                        onClick={(e) => handleStatusClick(e, task)}
-                                                                    >
+                                                                    <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(task.status)}`}>
                                                                         {task.status}
                                                                     </span>
                                                                 </dd>
@@ -691,13 +581,6 @@ export default function Tasks(props) {
                                                                     <>
                                                                         <dt className="col-span-1 text-gray-500">Customer:</dt>
                                                                         <dd className="col-span-2 text-gray-900">{getUserName(task.customer)}</dd>
-                                                                    </>
-                                                                )}
-
-                                                                {task.packId && (
-                                                                    <>
-                                                                        <dt className="col-span-1 text-gray-500">Pack:</dt>
-                                                                        <dd className="col-span-2 text-gray-900">{getPackName(task.packId)}</dd>
                                                                     </>
                                                                 )}
 
@@ -752,7 +635,6 @@ export default function Tasks(props) {
                         handleAddTask={handleAddTask}
                         handleCancelClick={handleCancelClick}
                         customers={customers}
-                        packs={packs}
                         selectedCustomerId={selectedCustomerId}
                         taskFormRef={taskFormRef}
                     />

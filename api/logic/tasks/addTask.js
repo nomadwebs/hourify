@@ -3,20 +3,6 @@ import { validate, errors } from 'com'
 
 const { SystemError, NotFoundError, ValidationError, OwnershipError } = errors
 
-/**
- * Creates a new task and associates it with a user and optionally with a customer and pack
- * 
- * @param {string} userId - The ID of the user who owns the task
- * @param {string} description - Description of the task
- * @param {Date} dueDate - Optional due date for the task
- * @param {string} priority - Priority level: 'Low', 'Medium', 'High', 'Urgent'
- * @param {string} status - Status: 'Pending', 'In Progress', 'On Hold', 'Completed', 'Cancelled'
- * @param {string} customerId - Optional ID of the customer associated with the task
- * @param {string} packId - Optional ID of the pack related to the task
- * @param {string} notes - Optional additional notes about the task
- * @returns {Promise<Object>} - The created task
- */
-
 export default (userId, description, dueDate, priority, status, customerId = null, packId = null, notes = null) => {
     // Validate required fields
     validate.id(userId, 'userId')
