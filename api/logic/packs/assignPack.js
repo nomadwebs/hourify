@@ -21,7 +21,15 @@ export default (userId, customerSearch, selectPack, description, payedAmount, pa
 
         try {
             providerUser = await User.findById(userId)
-            //TODO: Add a validation to avoid to create mor than 3 asignments to Standard Users
+
+            if (providerUser.plan === 'free') {
+                // Contar los packs actuales del proveedor
+                const packCount = await Pack.countDocuments({ provider: userId, status: 'Active' })
+
+                if (packCount >= 5) {
+                    throw new Error('Pack limit reached. Free users cannot have more than 5 assigned packs.')
+                }
+            }
 
         } catch (error) {
             throw new SystemError(error.message)
@@ -29,7 +37,6 @@ export default (userId, customerSearch, selectPack, description, payedAmount, pa
         if (!providerUser) {
             throw new NotFoundError('user not found')
         }
-
 
         try {
             customerId = await User.findOne({
