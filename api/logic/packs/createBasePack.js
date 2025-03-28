@@ -2,7 +2,7 @@ import { BasePack, User } from "dat";
 
 import { validate, errors } from "com";
 
-const { SystemError, NotFoundError } = errors
+const { SystemError, NotFoundError, SubscriptionError } = errors
 
 export default (userId, packName, description, quantity, unit, expiringTime, price, currency) => {
     validate.id(userId, 'userId')
@@ -14,22 +14,29 @@ export default (userId, packName, description, quantity, unit, expiringTime, pri
 
 
     return (async () => {
-        let user
+        const user = await User.findById(userId)
+        if (!user) throw new NotFoundError('user not found')
+
+        /* if (user.plan === 'free') {
+            const basePackCount = await BasePack.countDocuments({ user: userId })
+            if (basePackCount >= 3) {
+                throw new SubscriptionError('Free users cannot create more than 3 packs')
+            }
+        } */
 
         try {
-            user = await User.findById(userId)
+            return await BasePack.create({
+                user: userId,
+                packName,
+                description,
+                quantity,
+                unit,
+                expiringTime,
+                price,
+                currency
+            })
         } catch (error) {
             throw new SystemError(error.message)
-        }
-
-        if (!user) {
-            throw new NotFoundError(('user not found'))
-        }
-
-        try {
-            await BasePack.create({ user: userId, packName, description, quantity, unit, expiringTime, price, currency })
-        } catch (error) {
-            throw error
         }
     })()
 }
