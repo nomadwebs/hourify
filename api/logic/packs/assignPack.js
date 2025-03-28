@@ -21,6 +21,8 @@ export default (userId, customerSearch, selectPack, description, payedAmount, pa
 
         try {
             providerUser = await User.findById(userId)
+            //TODO: Add a validation to avoid to create mor than 3 asignments to Standard Users
+
         } catch (error) {
             throw new SystemError(error.message)
         }

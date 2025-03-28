@@ -1,18 +1,18 @@
 import React from 'react'
 
-export default function AddTask({
+export default function UpdateTask({
     formData,
     handleInputChange,
-    handleAddTask,
+    handleUpdateTask,
     handleCancelClick,
     customers,
     taskFormRef
 }) {
     return (
         <div ref={taskFormRef} className="mt-8 w-full max-w-4xl bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-xl font-semibold text-color_darkBlue mb-4">Create New Task</h2>
+            <h2 className="text-xl font-semibold text-color_darkBlue mb-4">Update Task</h2>
 
-            <form onSubmit={handleAddTask}>
+            <form onSubmit={handleUpdateTask}>
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">
                         Description <span className="text-red-500">*</span>
@@ -133,7 +133,7 @@ export default function AddTask({
                         type="submit"
                         className="bg-gray-800 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     >
-                        Create Task
+                        Update Task
                     </button>
                 </div>
             </form>

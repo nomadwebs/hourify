@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AddTask } from './components'
+import UpdateTask from './components/UpdateTask'
 import logic from '../logic'
 
 import { errors } from 'com'
@@ -73,7 +74,7 @@ export default function Tasks(props) {
     }, [])
 
     useEffect(() => {
-        if (view === 'AddTask' && taskFormRef.current) {
+        if ((view === 'AddTask' || view === 'EditTask') && taskFormRef.current) {
             taskFormRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
         }
     }, [view])
@@ -214,6 +215,73 @@ export default function Tasks(props) {
         }
     }
 
+    const handleEditClick = (event, task) => {
+        event.preventDefault()
+        event.stopPropagation()
+
+        // Set the selected task and form data for editing
+        setSelectedTask(task)
+        setFormData({
+            description: task.description,
+            dueDate: task.dueDate ? formatDate(task.dueDate) : '',
+            priority: task.priority,
+            status: task.status,
+            customerId: task.customer || '',
+            notes: task.notes || ''
+        })
+
+        if (task.customer) {
+            setSelectedCustomerId(task.customer)
+        }
+
+        // Set view to EditTask to show the edit form
+        setView('EditTask')
+    }
+
+    const handleUpdateTask = async (e) => {
+        e.preventDefault()
+
+        try {
+            setLoading(true)
+
+            // Create a Date object if dueDate is provided
+            const parsedDueDate = formData.dueDate ? new Date(formData.dueDate) : null
+
+            // Only pass customer ID if one is selected
+            const customerId = formData.customerId || null
+
+            // Notes are optional
+            const notes = formData.notes || null
+
+            // Call the API to update the task
+            await logic.updateTask(
+                selectedTask.id,
+                formData.description,
+                parsedDueDate,
+                customerId,
+                formData.priority,
+                formData.status,
+                notes
+            )
+
+            alert('Task updated successfully!', 'success')
+
+            // Reset form and view
+            handleCancelClick()
+
+            // Refresh task list with the latest data
+            const userId = logic.getUserId()
+            const refreshedTasks = await logic.getTasks(userId)
+            setTasks(refreshedTasks)
+
+        } catch (error) {
+            alert(error.message)
+            console.error(error)
+        } finally {
+            setLoading(false)
+        }
+    }
+
     const handleCancelClick = () => {
         setView(null)
         setSelectedTask(null)
@@ -226,7 +294,6 @@ export default function Tasks(props) {
             priority: 'Medium',
             status: 'Pending',
             customerId: '',
-            packId: '',
             notes: ''
         })
     }
@@ -238,30 +305,6 @@ export default function Tasks(props) {
 
     const handleAddNewClick = () => {
         setView('AddTask')
-    }
-
-    const handleEditClick = (event, task) => {
-        event.preventDefault()
-        event.stopPropagation()
-
-        // Set the form data with the task details
-        setSelectedTask(task)
-        setFormData({
-            description: task.description,
-            dueDate: task.dueDate ? formatDate(task.dueDate) : '',
-            priority: task.priority,
-            status: task.status,
-            customerId: task.customer || '',
-            packId: task.packId || '',
-            notes: task.notes || ''
-        })
-
-        if (task.customer) {
-            setSelectedCustomerId(task.customer)
-        }
-
-        // This would be implemented when the edit task functionality is available
-        alert('Edit task functionality will be implemented soon')
     }
 
     const handleDeleteClick = (event, taskId) => {
@@ -350,7 +393,7 @@ export default function Tasks(props) {
     return (
         <main className="flex flex-col items-center bg-color_backgroundGrey w-full flex-grow pt-12 px-4">
             <div className="w-full max-w-6xl">
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+                <div className="flex flex-col sm:flex-row  items-start sm:items-center mb-6 gap-4">
                     <div>
                         <h1 className="text-3xl font-bold">Task Management</h1>
                         <p className="text-gray-600">Create, view, and manage your tasks</p>
@@ -633,6 +676,18 @@ export default function Tasks(props) {
                         formData={formData}
                         handleInputChange={handleInputChange}
                         handleAddTask={handleAddTask}
+                        handleCancelClick={handleCancelClick}
+                        customers={customers}
+                        selectedCustomerId={selectedCustomerId}
+                        taskFormRef={taskFormRef}
+                    />
+                )}
+
+                {view === 'EditTask' && selectedTask && (
+                    <UpdateTask
+                        formData={formData}
+                        handleInputChange={handleInputChange}
+                        handleUpdateTask={handleUpdateTask}
                         handleCancelClick={handleCancelClick}
                         customers={customers}
                         selectedCustomerId={selectedCustomerId}

@@ -47,7 +47,8 @@ import {
 import {
     addTask,
     getTasks,
-    deleteTask
+    deleteTask,
+    updateTask
 } from './tasks'
 
 import {
@@ -109,6 +110,7 @@ const logic = {
     addTask,
     getTasks,
     deleteTask,
+    updateTask,
 
     //Home
     getUserStats
