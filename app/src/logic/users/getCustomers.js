@@ -1,7 +1,5 @@
 import { /* validate, */ errors } from 'com'
 
-import getUserId from './getUserId.js'
-
 const { SystemError } = errors
 
 export default () => {

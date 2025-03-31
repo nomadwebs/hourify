@@ -54,16 +54,27 @@ export default function Tasks(props) {
                 // Get user ID
                 const userId = logic.getUserId()
 
-                // Fetch tasks in parallel with customers for better performance
-                const [tasksResponse, customersResponse] = await Promise.all([
-                    logic.getTasks(userId),
-                    logic.getCustomers()
-                ])
+                // Fetch customers first, as we need them even if tasks fail
+                try {
+                    const customersResponse = await logic.getCustomers()
+                    setCustomers(customersResponse)
+                } catch (error) {
+                    console.error('Error fetching customers:', error)
+                    alert('Failed to load customers: ' + error.message)
+                }
 
-                setTasks(tasksResponse)
-                setCustomers(customersResponse)
+                // Fetch tasks separately, allowing customers to still load if this fails
+                try {
+                    const tasksResponse = await logic.getTasks(userId)
+                    setTasks(tasksResponse)
+                } catch (error) {
+                    console.error('Error fetching tasks:', error)
+                    alert('Failed to load tasks: ' + error.message)
+                    // Still set tasks to empty array to avoid undefined issues
+                    setTasks([])
+                }
             } catch (error) {
-                console.error('Error fetching data:', error)
+                console.error('Unexpected error in data fetching:', error)
                 alert(error.message)
             } finally {
                 setLoading(false)
