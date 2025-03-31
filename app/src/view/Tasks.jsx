@@ -508,7 +508,7 @@ export default function Tasks(props) {
                             <div className="bg-gray-50 border-b">
                                 <div className="grid grid-cols-12 py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     <div
-                                        className="col-span-5 cursor-pointer hover:text-gray-700"
+                                        className="col-span-12 sm:col-span-5 cursor-pointer hover:text-gray-700 mb-2 sm:mb-0"
                                         onClick={() => handleSort('description')}
                                     >
                                         Description
@@ -519,7 +519,7 @@ export default function Tasks(props) {
                                         )}
                                     </div>
                                     <div
-                                        className="col-span-2 cursor-pointer hover:text-gray-700"
+                                        className="col-span-4 sm:col-span-2 cursor-pointer hover:text-gray-700"
                                         onClick={() => handleSort('dueDate')}
                                     >
                                         Due Date
@@ -529,9 +529,9 @@ export default function Tasks(props) {
                                             </span>
                                         )}
                                     </div>
-                                    <div className="col-span-3">Customer</div>
+                                    <div className="col-span-8 sm:col-span-3 hidden sm:block">Customer</div>
                                     <div
-                                        className="col-span-1 text-center cursor-pointer hover:text-gray-700"
+                                        className="col-span-4 sm:col-span-1 text-center cursor-pointer hover:text-gray-700"
                                         onClick={() => handleSort('priority')}
                                     >
                                         Priority
@@ -542,7 +542,7 @@ export default function Tasks(props) {
                                         )}
                                     </div>
                                     <div
-                                        className="col-span-1 text-center cursor-pointer hover:text-gray-700"
+                                        className="col-span-4 sm:col-span-1 text-center cursor-pointer hover:text-gray-700"
                                         onClick={() => handleSort('status')}
                                     >
                                         Status
@@ -569,22 +569,22 @@ export default function Tasks(props) {
                                                 onClick={() => handleTaskClick(task.id)}
                                                 className="hover:bg-gray-50 p-4 cursor-pointer transition-colors"
                                             >
-                                                <div className="grid grid-cols-12 items-center">
-                                                    <div className="col-span-5 font-medium text-gray-900 truncate" title={task.description}>
+                                                <div className="grid grid-cols-12 gap-y-2 items-center">
+                                                    <div className="col-span-12 sm:col-span-5 font-medium text-gray-900 truncate" title={task.description}>
                                                         {task.description}
                                                     </div>
-                                                    <div className="col-span-2 text-sm text-gray-500">
+                                                    <div className="col-span-4 sm:col-span-2 text-sm text-gray-500">
                                                         {formatDate(task.dueDate)}
                                                     </div>
-                                                    <div className="col-span-3 text-sm text-gray-500 truncate" title={task.customer ? getUserName(task.customer) : ''}>
+                                                    <div className="col-span-8 sm:col-span-3 text-sm text-gray-500 truncate order-last sm:order-none block sm:block" title={task.customer ? getUserName(task.customer) : ''}>
                                                         {task.customer ? getUserName(task.customer) : '-'}
                                                     </div>
-                                                    <div className="col-span-1 flex justify-center">
+                                                    <div className="col-span-4 sm:col-span-1 flex justify-start sm:justify-center">
                                                         <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getPriorityColor(task.priority)}`}>
                                                             {task.priority}
                                                         </span>
                                                     </div>
-                                                    <div className="col-span-1 flex justify-center">
+                                                    <div className="col-span-4 sm:col-span-1 flex justify-start sm:justify-center">
                                                         <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(task.status)}`}>
                                                             {task.status}
                                                         </span>
@@ -595,7 +595,7 @@ export default function Tasks(props) {
                                             {/* Expanded details area */}
                                             {expandedTaskId === task.id && (
                                                 <div className="p-4 bg-gray-50 border-t border-gray-200">
-                                                    <div className="grid grid-cols-2 gap-4">
+                                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                                         {/* Details */}
                                                         <div>
                                                             <h3 className="font-medium text-sm text-gray-500 mb-2">Details</h3>
@@ -637,7 +637,7 @@ export default function Tasks(props) {
                                                         </div>
 
                                                         {/* Actions */}
-                                                        <div className="flex flex-col justify-start space-y-2">
+                                                        <div className="flex flex-col justify-start space-y-2 mt-4 sm:mt-0">
                                                             <h3 className="font-medium text-sm text-gray-500 mb-2">Actions</h3>
                                                             <div className="flex flex-wrap gap-2">
                                                                 <button
