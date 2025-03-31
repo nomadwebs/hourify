@@ -27,7 +27,9 @@ export default (userId, customerSearch, selectPack, description, payedAmount, pa
                 const packCount = await Pack.countDocuments({ provider: userId, status: 'Active' })
 
                 if (packCount >= 5) {
-                    throw new Error('Pack limit reached. Free users cannot have more than 5 assigned packs.')
+                    throw new Error(
+                        'Free users cannot assign more than 5 packs. \n' +
+                        'Upgrade your plan by contacting us at hola@nomadwebs.com.')
                 }
             }
 

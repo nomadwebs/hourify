@@ -1,6 +1,6 @@
 import { validate, errors } from 'com'
 
-const { SystemError } = errors
+const { SystemError, SubscriptionError } = errors
 
 export default (packName, packDescription, quantity, unit, expiringTime, price, currency) => {
     validate.packName(packName)
@@ -25,17 +25,18 @@ export default (packName, packDescription, quantity, unit, expiringTime, price, 
             throw new SystemError(error.message)
         })
         .then(res => {
-            if (res.ok)
-                return
+            if (res.ok) return
 
             return res.json()
-                .catch(error => {
-                    throw new SystemError(error.message)
+                .then(body => {
+                    if (body.error === 'SubscriptionError') {
+                        throw new SubscriptionError(body.message)
+                    }
+                    if (body.error && errors[body.error]) {
+                        throw new errors[body.error](body.message)
+                    }
+                    throw new SystemError(body.message || 'Unknown error')
                 })
-                .then(({ error, message }) => {
-                    throw new errors[error](message)
-                })
-
         })
 }
 

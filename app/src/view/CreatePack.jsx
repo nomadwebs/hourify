@@ -4,7 +4,7 @@ import { errors } from 'com'
 
 import CreatePack from './../logic/packs/createPack.js'
 
-const { SystemError } = errors
+const { SystemError, SubscriptionError } = errors
 
 import useContex from './useContext'
 
@@ -43,16 +43,27 @@ export default function Create(props) {
 
                 })
                 .catch(error => {
-                    if (error instanceof SystemError)
-                        alert('There was a problem, try it again later')
-                    else
-                        alert(error.message)
+                    console.error('Pack creation error:', error)
 
-                    console.error(error)
+                    if (error instanceof SubscriptionError) {
+                        alert(error.message, 'error') // Mensaje específico para límites
+                        // Opcional: mostrar UI especial para upgrade de plan
+                    }
+                    else if (error instanceof SystemError) {
+                        alert('There was a system problem, please try again later', 'error')
+                    }
+                    else if (error instanceof Error && Object.values(errors).some(E => error instanceof E)) {
+                        alert(error.message, 'error')
+                    }
+                    // Errores inesperados
+                    else {
+                        alert('An unexpected error occurred', 'error')
+                    }
                 })
+
         } catch (error) {
-            alert(error.message)
-            console.error(error)
+            alert('An unexpected error occurred during pack creation', 'error')
+            console.error('Synchronous error in pack creation:', error)
         }
     }
 

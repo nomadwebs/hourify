@@ -17,12 +17,14 @@ export default (userId, packName, description, quantity, unit, expiringTime, pri
         const user = await User.findById(userId)
         if (!user) throw new NotFoundError('user not found')
 
-        /* if (user.plan === 'free') {
+        if (user.plan === 'free') {
             const basePackCount = await BasePack.countDocuments({ user: userId })
             if (basePackCount >= 3) {
-                throw new SubscriptionError('Free users cannot create more than 3 packs')
+                throw new SubscriptionError(
+                    'Free users cannot create more than 3 packs. \n' +
+                    'Upgrade your plan by contacting us at hola@nomadwebs.com.')
             }
-        } */
+        }
 
         try {
             return await BasePack.create({
