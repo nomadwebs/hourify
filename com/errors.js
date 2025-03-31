@@ -46,6 +46,11 @@ class DataIntegrityError extends Error {
     }
 }
 
+class SubscriptionError extends Error {
+    constructor(message) {
+        super(message)
+    }
+}
 
 const errors = {
     ValidationError,
@@ -56,6 +61,7 @@ const errors = {
     OwnershipError,
     AuthorizationError,
     DataIntegrityError,
+    SubscriptionError
 }
 
 export default errors

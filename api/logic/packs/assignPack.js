@@ -21,13 +21,24 @@ export default (userId, customerSearch, selectPack, description, payedAmount, pa
 
         try {
             providerUser = await User.findById(userId)
+
+            if (providerUser.plan === 'free') {
+                // Contar los packs actuales del proveedor
+                const packCount = await Pack.countDocuments({ provider: userId, status: 'Active' })
+
+                if (packCount >= 5) {
+                    throw new Error(
+                        'Free users cannot assign more than 5 packs. \n' +
+                        'Upgrade your plan by contacting us at hola@nomadwebs.com.')
+                }
+            }
+
         } catch (error) {
             throw new SystemError(error.message)
         }
         if (!providerUser) {
             throw new NotFoundError('user not found')
         }
-
 
         try {
             customerId = await User.findOne({

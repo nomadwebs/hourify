@@ -13,6 +13,7 @@ import {
     updatePackHandler,
     getProviderSoldPacksHandler,
     getCustomerBoughtPacksHandler,
+    getPackDetailsHandler,
 } from './handlers/index.js'
 import getCustomerBoughtPacks from "../../logic/packs/getCustomerBoughtPacks.js"
 
@@ -22,6 +23,7 @@ packsRouter.post('/create-pack', authorizationHandler, jsonBodyParser, createBas
 packsRouter.post('/assign-pack', authorizationHandler, jsonBodyParser, assingPackHandlers)
 packsRouter.get('/get-basepack', authorizationHandler, getBasePacks)
 packsRouter.get('/get-basepack-details/:basePackId', getBasePacksDetailsHandler)
+packsRouter.get('/get-pack-details/:packId', authorizationHandler, getPackDetailsHandler)
 packsRouter.delete('/delete/:basePackId', authorizationHandler, deleteBasePackHandler)
 packsRouter.put('/update/:basePackId', authorizationHandler, jsonBodyParser, updateBasePackHandler)
 packsRouter.put('/updatepack/:packId', authorizationHandler, jsonBodyParser, updatePackHandler)

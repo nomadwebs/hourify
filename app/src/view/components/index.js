@@ -6,6 +6,7 @@ import UpdateBasePack from './UpdateBasePack.jsx'
 import UpdateCustomerPack from './UpdateCustomerPack.jsx'
 import ActivityTable from './ActivityTable.jsx'
 import CreateUserByProvider from './CreateUserByProvider.jsx'
+import AddTask from './AddTask.jsx'
 /* import PrivacyPolicy from './PrivacyPolicy.jsx' */
 
 
@@ -21,6 +22,7 @@ export {
 
     ActivityTable,
     CreateUserByProvider,
+    AddTask,
 
     /*  PrivacyPolicy */
 }

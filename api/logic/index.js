@@ -22,7 +22,8 @@ import {
     checkPackAndUpdate,
     updatePack,
     getCustomerBoughtPacks,
-    getProviderSoldPacks
+    getProviderSoldPacks,
+    getPackDetails
 } from './packs/index.js'
 
 //EMAILING
@@ -43,6 +44,14 @@ import {
     getActivityByPackId,
 
 } from './activity/index.js'
+
+//TASKS
+import {
+    addTask,
+    getTasks,
+    deleteTask,
+    updateTask
+} from './tasks/index.js'
 
 
 import {
@@ -75,6 +84,7 @@ const logic = {
     updatePack,
     getCustomerBoughtPacks,
     getProviderSoldPacks,
+    getPackDetails,
 
     //emailing
     emailRegisterWelcome,
@@ -92,7 +102,13 @@ const logic = {
     //Payments
     addPayment,
     getPayments,
-    deletePayment
+    deletePayment,
+
+    //Tasks
+    addTask,
+    getTasks,
+    deleteTask,
+    updateTask
 }
 
 export default logic

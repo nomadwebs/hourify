@@ -23,6 +23,7 @@ import {
     updatePack,
     getProviderSoldPacks,
     getCustomerBoughtPacks,
+    getPackDetails
 } from './packs'
 
 import {
@@ -42,6 +43,13 @@ import {
     addPayment,
     deletePayment
 } from './payments'
+
+import {
+    addTask,
+    getTasks,
+    deleteTask,
+    updateTask
+} from './tasks'
 
 import {
     getDecimalToTimeFormat,
@@ -77,6 +85,7 @@ const logic = {
     updatePack,
     getProviderSoldPacks,
     getCustomerBoughtPacks,
+    getPackDetails,
 
     //Activities
     getActivitiesByPackId,
@@ -96,6 +105,12 @@ const logic = {
     getPayments,
     addPayment,
     deletePayment,
+
+    //Tasks
+    addTask,
+    getTasks,
+    deleteTask,
+    updateTask,
 
     //Home
     getUserStats

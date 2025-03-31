@@ -18,6 +18,8 @@ import UserProfile from "./UserProfile"
 //Tracker Managing
 import Tracker from "./Tracker"
 
+//Tasks Managing
+import Tasks from "./Tasks"
 
 import { Alert, Confirm } from "./components"
 
@@ -42,6 +44,8 @@ export {
     //Tracker
     Tracker,
 
+    //Tasks
+    Tasks,
 
     //Others
     Alert,
