@@ -13,8 +13,8 @@ export default (userId) => {
 
             return Task.find({ userOwner: userId }).lean()
                 .then(tasks => {
-                    if (!tasks || tasks.length === 0)
-                        throw new NotFoundError('no tasks found')
+                    /* if (!tasks || tasks.length === 0)
+                        throw new NotFoundError('no tasks found') */
 
                     tasks.forEach(task => {
                         task.id = task._id.toString()
