@@ -153,7 +153,12 @@ const user = new Schema({
         type: ObjectId,
         required: false,
         ref: 'User'
-    }
+    },
+    lastLogin: {
+        type: Date,
+        required: false,
+        default: null
+    },
 }, { versionKey: false })
 
 
