@@ -1,6 +1,6 @@
 import { validate, errors } from 'com'
 
-const { SystemError } = errors
+const { SystemError, DuplicityError } = errors
 
 export default (userId, targetUserId, username, email, name, surname1, surname2, dni, biography, country, province, city, postalCode, address1, address2, number, flat, legalName, website) => {
     validate.id(userId, 'userId')
@@ -31,15 +31,27 @@ export default (userId, targetUserId, username, email, name, surname1, surname2,
         },
         body: JSON.stringify({ username, email, name, surname1, surname2, dni, biography, country, province, city, postalCode, address1, address2, number, flat, legalName, website })
     })
-
         .catch(error => { throw new SystemError(error.message) })
         .then(res => {
-            if (res.ok)
-                return
+            if (res.ok) return
 
             return res.json()
                 .catch(error => { throw new SystemError(error.message) })
-                .then(({ error, message }) => { throw new errors[error](message) })
-        })
+                .then(error => {
+                    // Check for duplicate key error in the message
+                    if (error.message && error.message.includes('E11000 duplicate key error')) {
+                        // Extract the field that caused the duplicate error
+                        const field = error.message.includes('username_1') ? 'username' : 'email'
+                        throw new DuplicityError(`${field} already exists`)
+                    }
 
+                    // If it's a structured error from the API
+                    if (error.error && error.message) {
+                        throw new errors[error.error](error.message)
+                    }
+
+                    // Fallback to SystemError for unknown errors
+                    throw new SystemError(error.message || 'Unknown error occurred')
+                })
+        })
 }
