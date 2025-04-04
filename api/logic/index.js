@@ -54,12 +54,18 @@ import {
     updateTask
 } from './tasks/index.js'
 
-
+//PAYMENTS
 import {
     addPayment,
     getPayments,
     deletePayment
 } from './payments/index.js'
+
+//STATS
+import {
+    getMonthEarned,
+    getMonthPayments
+} from './stats/index.js'
 
 const logic = {
     //Users
@@ -110,7 +116,11 @@ const logic = {
     addTask,
     getTasks,
     deleteTask,
-    updateTask
+    updateTask,
+
+    //Stats
+    getMonthEarned,
+    getMonthPayments
 }
 
 export default logic

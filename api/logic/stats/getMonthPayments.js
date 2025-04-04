@@ -1,65 +1,51 @@
-import { Payment } from 'dat'
+import { Payment, Pack } from 'dat'
 import { validate, errors } from 'com'
 import { ObjectId } from 'mongodb'
 
-const { SystemError, NotFoundError } = errors
+const { SystemError } = errors
 
-export default (providerId) => {
+export default async function (providerId) {
     validate.id(providerId, 'providerId')
 
     const now = new Date()
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
     const startOfNextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1)
 
-    console.log('Searching payments between:', startOfMonth, 'and', startOfNextMonth)
-    console.log('For provider:', providerId)
+    try {
+        const packs = await Pack.find({
+            provider: new ObjectId(providerId),
+            purchaseDate: {
+                $gte: startOfMonth,
+                $lt: startOfNextMonth
+            }
+        }, { _id: 1 }).lean()
+        const packIds = packs.map(pack => pack._id.toString())
+        //console.log('✅ packIds del proveedor:', packIds)
 
-    return Payment.aggregate([
-        {
-            $match: {
-                date: {
-                    $gte: startOfMonth,
-                    $lt: startOfNextMonth
+        if (packIds.length === 0) return 0
+
+        const result = await Payment.aggregate([
+            {
+                $match: {
+                    pack: { $in: packIds },
+                    date: {
+                        $gte: startOfMonth,
+                        $lt: startOfNextMonth
+                    }
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    total: { $sum: "$amount" }
                 }
             }
-        },
-        {
-            $lookup: {
-                from: 'packs',
-                localField: 'pack',
-                foreignField: '_id',
-                as: 'packInfo'
-            }
-        },
-        {
-            $unwind: {
-                path: '$packInfo',
-                preserveNullAndEmptyArrays: true
-            }
-        },
-        {
-            $match: {
-                'packInfo.provider': new ObjectId(providerId)
-            }
-        },
-        {
-            $group: {
-                _id: null,
-                total: { $sum: "$amount" }
-            }
-        }
-    ]).exec()
-        .catch(error => {
-            console.error('Aggregation error:', error)
-            throw new SystemError(error.message)
-        })
-        .then(result => {
-            console.log('Aggregation result:', result)
-            // If no payments found, return 0
-            if (!result || result.length === 0) {
-                return 0
-            }
+        ])
 
-            return result[0].total
-        })
-} 
+        //console.log('📦 resultado agregado:', result)
+
+        return result.length === 0 ? 0 : result[0].total
+    } catch (error) {
+        throw new SystemError(error.message)
+    }
+}

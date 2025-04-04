@@ -4,6 +4,7 @@ import trackerRouter from './tracker/index.js'
 import activitiesRouter from './activities/index.js'
 import paymentsRouter from './payments/index.js'
 import tasksRouter from './tasks/index.js'
+import statsRouter from './stats/index.js'
 
 export {
     usersRouter,
@@ -11,5 +12,6 @@ export {
     trackerRouter,
     activitiesRouter,
     paymentsRouter,
-    tasksRouter
+    tasksRouter,
+    statsRouter
 }
