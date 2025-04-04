@@ -55,11 +55,16 @@ import {
     getDecimalToTimeFormat,
     getTimeFormatFromDecimal,
     getProfileImage,
+    formatCurrencyES
 } from './helpers'
 
 import {
     getUserStats,
 } from './home'
+
+import {
+    getMonthEarned
+} from './stats'
 
 const logic = {
     //Users
@@ -74,6 +79,7 @@ const logic = {
     updateUser,
     getCustomerPacks,
     createUserByProvider,
+
     //Packs
     createPack,
     getBasePacks,
@@ -94,6 +100,8 @@ const logic = {
     getDecimalToTimeFormat,
     getTimeFormatFromDecimal,
     getProfileImage,
+    formatCurrencyES,
+
 
     //Tracker
     toggleTimeTracker,
@@ -113,7 +121,10 @@ const logic = {
     updateTask,
 
     //Home
-    getUserStats
+    getUserStats,
+
+    //Stats
+    getMonthEarned
 }
 
 export default logic

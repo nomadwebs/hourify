@@ -12,6 +12,7 @@ export default async function (providerId) {
     const startOfNextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1)
 
     try {
+        // Paso 1: obtener packs del proveedor vendidos este mes
         const packs = await Pack.find({
             provider: new ObjectId(providerId),
             purchaseDate: {
@@ -19,11 +20,13 @@ export default async function (providerId) {
                 $lt: startOfNextMonth
             }
         }, { _id: 1 }).lean()
+
         const packIds = packs.map(pack => pack._id.toString())
         //console.log('✅ packIds del proveedor:', packIds)
 
         if (packIds.length === 0) return 0
 
+        // Paso 2: calcular payments de esos packs en el mismo rango de fechas
         const result = await Payment.aggregate([
             {
                 $match: {

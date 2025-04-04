@@ -64,7 +64,8 @@ import {
 //STATS
 import {
     getMonthEarned,
-    getMonthPayments
+    getMonthPayments,
+    getMonthHoursTracked
 } from './stats/index.js'
 
 const logic = {
@@ -120,7 +121,8 @@ const logic = {
 
     //Stats
     getMonthEarned,
-    getMonthPayments
+    getMonthPayments,
+    getMonthHoursTracked
 }
 
 export default logic

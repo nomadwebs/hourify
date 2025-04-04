@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import logic from "../logic"
+import logic from "../logic/index.js"
 
 import { Button, TagKO, TagOK, TagEXTRA, TagWARN, StatusFilter } from "../library"
 import { useLocation } from 'react-router-dom'
@@ -13,6 +13,7 @@ export default function Home(props) {
     const [name, setName] = useState('')
     const [providerSoldPacks, setProviderSoldPacks] = useState([])
     const [customerBoughtPacks, setCustomerBoughtPacks] = useState([])
+    const [monthEarned, setMonthEarned] = useState([])
     const [soldPacksFilter, setSoldPacksFilter] = useState('All')
     const [boughtPacksFilter, setBoughtPacksFilter] = useState('All')
 
@@ -67,8 +68,28 @@ export default function Home(props) {
                 alert(error.message)
             }
         }
-
         fetchProviderSoldPacks()
+    }, [])
+
+    // Obtener importe vendido del mes actual
+    useEffect(() => {
+        const fetchMonthEarned = async () => {
+            try {
+                const userId = logic.getUserId()
+
+                if (userId) {
+                    const userMonthEarnings = await logic.getMonthEarned(userId)
+
+                    setMonthEarned(userMonthEarnings)
+                } else {
+                    console.warn("UserId no encontrado")
+                }
+            } catch (error) {
+                console.error("Error obteniendo userId:", error.message)
+                alert(error.message)
+            }
+        }
+        fetchMonthEarned()
     }, [])
 
     useEffect(() => {
@@ -205,8 +226,8 @@ export default function Home(props) {
                         <div className="bg-white rounded-lg shadow-md p-4 border-l-4 border-blue-500">
                             <div className="flex justify-between items-start">
                                 <div>
-                                    <p className="text-sm text-gray-500">Total Earned</p>
-                                    <p className="text-2xl font-bold">0.00€</p>
+                                    <p className="text-sm text-gray-500">Month Earned</p>
+                                    <p className="text-2xl font-bold">{monthEarned ? logic.formatCurrencyES(monthEarned) : logic.formatCurrencyES(0)}</p>
                                 </div>
                                 <div className="p-2 bg-blue-100 rounded-full">
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
