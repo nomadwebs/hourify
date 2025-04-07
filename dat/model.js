@@ -510,12 +510,57 @@ const task = new Schema({
     */
 }, { versionKey: false })
 
+const event = new Schema({
+    title: {
+        type: String,
+        required: true
+    },
+
+    description: {
+        type: String,
+        required: false
+    },
+
+    location: {
+        type: String,
+        required: false
+    },
+
+    creator: {
+        type: ObjectId,
+        ref: 'User',
+        required: true
+    },
+
+    attendees: [{
+        type: ObjectId,
+        ref: 'User'
+    }],
+
+    startDateTime: {
+        type: Date,
+        required: true
+    },
+
+    endDateTime: {
+        type: Date,
+        required: true
+    },
+
+    createdAt: {
+        type: Date,
+        default: Date.now
+    }
+}, { versionKey: false });
+
+
 const User = model('User', user)
 const BasePack = model('BasePack', basePack)
 const Pack = model('Pack', pack)
 const Activity = model('Activity', activity)
 const Payment = model('Payment', payment)
 const Task = model('Task', task)
+const Event = model('Event', event)
 
 
 export {
@@ -524,5 +569,6 @@ export {
     Pack,
     Activity,
     Payment,
-    Task
+    Task,
+    Event
 }

@@ -21,6 +21,9 @@ import Tracker from "./Tracker"
 //Tasks Managing
 import Tasks from "./Tasks"
 
+//Calendar Managing
+import Calendar from "./Calendar"
+
 import { Alert, Confirm } from "./components"
 
 
@@ -46,6 +49,9 @@ export {
 
     //Tasks
     Tasks,
+
+    //Calendar
+    Calendar,
 
     //Others
     Alert,

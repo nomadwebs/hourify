@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 import { Routes, Route, useNavigate, Navigate } from 'react-router-dom'
 
-import { Login, Register, Home, ManagePacks, ManageCustomers, ManagePurchasedPacks, AssignPack, CreatePack, Tracker, UserProfile, CustomerPacks, Tasks } from './view'
+import { Login, Register, Home, ManagePacks, ManageCustomers, ManagePurchasedPacks, AssignPack, CreatePack, Tracker, UserProfile, CustomerPacks, Tasks, Calendar } from './view'
 
 import { Header, Footer, Alert, Confirm, /* PrivacyPolicy */ } from './view/components'
 
@@ -62,6 +62,9 @@ export default function App() {
   //Navigation throw Tasks things
   const handleTasksClick = () => navigate('/tasks')
 
+  //Navigation throw Calendar things
+  const handleCalendarClick = () => navigate('/calendar')
+
   const handleAddTaskClick = () => {
     navigate('/tasks');
     // When navigating to the tasks page, we want the add task form to be shown
@@ -112,7 +115,8 @@ export default function App() {
           onTrackerClick={handleTrackerPacksClick}
           onManagePacksClick={handleManagePacksClick}
           onManageCustomersClick={handleManageCustomersClick}
-          onTasksClick={handleTasksClick} />
+          onTasksClick={handleTasksClick}
+          onCalendarClick={handleCalendarClick} />
       )}
       <Routes>
         <Route path="/login" element={logic.isUserLoggedIn() ?
@@ -172,6 +176,10 @@ export default function App() {
 
         <Route path="/tasks" element={logic.isUserLoggedIn() ?
           <Tasks onHomeClick={handleHomeClick} /> :
+          <Navigate to="/login" />} />
+
+        <Route path="/calendar" element={logic.isUserLoggedIn() ?
+          <Calendar onHomeClick={handleHomeClick} /> :
           <Navigate to="/login" />} />
 
         {/* <Route path="/privacy-policy" element={<PrivacyPolicy onHomeClick={handleHomeClick} />} />

@@ -10,7 +10,8 @@ export default function Header({ onHomeClick,
     onTrackerClick,
     onManagePacksClick,
     onManageCustomersClick,
-    onTasksClick }) {
+    onTasksClick,
+    onCalendarClick }) {
     const [name, setName] = useState(null)
     const [userDetails, setUserDetails] = useState(null)
     const location = useLocation()
@@ -84,6 +85,11 @@ export default function Header({ onHomeClick,
         onTasksClick()
     }
 
+    const handleCalendarClick = event => {
+        event.preventDefault()
+        onCalendarClick()
+    }
+
     const profileImageUrl = logic.getProfileImage(userDetails)
 
     const isActive = (path) => location.pathname === path ? 'text-color_green font-bold' : 'hover:underline';
@@ -99,6 +105,7 @@ export default function Header({ onHomeClick,
                     <a href="#" className={`hover:underline ${location.pathname === '/manage-packs' ? 'text-color_green font-bold' : ''}`} onClick={handleManagePacks}>Manage Packs</a>
                     <a href="#" className={`hover:underline ${location.pathname === '/manage-customers' ? 'text-color_green font-bold' : ''}`} onClick={handleManageCustomers}>Manage Customers</a>
                     <a href="#" className={`hover:underline ${location.pathname === '/tasks' ? 'text-color_green font-bold' : ''}`} onClick={handleTasksClick}>Tasks</a>
+                    <a href="#" className={`hover:underline ${location.pathname === '/calendar' ? 'text-color_green font-bold' : ''}`} onClick={handleCalendarClick}>Calendar</a>
                 </>
             )}
         </nav>
@@ -117,6 +124,7 @@ export default function Header({ onHomeClick,
                         <a href="#" className="block px-4 py-2 hover:bg-gray-100" onClick={handleManagePacks}>📑 Packs</a>
                         <a href="#" className="block px-4 py-2 hover:bg-gray-100" onClick={handleManageCustomers}>👥 Customers</a>
                         <a href="#" className="block px-4 py-2 hover:bg-gray-100" onClick={handleTasksClick}>📝 Tasks</a>
+                        <a href="#" className="block px-4 py-2 hover:bg-gray-100" onClick={handleCalendarClick}>📅 Calendar</a>
                         <a href="#" className="block px-4 py-2 hover:bg-gray-100" onClick={handleProfileClick}>👤 User profile</a>
                         <a href="#" className="block px-4 py-2 hover:bg-gray-100" onClick={handleLogout}>👋 Logout</a>
                     </div>
