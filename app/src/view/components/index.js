@@ -9,6 +9,8 @@ import CreateUserByProvider from './CreateUserByProvider.jsx'
 import AddTask from './AddTask.jsx'
 /* import PrivacyPolicy from './PrivacyPolicy.jsx' */
 
+import StatCard from './home/StatCard.jsx'
+
 
 export {
     Header,
@@ -25,4 +27,6 @@ export {
     AddTask,
 
     /*  PrivacyPolicy */
+
+    StatCard
 }
