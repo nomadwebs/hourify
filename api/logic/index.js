@@ -65,7 +65,8 @@ import {
 import {
     getMonthEarned,
     getMonthPayments,
-    getMonthHoursTracked
+    getMonthHoursTracked,
+    getMonthUnitsTracked
 } from './stats/index.js'
 
 const logic = {
@@ -107,7 +108,6 @@ const logic = {
     //Activity
     getActivityByPackId,
 
-
     //Payments
     addPayment,
     getPayments,
@@ -122,7 +122,8 @@ const logic = {
     //Stats
     getMonthEarned,
     getMonthPayments,
-    getMonthHoursTracked
+    getMonthHoursTracked,
+    getMonthUnitsTracked
 }
 
 export default logic

@@ -16,7 +16,7 @@ export default async (userId) => { //find as a providerId
         const packs = await Pack.find({
             provider: new ObjectId(userId),
             status: 'Active',
-            unit: 'hours',
+            unit: 'units',
             purchaseDate: {
                 $gte: startOfMonth,
                 $lt: startOfNextMonth
@@ -65,7 +65,7 @@ export default async (userId) => { //find as a providerId
 
         return result.length === 0 ? 0 : result[0].total
     } catch (error) {
-        console.error('Error al calcular las horas trabajadas:', error)
+        console.error('Error al calcular las sesiones trabajadas:', error)
         throw new SystemError(error.message)
     }
 }

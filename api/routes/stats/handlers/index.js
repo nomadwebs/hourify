@@ -1,5 +1,11 @@
-import getMonthEarnedHandler from "./getMonthEarnedHandler.js"
+import getMonthEarnedHandler from './getMonthEarnedHandler.js'
+import getMonthHoursTrackedHandler from './getMonthHoursTrackedHandler.js'
+import getMonthPaymentsHandler from './getMonthPaymentsHandler.js'
+import getMonthUnitsTrackedHandler from './getMonthUnitsTrackedHandler.js'
 
 export {
-    getMonthEarnedHandler
+    getMonthEarnedHandler,
+    getMonthHoursTrackedHandler,
+    getMonthPaymentsHandler,
+    getMonthUnitsTrackedHandler
 }

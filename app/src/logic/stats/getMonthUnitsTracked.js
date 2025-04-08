@@ -1,3 +1,4 @@
+
 import { /* validate, */ errors, validate } from 'com'
 
 const { SystemError } = errors
@@ -6,7 +7,7 @@ export default (userId) => {
     validate.id(userId, 'userId')
 
     //Logic and call to the api
-    return fetch(`${import.meta.env.VITE_API_URL}/stats/get-earned`, {
+    return fetch(`${import.meta.env.VITE_API_URL}/stats/get-units-tracked`, {
         method: 'GET',
         headers: {
             Authorization: `Bearer ${localStorage.token}`

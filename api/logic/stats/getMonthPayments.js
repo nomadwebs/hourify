@@ -4,8 +4,8 @@ import { ObjectId } from 'mongodb'
 
 const { SystemError } = errors
 
-export default async function (providerId) {
-    validate.id(providerId, 'providerId')
+export default async function (userId) { //User is find as a provider id
+    validate.id(userId, 'userId')
 
     const now = new Date()
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
@@ -14,7 +14,7 @@ export default async function (providerId) {
     try {
         // Paso 1: obtener packs del proveedor vendidos este mes
         const packs = await Pack.find({
-            provider: new ObjectId(providerId),
+            provider: new ObjectId(userId),
             purchaseDate: {
                 $gte: startOfMonth,
                 $lt: startOfNextMonth

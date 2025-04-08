@@ -60,10 +60,14 @@ import {
 
 import {
     getUserStats,
+    usePendingPayments
 } from './home'
 
 import {
-    getMonthEarned
+    getMonthEarned,
+    getMonthPayments,
+    getMonthHoursTracked,
+    getMonthUnitsTracked
 } from './stats'
 
 const logic = {
@@ -122,9 +126,13 @@ const logic = {
 
     //Home
     getUserStats,
+    usePendingPayments,
 
     //Stats
-    getMonthEarned
+    getMonthEarned,
+    getMonthHoursTracked,
+    getMonthPayments,
+    getMonthUnitsTracked
 }
 
 export default logic

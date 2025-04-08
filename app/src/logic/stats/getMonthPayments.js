@@ -6,7 +6,7 @@ export default (userId) => {
     validate.id(userId, 'userId')
 
     //Logic and call to the api
-    return fetch(`${import.meta.env.VITE_API_URL}/stats/get-earned`, {
+    return fetch(`${import.meta.env.VITE_API_URL}/stats/get-payments`, {
         method: 'GET',
         headers: {
             Authorization: `Bearer ${localStorage.token}`
