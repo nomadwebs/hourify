@@ -226,6 +226,12 @@ const basePack = new Schema({
     priceWithVat: {
         type: Number,
         required: false,
+    },
+
+    archived: {
+        type: Boolean,
+        required: false,
+        default: false
     }
 
 }, { versionKey: false })
@@ -311,7 +317,6 @@ const pack = new Schema({
         type: Date,
         required: false,
         default: null
-
     },
 
     status: {
@@ -319,6 +324,12 @@ const pack = new Schema({
         required: true,
         enum: ['Pending', 'Active', 'Expired', 'Finished'],
         default: 'Pending'
+    },
+
+    archived: {
+        type: Boolean,
+        required: false,
+        default: false
     }
 }, { versionKey: false })
 
