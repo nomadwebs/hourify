@@ -11,17 +11,17 @@ export default function EventList({ events, onEventSelect }) {
     }
 
     // Get event type color
-    const getEventTypeColor = (type) => {
-        switch (type) {
-            case 'meeting':
+    const getEventTypeColor = (event) => {
+        switch (event.typeEvent) {
+            case 'Meeting':
                 return 'bg-blue-100 text-blue-800'
-            case 'call':
+            case 'Call':
                 return 'bg-purple-100 text-purple-800'
-            case 'delivery':
+            case 'Delivery':
                 return 'bg-green-100 text-green-800'
-            case 'training':
+            case 'Training':
                 return 'bg-yellow-100 text-yellow-800'
-            default:
+            default: 'Others'
                 return 'bg-gray-100 text-gray-800'
         }
     }
@@ -51,8 +51,8 @@ export default function EventList({ events, onEventSelect }) {
                                     </p>
                                 )}
                             </div>
-                            <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getEventTypeColor(event.type)}`}>
-                                {event.type}
+                            <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getEventTypeColor(event)}`}>
+                                {event.typeEvent}
                             </span>
                         </div>
                     </div>

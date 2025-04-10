@@ -23,19 +23,6 @@ export default function Calendar({ onHomeClick }) {
         attendees: []
     })
 
-    // TODO: Por si quiero añadir el tipo de evento tengo que poner el type en mongo, de lo contrario eliminar de react todo lo relacionado con type
-    /*
-    {
-        id: 1,
-        title: 'Reunión con cliente',
-        date: new Date(2025, 3, 7, 10, 0),
-        endDate: new Date(2025, 3, 7, 11, 30),
-        description: 'Revisión de proyecto con cliente principal',
-        location: 'Oficina central',
-        type: 'meeting'
-    },
-    */
-
     useEffect(() => {
         const fetchEvents = async () => {
             try {
@@ -88,8 +75,13 @@ export default function Calendar({ onHomeClick }) {
     const handleSaveEvent = async () => {
         try {
             const userId = logic.getUserId()
-            const savedEvent = await logic.createEvent(userId, newEvent)
-            setEvents([...events, savedEvent])
+            const { title, description, location, startDateTime, endDateTime, attendees, typeEvent } = newEvent
+
+            await logic.addEvent(title, description, location, attendees, startDateTime, endDateTime, typeEvent)
+
+            const updatedEvents = await logic.getEvents(userId)
+            setEvents(updatedEvents)
+
             setIsAddingEvent(false)
             setNewEvent({
                 title: '',
@@ -97,7 +89,8 @@ export default function Calendar({ onHomeClick }) {
                 location: '',
                 startDateTime: new Date(),
                 endDateTime: new Date(),
-                attendees: []
+                attendees: [],
+                typeEvent: 'Meeting'
             })
         } catch (error) {
             console.error('Error saving event:', error.message)
@@ -139,7 +132,8 @@ export default function Calendar({ onHomeClick }) {
                 location: '',
                 startDateTime: new Date(),
                 endDateTime: new Date(),
-                attendees: []
+                attendees: [],
+                typeEvent,
             })
         } catch (error) {
             console.error('Error updating event:', error.message)

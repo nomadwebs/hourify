@@ -3,7 +3,7 @@ import { validate, errors } from 'com'
 
 const { SystemError, NotFoundError, OwnershipError } = errors
 
-export default function updateEvent(eventId, userId, title, description, location, attendees, startDateTime, endDateTime) {
+export default function updateEvent(eventId, userId, title, description, location, attendees, startDateTime, endDateTime, typeEvent) {
     console.log(attendees)
 
     validate.id(eventId, 'eventId')
@@ -38,6 +38,7 @@ export default function updateEvent(eventId, userId, title, description, locatio
                     attendees,
                     startDateTime,
                     endDateTime,
+                    typeEvent,
                 },
                 { new: true } // <- para que devuelva el evento actualizado
             )

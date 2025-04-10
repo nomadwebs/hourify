@@ -41,7 +41,7 @@ export default async (userId) => { //find as a providerId
             }
         }).lean()
 
-        console.log('📊 Actividades registradas este mes:', matchingActivities)
+        /*         console.log('📊 Actividades registradas este mes:', matchingActivities) */
 
         // Paso 2: calcular actividades "substract" de esos packs en el mismo rango de fechas
         const result = await Activity.aggregate([

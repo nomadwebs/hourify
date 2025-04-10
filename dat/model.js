@@ -558,6 +558,12 @@ const event = new Schema({
         required: true
     },
 
+    typeEvent: {
+        type: String,
+        required: false,
+        enum: ['Meeting', 'Call', 'Delivery', 'Training', 'Others']
+    },
+
     createdAt: {
         type: Date,
         default: Date.now

@@ -7,9 +7,9 @@ export default function EventDetails({ event, onClose, onEdit, onDelete }) {
     const endDate = new Date(event.endDateTime)
 
     // Get event type color
-    const getEventTypeColor = (type) => {
-        switch (type) {
-            case 'meeting':
+    const getEventTypeColor = (event) => {
+        switch (event.typeEvent) {
+            case 'Meeting':
                 return 'bg-blue-100 text-blue-800'
             case 'call':
                 return 'bg-purple-100 text-purple-800'
@@ -22,28 +22,12 @@ export default function EventDetails({ event, onClose, onEdit, onDelete }) {
         }
     }
 
-    // Get event type in Spanish
-    const getEventTypeInSpanish = (type) => {
-        switch (type) {
-            case 'meeting':
-                return 'Reunión'
-            case 'call':
-                return 'Llamada'
-            case 'delivery':
-                return 'Entrega'
-            case 'training':
-                return 'Capacitación'
-            default:
-                return type
-        }
-    }
-
     return (
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
             <div className="flex justify-between items-start mb-4">
                 <h3 className="text-xl font-semibold text-gray-900">{event.title}</h3>
-                <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getEventTypeColor(event.type)}`}>
-                    {getEventTypeInSpanish(event.type)}
+                <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getEventTypeColor(event)}`}>
+                    {event.typeEvent}
                 </span>
             </div>
 

@@ -10,22 +10,24 @@ export default function EventForm({
 }) {
     const [formData, setFormData] = useState({
         title: '',
-        date: new Date(),
-        endDate: new Date(),
+        startDateTime: new Date(),
+        endDateTime: new Date(),
         description: '',
         location: '',
-        type: 'meeting'
+        typeEvent: 'Meeting',
+        attendees: []
     })
 
     useEffect(() => {
         if (event) {
             setFormData({
                 title: event.title || '',
-                date: event.date || new Date(),
-                endDate: event.endDate || new Date(),
+                startDateTime: event.startDateTime || new Date(),
+                endDateTime: event.endDateTime || new Date(),
                 description: event.description || '',
                 location: event.location || '',
-                type: event.type || 'meeting'
+                typeEvent: event.typeEvent || 'Meeting',
+                attendees: event.attendees || []
             })
         }
     }, [event])
@@ -104,13 +106,13 @@ export default function EventForm({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-1">
-                        Fecha
+                        Date
                     </label>
                     <input
                         type="date"
                         id="date"
-                        name="date"
-                        value={format(formData.date, 'yyyy-MM-dd')}
+                        name="startDateTime"
+                        value={format(formData.startDateTime, 'yyyy-MM-dd')}
                         onChange={handleDateChange}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                         required
@@ -119,13 +121,13 @@ export default function EventForm({
 
                 <div>
                     <label htmlFor="endDate" className="block text-sm font-medium text-gray-700 mb-1">
-                        Fecha de fin
+                        End Date
                     </label>
                     <input
                         type="date"
                         id="endDate"
-                        name="endDate"
-                        value={format(formData.endDate, 'yyyy-MM-dd')}
+                        name="endDateTime"
+                        value={format(formData.endDateTime, 'yyyy-MM-dd')}
                         onChange={handleDateChange}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                         required
@@ -136,13 +138,13 @@ export default function EventForm({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <label htmlFor="time" className="block text-sm font-medium text-gray-700 mb-1">
-                        Hora de inicio
+                        Start Time
                     </label>
                     <input
                         type="time"
                         id="time"
-                        name="date"
-                        value={format(formData.date, 'HH:mm')}
+                        name="startDateTime"
+                        value={format(formData.startDateTime, 'HH:mm')}
                         onChange={handleTimeChange}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                         required
@@ -151,13 +153,13 @@ export default function EventForm({
 
                 <div>
                     <label htmlFor="endTime" className="block text-sm font-medium text-gray-700 mb-1">
-                        Hora de fin
+                        End Time
                     </label>
                     <input
                         type="time"
                         id="endTime"
-                        name="endDate"
-                        value={format(formData.endDate, 'HH:mm')}
+                        name="endDateTime"
+                        value={format(formData.endDateTime, 'HH:mm')}
                         onChange={handleTimeChange}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                         required
@@ -167,26 +169,27 @@ export default function EventForm({
 
             <div>
                 <label htmlFor="type" className="block text-sm font-medium text-gray-700 mb-1">
-                    Tipo de evento
+                    Event Type
                 </label>
                 <select
-                    id="type"
-                    name="type"
-                    value={formData.type}
+                    id="typeEvent"
+                    name="typeEvent"
+                    value={formData.typeEvent}
                     onChange={handleInputChange}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                     required
                 >
-                    <option value="meeting">Reunión</option>
-                    <option value="call">Llamada</option>
-                    <option value="delivery">Entrega</option>
-                    <option value="training">Capacitación</option>
+                    <option value="Meeting">Meeting</option>
+                    <option value="Call">Call</option>
+                    <option value="Delivery">Delivery</option>
+                    <option value="Training">Training</option>
+                    <option value="Others">Others</option>
                 </select>
             </div>
 
             <div>
                 <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-1">
-                    Ubicación
+                    Location
                 </label>
                 <input
                     type="text"
@@ -212,19 +215,48 @@ export default function EventForm({
                 ></textarea>
             </div>
 
+            <div>
+                <label htmlFor="attendees" className="block text-sm font-medium text-gray-700 mb-1">
+                    Attendees (emails separated by ',') COMMING SOON...
+                </label>
+                <input
+                    type="text"
+                    id="attendees"
+                    name="attendees"
+                    value={formData.attendees.join(', ')}
+                    disabled
+                    onChange={(e) => {
+                        const emails = e.target.value
+                            .split(',')
+                            .map(email => email.trim())
+                            .filter(email => email.length > 0)
+                        setFormData(prev => ({
+                            ...prev,
+                            attendees: emails
+                        }))
+                        onEventChange({
+                            ...formData,
+                            attendees: emails
+                        })
+                    }}
+                    placeholder="email1@example.com, email2@example.com"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                />
+            </div>
+
             <div className="flex justify-end space-x-2 pt-2">
                 <button
                     type="button"
                     onClick={onCancel}
                     className="px-3 py-1 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-md transition-colors duration-200 text-sm font-medium"
                 >
-                    Cancelar
+                    Cancel
                 </button>
                 <button
                     type="submit"
                     className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors duration-200 text-sm font-medium"
                 >
-                    {isEditing ? 'Actualizar' : 'Guardar'}
+                    {isEditing ? 'Update' : 'Save'}
                 </button>
             </div>
         </form>

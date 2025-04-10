@@ -3,7 +3,7 @@ import { validate, errors } from 'com'
 
 const { SystemError, NotFoundError, ValidationError, OwnershipError } = errors
 
-export default (userId, title, description, location, attendees, startDateTime, endDateTime) => {
+export default (userId, title, description, location, attendees, startDateTime, endDateTime, typeEvent) => {
 
     console.log('start: ', startDateTime)
     console.log('end: ', endDateTime)
@@ -32,7 +32,7 @@ export default (userId, title, description, location, attendees, startDateTime, 
                 endDateTime.setHours(endDateTime.getHours() + 1)
             }
 
-            return Event.create({ title, description, location, creator: userId, attendees, startDateTime, endDateTime, created: new Date() })
+            return Event.create({ title, description, location, creator: userId, attendees, startDateTime, endDateTime, typeEvent, created: new Date() })
                 .catch(error => { throw new SystemError(error.message) })
                 .then((eventAdded) => {
                     return eventAdded
