@@ -17,10 +17,10 @@ export default async (userId) => { //find as a providerId
             provider: new ObjectId(userId),
             status: 'Active',
             unit: 'hours',
-            purchaseDate: {
+            /* purchaseDate: {
                 $gte: startOfMonth,
                 $lt: startOfNextMonth
-            }
+            } */
         }).select('_id').lean()
 
         const packIds = packs.map(pack => pack._id.toString())
