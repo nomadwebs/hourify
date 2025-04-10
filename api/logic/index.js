@@ -54,6 +54,14 @@ import {
     updateTask
 } from './tasks/index.js'
 
+//CALENDAR
+import {
+    addEvent,
+    getEvents,
+    updateEvent,
+    deleteEvent
+} from './calendar/index.js'
+
 //PAYMENTS
 import {
     addPayment,
@@ -118,6 +126,12 @@ const logic = {
     getTasks,
     deleteTask,
     updateTask,
+
+    //Calendar
+    addEvent,
+    getEvents,
+    updateEvent,
+    deleteEvent,
 
     //Stats
     getMonthEarned,
