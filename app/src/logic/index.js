@@ -52,6 +52,10 @@ import {
 } from './tasks'
 
 import {
+    getEvents,
+} from './calendar'
+
+import {
     getDecimalToTimeFormat,
     getTimeFormatFromDecimal,
     getProfileImage,
@@ -123,6 +127,10 @@ const logic = {
     getTasks,
     deleteTask,
     updateTask,
+
+    //Calendar
+    getEvents,
+
 
     //Home
     getUserStats,

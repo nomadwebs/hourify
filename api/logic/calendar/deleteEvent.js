@@ -3,7 +3,7 @@ import { validate, errors } from 'com'
 
 const { SystemError, NotFoundError, OwnershipError } = errors
 
-export default function deleteEvent(eventId, userId) {
+export default function deleteEvent(userId, eventId) {
     validate.id(eventId, 'eventId')
     validate.id(userId, 'userId')
 

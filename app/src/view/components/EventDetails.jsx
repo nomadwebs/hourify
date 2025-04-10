@@ -2,6 +2,10 @@ import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 
 export default function EventDetails({ event, onClose, onEdit, onDelete }) {
+    // Convertir las fechas a objetos Date si son strings
+    const startDate = new Date(event.startDateTime)
+    const endDate = new Date(event.endDateTime)
+
     // Get event type color
     const getEventTypeColor = (type) => {
         switch (type) {
@@ -44,47 +48,27 @@ export default function EventDetails({ event, onClose, onEdit, onDelete }) {
             </div>
 
             <div className="space-y-3">
-                <div className="flex items-start">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500 mr-2 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
-                    </svg>
-                    <div>
-                        <div className="text-sm font-medium text-gray-500">Fecha</div>
-                        <div className="text-gray-900">{format(event.date, "EEEE d 'de' MMMM 'de' yyyy", { locale: es })}</div>
-                    </div>
-                </div>
-
-                <div className="flex items-start">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500 mr-2 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
-                    </svg>
-                    <div>
-                        <div className="text-sm font-medium text-gray-500">Horario</div>
-                        <div className="text-gray-900">{format(event.date, 'HH:mm', { locale: es })} - {format(event.endDate, 'HH:mm', { locale: es })}</div>
-                    </div>
+                <div>
+                    <h3 className="text-sm font-medium text-gray-500">Fecha y hora</h3>
+                    <p className="text-gray-900">
+                        {format(startDate, "EEEE d 'de' MMMM 'de' yyyy", { locale: es })}
+                    </p>
+                    <p className="text-gray-900">
+                        {format(startDate, 'HH:mm', { locale: es })} - {format(endDate, 'HH:mm', { locale: es })}
+                    </p>
                 </div>
 
                 {event.location && (
-                    <div className="flex items-start">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500 mr-2 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
-                            <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
-                        </svg>
-                        <div>
-                            <div className="text-sm font-medium text-gray-500">Ubicación</div>
-                            <div className="text-gray-900">{event.location}</div>
-                        </div>
+                    <div>
+                        <h3 className="text-sm font-medium text-gray-500">Ubicación</h3>
+                        <p className="text-gray-900">{event.location}</p>
                     </div>
                 )}
 
                 {event.description && (
-                    <div className="flex items-start">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500 mr-2 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
-                            <path fillRule="evenodd" d="M18 13V5a2 2 0 00-2-2H4a2 2 0 00-2 2v8a2 2 0 002 2h3l3 3 3-3h3a2 2 0 002-2zM5 7a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1zm1 3a1 1 0 100 2h3a1 1 0 100-2H6z" clipRule="evenodd" />
-                        </svg>
-                        <div>
-                            <div className="text-sm font-medium text-gray-500">Descripción</div>
-                            <div className="text-gray-900 whitespace-pre-wrap">{event.description}</div>
-                        </div>
+                    <div>
+                        <h3 className="text-sm font-medium text-gray-500">Descripción</h3>
+                        <p className="text-gray-900">{event.description}</p>
                     </div>
                 )}
             </div>

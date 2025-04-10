@@ -6,9 +6,25 @@ import { es } from 'date-fns/locale'
 import EventForm from './components/EventForm'
 import EventDetails from './components/EventDetails'
 import EventList from './components/EventList'
+import logic from '../logic'
 
-// Dummy data for events
-const dummyEvents = [
+export default function Calendar({ onHomeClick }) {
+    const [selectedDate, setSelectedDate] = useState(new Date())
+    const [events, setEvents] = useState([])
+    const [selectedEvent, setSelectedEvent] = useState(null)
+    const [isAddingEvent, setIsAddingEvent] = useState(false)
+    const [isEditingEvent, setIsEditingEvent] = useState(false)
+    const [newEvent, setNewEvent] = useState({
+        title: '',
+        description: '',
+        location: '',
+        startDateTime: new Date(),
+        endDateTime: new Date(),
+        attendees: []
+    })
+
+    // TODO: Por si quiero añadir el tipo de evento tengo que poner el type en mongo, de lo contrario eliminar de react todo lo relacionado con type
+    /*
     {
         id: 1,
         title: 'Reunión con cliente',
@@ -18,58 +34,32 @@ const dummyEvents = [
         location: 'Oficina central',
         type: 'meeting'
     },
-    {
-        id: 2,
-        title: 'Entrega de proyecto',
-        date: new Date(2025, 3, 7, 14, 0),
-        endDate: new Date(2025, 3, 7, 15, 0),
-        description: 'Entrega final del proyecto de desarrollo',
-        location: 'Remoto',
-        type: 'delivery'
-    },
-    {
-        id: 3,
-        title: 'Capacitación',
-        date: new Date(2025, 3, 7, 15, 0),
-        endDate: new Date(2025, 3, 7, 17, 0),
-        description: 'Capacitación en nuevas tecnologías',
-        location: 'Sala de conferencias',
-        type: 'training'
-    },
-    {
-        id: 4,
-        title: 'Llamada con proveedor',
-        date: new Date(2025, 4, 28, 11, 0),
-        endDate: new Date(2025, 4, 28, 12, 0),
-        description: 'Discusión sobre nuevos servicios',
-        location: 'Remoto',
-        type: 'call'
-    }
-]
+    */
 
-export default function Calendar({ onHomeClick }) {
-    const [selectedDate, setSelectedDate] = useState(new Date())
-    const [events, setEvents] = useState(dummyEvents)
-    const [selectedEvent, setSelectedEvent] = useState(null)
-    const [isAddingEvent, setIsAddingEvent] = useState(false)
-    const [isEditingEvent, setIsEditingEvent] = useState(false)
-    const [newEvent, setNewEvent] = useState({
-        title: '',
-        date: new Date(),
-        endDate: new Date(),
-        description: '',
-        location: '',
-        type: 'meeting'
-    })
+    useEffect(() => {
+        const fetchEvents = async () => {
+            try {
+                const userId = logic.getUserId()
+                const events = await logic.getEvents(userId)
+                setEvents(events)
+                console.log(events)
+            } catch (error) {
+                console.error('Error loading events:', error.message)
+                alert('Error loading events: ' + error.message)
+                setEvents([])
+            }
+        }
 
-    // Get events for the selected date
+        fetchEvents()
+    }, [])
+
     const getEventsForDate = (date) => {
-        return events.filter(event =>
-            format(event.date, 'yyyy-MM-dd') === format(date, 'yyyy-MM-dd')
-        )
+        return events.filter(event => {
+            const eventDate = new Date(event.startDateTime)
+            return format(eventDate, 'yyyy-MM-dd') === format(date, 'yyyy-MM-dd')
+        })
     }
 
-    // Handle date selection
     const handleDateSelect = (date) => {
         setSelectedDate(date)
         setSelectedEvent(null)
@@ -77,86 +67,98 @@ export default function Calendar({ onHomeClick }) {
         setIsEditingEvent(false)
     }
 
-    // Handle event selection
     const handleEventSelect = (event) => {
         setSelectedEvent(event)
     }
 
-    // Handle adding a new event
     const handleAddEvent = () => {
         setIsAddingEvent(true)
         setSelectedEvent(null)
         setIsEditingEvent(false)
         setNewEvent({
-            ...newEvent,
-            date: selectedDate,
-            endDate: new Date(selectedDate.getTime() + 60 * 60 * 1000) // 1 hour later
-        })
-    }
-
-    // Handle saving a new event
-    const handleSaveEvent = () => {
-        const newEventWithId = {
-            ...newEvent,
-            id: events.length + 1
-        }
-        setEvents([...events, newEventWithId])
-        setIsAddingEvent(false)
-        setNewEvent({
             title: '',
-            date: new Date(),
-            endDate: new Date(),
             description: '',
             location: '',
-            type: 'meeting'
+            startDateTime: selectedDate,
+            endDateTime: new Date(selectedDate.getTime() + 60 * 60 * 1000), // 1 hour later
+            attendees: []
         })
     }
 
-    // Handle canceling event creation
+    const handleSaveEvent = async () => {
+        try {
+            const userId = logic.getUserId()
+            const savedEvent = await logic.createEvent(userId, newEvent)
+            setEvents([...events, savedEvent])
+            setIsAddingEvent(false)
+            setNewEvent({
+                title: '',
+                description: '',
+                location: '',
+                startDateTime: new Date(),
+                endDateTime: new Date(),
+                attendees: []
+            })
+        } catch (error) {
+            console.error('Error saving event:', error.message)
+            alert('Error saving event: ' + error.message)
+        }
+    }
+
     const handleCancelEvent = () => {
         setIsAddingEvent(false)
         setIsEditingEvent(false)
         setNewEvent({
             title: '',
-            date: new Date(),
-            endDate: new Date(),
             description: '',
             location: '',
-            type: 'meeting'
+            startDateTime: new Date(),
+            endDateTime: new Date(),
+            attendees: []
         })
     }
 
-    // Handle editing an event
     const handleEditEvent = () => {
         setIsEditingEvent(true)
         setNewEvent({ ...selectedEvent })
     }
 
-    // Handle updating an event
-    const handleUpdateEvent = () => {
-        const updatedEvents = events.map(event =>
-            event.id === newEvent.id ? newEvent : event
-        )
-        setEvents(updatedEvents)
-        setSelectedEvent(newEvent)
-        setIsEditingEvent(false)
-        setNewEvent({
-            title: '',
-            date: new Date(),
-            endDate: new Date(),
-            description: '',
-            location: '',
-            type: 'meeting'
-        })
+    const handleUpdateEvent = async () => {
+        try {
+            const userId = logic.getUserId()
+            const updatedEvent = await logic.updateEvent(userId, newEvent.id, newEvent)
+            const updatedEvents = events.map(event =>
+                event.id === updatedEvent.id ? updatedEvent : event
+            )
+            setEvents(updatedEvents)
+            setSelectedEvent(updatedEvent)
+            setIsEditingEvent(false)
+            setNewEvent({
+                title: '',
+                description: '',
+                location: '',
+                startDateTime: new Date(),
+                endDateTime: new Date(),
+                attendees: []
+            })
+        } catch (error) {
+            console.error('Error updating event:', error.message)
+            alert('Error updating event: ' + error.message)
+        }
     }
 
-    // Handle deleting an event
-    const handleDeleteEvent = (eventId) => {
-        setEvents(events.filter(event => event.id !== eventId))
-        setSelectedEvent(null)
+    const handleDeleteEvent = async (eventId) => {
+        try {
+            const userId = logic.getUserId()
+            await logic.deleteEvent(userId, eventId)
+            setEvents(events.filter(event => event.id !== eventId))
+            setSelectedEvent(null)
+        } catch (error) {
+            console.error('Error deleting event:', error.message)
+            alert('Error deleting event: ' + error.message)
+        }
     }
 
-    // Custom modifiers for the calendar
     const modifiers = {
         hasEvent: (date) => getEventsForDate(date).length > 0
     }
@@ -166,22 +168,6 @@ export default function Calendar({ onHomeClick }) {
             fontWeight: 'bold',
             color: '#2563eb',
             textDecoration: 'underline'
-        }
-    }
-
-    // Get event type color
-    const getEventTypeColor = (type) => {
-        switch (type) {
-            case 'meeting':
-                return 'bg-blue-100 text-blue-800'
-            case 'call':
-                return 'bg-purple-100 text-purple-800'
-            case 'delivery':
-                return 'bg-green-100 text-green-800'
-            case 'training':
-                return 'bg-yellow-100 text-yellow-800'
-            default:
-                return 'bg-gray-100 text-gray-800'
         }
     }
 

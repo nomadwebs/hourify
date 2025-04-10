@@ -4,6 +4,8 @@ import { validate, errors } from 'com'
 const { SystemError, NotFoundError, OwnershipError } = errors
 
 export default function updateEvent(eventId, userId, title, description, location, attendees, startDateTime, endDateTime) {
+    console.log(attendees)
+
     validate.id(eventId, 'eventId')
     validate.id(userId, 'userId')
     validate.text(title, 'title')
@@ -11,8 +13,8 @@ export default function updateEvent(eventId, userId, title, description, locatio
     validate.text(location, 'location')
     validate.attendees(attendees)
 
-    if (startDateTime) validate.date(startDateTime)
-    if (endDateTime) validate.date(endDateTime)
+    if (startDateTime) validate.date(new Date(startDateTime))
+    if (endDateTime) validate.date(new Date(endDateTime))
 
     return Event.findById(eventId).lean()
         .catch(error => { throw new SystemError(error.message) })
