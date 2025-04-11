@@ -54,6 +54,8 @@ import {
 import {
     getEvents,
     addEvent,
+    updateEvent,
+    deleteEvent
 } from './calendar'
 
 import {
@@ -132,6 +134,8 @@ const logic = {
     //Calendar
     getEvents,
     addEvent,
+    updateEvent,
+    deleteEvent,
 
 
     //Home

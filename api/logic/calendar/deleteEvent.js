@@ -7,6 +7,9 @@ export default function deleteEvent(userId, eventId) {
     validate.id(eventId, 'eventId')
     validate.id(userId, 'userId')
 
+    console.log(eventId)
+    console.log(userId)
+
     return Event.findById(eventId).lean()
         .catch(error => { throw new SystemError(error.message) })
         .then(event => {

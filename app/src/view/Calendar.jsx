@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { DayPicker } from 'react-day-picker'
 import 'react-day-picker/dist/style.css'
 import { format } from 'date-fns'
-import { es } from 'date-fns/locale'
+import { enGB } from 'date-fns/locale'
 import EventForm from './components/EventForm'
 import EventDetails from './components/EventDetails'
 import EventList from './components/EventList'
@@ -20,7 +20,8 @@ export default function Calendar({ onHomeClick }) {
         location: '',
         startDateTime: new Date(),
         endDateTime: new Date(),
-        attendees: []
+        attendees: [],
+        typeEvent: 'Meeting'
     })
 
     useEffect(() => {
@@ -29,14 +30,12 @@ export default function Calendar({ onHomeClick }) {
                 const userId = logic.getUserId()
                 const events = await logic.getEvents(userId)
                 setEvents(events)
-                console.log(events)
             } catch (error) {
                 console.error('Error loading events:', error.message)
                 alert('Error loading events: ' + error.message)
                 setEvents([])
             }
         }
-
         fetchEvents()
     }, [])
 
@@ -67,8 +66,9 @@ export default function Calendar({ onHomeClick }) {
             description: '',
             location: '',
             startDateTime: selectedDate,
-            endDateTime: new Date(selectedDate.getTime() + 60 * 60 * 1000), // 1 hour later
-            attendees: []
+            endDateTime: new Date(selectedDate.getTime() + 60 * 60 * 1000),
+            attendees: [],
+            typeEvent: 'Meeting' // ✅ FIX: aseguramos tipo por defecto
         })
     }
 
@@ -76,6 +76,12 @@ export default function Calendar({ onHomeClick }) {
         try {
             const userId = logic.getUserId()
             const { title, description, location, startDateTime, endDateTime, attendees, typeEvent } = newEvent
+
+            // ✅ FIX: validación mínima
+            if (!title || !startDateTime || !endDateTime) {
+                alert('Missing required fields.')
+                return
+            }
 
             await logic.addEvent(title, description, location, attendees, startDateTime, endDateTime, typeEvent)
 
@@ -107,24 +113,46 @@ export default function Calendar({ onHomeClick }) {
             location: '',
             startDateTime: new Date(),
             endDateTime: new Date(),
-            attendees: []
+            attendees: [],
+            typeEvent: 'Meeting' // ✅ FIX: añadimos el campo que faltaba
         })
     }
 
     const handleEditEvent = () => {
         setIsEditingEvent(true)
-        setNewEvent({ ...selectedEvent })
+        setNewEvent({
+            ...selectedEvent,
+            eventId: selectedEvent.id, // ✅ Aunque opcional, lo dejas por compatibilidad
+            typeEvent: selectedEvent.typeEvent || 'Meeting' // ✅ FIX: fallback si no existe
+        })
+
+        // ✅ FIX: este log no mostrará el valor actualizado, lo dejamos comentado para evitar confusión
+        // console.log("new event: ", newEvent)
     }
 
     const handleUpdateEvent = async () => {
         try {
-            const userId = logic.getUserId()
-            const updatedEvent = await logic.updateEvent(userId, newEvent.id, newEvent)
+            const { eventId, title, description, location, attendees, startDateTime, endDateTime, typeEvent } = newEvent
+
+            const formattedStartDateTime = startDateTime ? new Date(startDateTime) : null
+            const formattedEndDateTime = endDateTime ? new Date(endDateTime) : null
+
+            const updatedEvent = await logic.updateEvent(
+                eventId || newEvent.id,
+                title,
+                description,
+                location,
+                attendees,
+                formattedStartDateTime,
+                formattedEndDateTime,
+                typeEvent
+            )
+
             const updatedEvents = events.map(event =>
-                event.id === updatedEvent.id ? updatedEvent : event
+                event.id === (eventId || newEvent.id) ? { ...event, ...newEvent, id: event.id } : event
             )
             setEvents(updatedEvents)
-            setSelectedEvent(updatedEvent)
+            setSelectedEvent(updatedEvents.find(event => event.id === (eventId || newEvent.id)))
             setIsEditingEvent(false)
             setNewEvent({
                 title: '',
@@ -133,7 +161,7 @@ export default function Calendar({ onHomeClick }) {
                 startDateTime: new Date(),
                 endDateTime: new Date(),
                 attendees: [],
-                typeEvent,
+                typeEvent: 'Meeting'
             })
         } catch (error) {
             console.error('Error updating event:', error.message)
@@ -143,8 +171,7 @@ export default function Calendar({ onHomeClick }) {
 
     const handleDeleteEvent = async (eventId) => {
         try {
-            const userId = logic.getUserId()
-            await logic.deleteEvent(userId, eventId)
+            await logic.deleteEvent(eventId)
             setEvents(events.filter(event => event.id !== eventId))
             setSelectedEvent(null)
         } catch (error) {
@@ -194,7 +221,7 @@ export default function Calendar({ onHomeClick }) {
                                 onSelect={handleDateSelect}
                                 modifiers={modifiers}
                                 modifiersStyles={modifiersStyles}
-                                locale={es}
+                                locale={enGB}
                                 className="w-full"
                             />
                         </div>
@@ -202,7 +229,7 @@ export default function Calendar({ onHomeClick }) {
                         {/* Events Section */}
                         <div className="lg:col-span-7 bg-gray-50 rounded-lg p-4">
                             <h2 className="text-xl font-semibold mb-4 text-color_darkBlue">
-                                {format(selectedDate, "EEEE d 'de' MMMM", { locale: es })}
+                                {format(selectedDate, "EEEE d 'de' MMMM", { locale: enGB })}
                             </h2>
 
                             {isAddingEvent ? (
@@ -253,4 +280,4 @@ export default function Calendar({ onHomeClick }) {
             </div>
         </main>
     )
-} 
+}

@@ -15,11 +15,13 @@ export default function EventForm({
         description: '',
         location: '',
         typeEvent: 'Meeting',
-        attendees: []
+        attendees: [],
+        eventId: null // ✅ Añadido aquí
     })
 
     useEffect(() => {
         if (event) {
+            console.log('Event: ', event)
             setFormData({
                 title: event.title || '',
                 startDateTime: event.startDateTime || new Date(),
@@ -27,21 +29,21 @@ export default function EventForm({
                 description: event.description || '',
                 location: event.location || '',
                 typeEvent: event.typeEvent || 'Meeting',
-                attendees: event.attendees || []
+                attendees: event.attendees || [],
+                eventId: event.eventId || event.id || null // ✅ Asegura que se incluya el id
             })
         }
     }, [event])
 
     const handleInputChange = (e) => {
         const { name, value } = e.target
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }))
-        onEventChange({
+        const updated = {
             ...formData,
-            [name]: value
-        })
+            [name]: value,
+            eventId: formData.eventId // ✅ mantener eventId
+        }
+        setFormData(updated)
+        onEventChange(updated)
     }
 
     const handleDateChange = (e) => {
@@ -49,36 +51,32 @@ export default function EventForm({
         const newDate = new Date(value)
         const currentDate = new Date(formData[name])
 
-        // Preserve the time when changing the date
         newDate.setHours(currentDate.getHours())
         newDate.setMinutes(currentDate.getMinutes())
 
-        setFormData(prev => ({
-            ...prev,
-            [name]: newDate
-        }))
-        onEventChange({
+        const updated = {
             ...formData,
-            [name]: newDate
-        })
+            [name]: newDate,
+            eventId: formData.eventId // ✅ mantener eventId
+        }
+        setFormData(updated)
+        onEventChange(updated)
     }
 
     const handleTimeChange = (e) => {
         const { name, value } = e.target
         const [hours, minutes] = value.split(':')
         const newDate = new Date(formData[name])
-
         newDate.setHours(parseInt(hours, 10))
         newDate.setMinutes(parseInt(minutes, 10))
 
-        setFormData(prev => ({
-            ...prev,
-            [name]: newDate
-        }))
-        onEventChange({
+        const updated = {
             ...formData,
-            [name]: newDate
-        })
+            [name]: newDate,
+            eventId: formData.eventId // ✅ mantener eventId
+        }
+        setFormData(updated)
+        onEventChange(updated)
     }
 
     const handleSubmit = (e) => {
@@ -89,9 +87,7 @@ export default function EventForm({
     return (
         <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-                <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
-                    Título
-                </label>
+                <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">Título</label>
                 <input
                     type="text"
                     id="title"
@@ -105,9 +101,7 @@ export default function EventForm({
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                    <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-1">
-                        Date
-                    </label>
+                    <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-1">Date</label>
                     <input
                         type="date"
                         id="date"
@@ -118,11 +112,8 @@ export default function EventForm({
                         required
                     />
                 </div>
-
                 <div>
-                    <label htmlFor="endDate" className="block text-sm font-medium text-gray-700 mb-1">
-                        End Date
-                    </label>
+                    <label htmlFor="endDate" className="block text-sm font-medium text-gray-700 mb-1">End Date</label>
                     <input
                         type="date"
                         id="endDate"
@@ -137,9 +128,7 @@ export default function EventForm({
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                    <label htmlFor="time" className="block text-sm font-medium text-gray-700 mb-1">
-                        Start Time
-                    </label>
+                    <label htmlFor="time" className="block text-sm font-medium text-gray-700 mb-1">Start Time</label>
                     <input
                         type="time"
                         id="time"
@@ -150,11 +139,8 @@ export default function EventForm({
                         required
                     />
                 </div>
-
                 <div>
-                    <label htmlFor="endTime" className="block text-sm font-medium text-gray-700 mb-1">
-                        End Time
-                    </label>
+                    <label htmlFor="endTime" className="block text-sm font-medium text-gray-700 mb-1">End Time</label>
                     <input
                         type="time"
                         id="endTime"
@@ -168,9 +154,7 @@ export default function EventForm({
             </div>
 
             <div>
-                <label htmlFor="type" className="block text-sm font-medium text-gray-700 mb-1">
-                    Event Type
-                </label>
+                <label htmlFor="typeEvent" className="block text-sm font-medium text-gray-700 mb-1">Event Type</label>
                 <select
                     id="typeEvent"
                     name="typeEvent"
@@ -188,9 +172,7 @@ export default function EventForm({
             </div>
 
             <div>
-                <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-1">
-                    Location
-                </label>
+                <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-1">Location</label>
                 <input
                     type="text"
                     id="location"
@@ -202,9 +184,7 @@ export default function EventForm({
             </div>
 
             <div>
-                <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
-                    Descripción
-                </label>
+                <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
                 <textarea
                     id="description"
                     name="description"
@@ -230,14 +210,14 @@ export default function EventForm({
                             .split(',')
                             .map(email => email.trim())
                             .filter(email => email.length > 0)
-                        setFormData(prev => ({
-                            ...prev,
-                            attendees: emails
-                        }))
-                        onEventChange({
+
+                        const updated = {
                             ...formData,
-                            attendees: emails
-                        })
+                            attendees: emails,
+                            eventId: formData.eventId // ✅ mantener eventId
+                        }
+                        setFormData(updated)
+                        onEventChange(updated)
                     }}
                     placeholder="email1@example.com, email2@example.com"
                     className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
@@ -261,4 +241,4 @@ export default function EventForm({
             </div>
         </form>
     )
-} 
+}
