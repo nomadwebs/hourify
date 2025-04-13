@@ -47,7 +47,7 @@ export default function Calendar({ onHomeClick }) {
     }
 
     const handleDateSelect = (date) => {
-        setSelectedDate(date)
+        setSelectedDate(date || new Date())
         setSelectedEvent(null)
         setIsAddingEvent(false)
         setIsEditingEvent(false)
@@ -228,9 +228,14 @@ export default function Calendar({ onHomeClick }) {
 
                         {/* Events Section */}
                         <div className="lg:col-span-7 bg-gray-50 rounded-lg p-4">
-                            <h2 className="text-xl font-semibold mb-4 text-color_darkBlue">
+                            {/* <h2 className="text-xl font-semibold mb-4 text-color_darkBlue">
                                 {format(selectedDate, "EEEE d 'de' MMMM", { locale: enGB })}
-                            </h2>
+                            </h2> */}
+                            {selectedDate && (
+                                <h2 className="text-xl font-semibold mb-4 text-color_darkBlue">
+                                    {format(selectedDate, "EEEE d 'de' MMMM", { locale: enGB })}
+                                </h2>
+                            )}
 
                             {isAddingEvent ? (
                                 <EventForm

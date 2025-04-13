@@ -30,6 +30,11 @@ const user = new Schema({
         enum: ['free', 'pro'],
         default: 'free'
     },
+    reason: {
+        type: String,
+        required: false,
+        enum: ['', 'earlyAdopterPromo']
+    },
     planExpiryDate: {
         type: Date,
         required: false,

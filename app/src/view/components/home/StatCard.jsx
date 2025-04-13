@@ -1,4 +1,3 @@
-// StatCard.jsx
 export default function StatCard({ label, value, icon, borderColor, bgColor, iconColor }) {
     return (
         <div className={`bg-white rounded-lg shadow-md p-4 border-l-4 ${borderColor}`}>

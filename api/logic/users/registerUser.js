@@ -8,6 +8,11 @@ import { emailRegisterWelcome } from '../emailing/index.js'
 
 const { DuplicityError, SystemError } = errors
 
+const PROMO_START_DATE = new Date('2025-04-12T00:00:00Z')
+const PROMO_END_DATE = new Date('2025-04-20T23:59:59Z')
+const PROMO_MAX_USERS = 30
+const now = new Date()
+
 const assignRandomProfileImage = () => {
     const imageNumber = Math.floor(Math.random() * 12) + 1; //from 1 to 12
     return `/images/profile/profile${imageNumber}.jpeg`;
@@ -20,21 +25,44 @@ export default (name, email, username, password, passwordRepeat) => {
     validate.password(password)
     validate.passwordsMatch(password, passwordRepeat)
 
-    //In the register moment all users will be free
-    const plan = 'free'
-    const creationStatus = 'true'
-    const role = 'standard'
 
-    const planExpiryDate = '', dni = '', surname1 = '',
+    const dni = '', surname1 = '',
         surname2 = '', biography = '', country = '', province = '', city = '',
         postalCode = '', street = '', street2 = '', number = '', flat = '',
-        legalName = '', website = ''
+        legalName = '', website = '', createdDate = new Date()
 
     const customers = [], ownPacks = [], adquiredPacks = []
 
 
     return (async () => {
         let hash
+
+        const isInPromoPeriod = now >= PROMO_START_DATE && now <= PROMO_END_DATE
+
+        //In the register moment all users will be free
+        let plan = 'free'
+        let creationStatus = 'true'
+        let role = 'standard'
+        let planExpiryDate = ''
+        let reason = ''
+
+        if (isInPromoPeriod) {
+            try {
+                const usersPromoCount = await User.countDocuments(
+                    {
+                        plan: 'pro',
+                        reason: 'earlyAdopterPromo',
+                        createdDate: { $gte: PROMO_START_DATE, $lte: PROMO_END_DATE }
+                    })
+                if (usersPromoCount < PROMO_MAX_USERS) {
+                    plan = 'pro'
+                    planExpiryDate = new Date('9999-12-31')
+                    reason = 'earlyAdopterPromo'
+                }
+            } catch (error) {
+                throw new SystemError(error.message)
+            }
+        }
 
         try {
             hash = await bcrypt.hash(password, 10)
@@ -49,6 +77,7 @@ export default (name, email, username, password, passwordRepeat) => {
                 username,
                 password: hash,
                 plan,
+                reason,
                 planExpiryDate: planExpiryDate || null,
                 role,
                 dni: dni || null,
@@ -70,6 +99,7 @@ export default (name, email, username, password, passwordRepeat) => {
                 ownPacks,
                 adquiredPacks,
                 profileImage: assignRandomProfileImage(), //Create random profile image
+                createdDate,
             })
 
         } catch (error) {
