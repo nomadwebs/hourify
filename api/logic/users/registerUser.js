@@ -45,6 +45,7 @@ export default (name, email, username, password, passwordRepeat) => {
         let role = 'standard'
         let planExpiryDate = ''
         let reason = ''
+        let promoApplied = false
 
         if (isInPromoPeriod) {
             try {
@@ -58,6 +59,7 @@ export default (name, email, username, password, passwordRepeat) => {
                     plan = 'pro'
                     planExpiryDate = new Date('9999-12-31')
                     reason = 'earlyAdopterPromo'
+                    promoApplied = true
                 }
             } catch (error) {
                 throw new SystemError(error.message)
@@ -113,5 +115,14 @@ export default (name, email, username, password, passwordRepeat) => {
         } catch (error) {
             throw new SystemError(error.message)
         }
+
+        return {
+            success: true,
+            promoApplied,
+            message: promoApplied
+                ? '¡Felicidades! Has conseguido acceso vitalicio al plan Pro como early adopter 🚀'
+                : 'Usuario registrado correctamente.'
+        }
+
     })()
 }
