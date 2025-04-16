@@ -1,17 +1,19 @@
 import { useState, useEffect } from 'react'
 import logic from '../logic/index.js'
 
-import { Button, TagKO, TagOK, TagEXTRA, TagWARN, StatusFilter } from '../library'
+import { TagKO, TagOK, TagEXTRA, TagWARN, StatusFilter } from '../library'
 import { StatCard } from './components/index.js'
 import { useLocation } from 'react-router-dom'
 
 import useContext from './useContext'
 
 import { getDecimalToTimeFormat } from '../logic/helpers'
+import { CustomerBoughtPacks } from './index.js'
 
 
 export default function Home(props) {
     const [name, setName] = useState('')
+    const [userDetails, setUserDetails] = useState({})
     const [providerSoldPacks, setProviderSoldPacks] = useState([])
     const [customerBoughtPacks, setCustomerBoughtPacks] = useState([])
     const [monthEarned, setMonthEarned] = useState([])
@@ -24,6 +26,22 @@ export default function Home(props) {
     const location = useLocation()
 
     const { alert, confirm } = useContext()
+
+    useEffect(() => {
+        try {
+            logic.getUserDetails()
+                .then(setUserDetails)
+                .catch(error => {
+                    alert(error.message)
+                    console.error(error)
+                })
+
+        } catch (error) {
+            alert(error.message)
+            console.error(error)
+        }
+    }, [])
+    console.log(userDetails)
 
     useEffect(() => {
         if (logic.isUserLoggedIn()) {
@@ -164,8 +182,6 @@ export default function Home(props) {
         //console.log('Estado actualizado - providerSoldPacks:', providerSoldPacks)
     }, [providerSoldPacks])
 
-
-
     // Obtener packs comprados por el cliente
     useEffect(() => {
         const fetchCustomerBoughtPacks = async () => {
@@ -190,7 +206,6 @@ export default function Home(props) {
     }, [])
 
     useEffect(() => {
-        //console.log('Estado actualizado - customerBoughtPacks:', customerBoughtPacks)
     }, [customerBoughtPacks])
 
 
@@ -207,9 +222,9 @@ export default function Home(props) {
         props.onManageCustomersClick()
     }
 
-    /* const handleManagePurchasedPacks = event => {
+    const handleManagePurchasedPacks = event => {
         props.onManagePurchasedPacksClick()
-    } */
+    }
 
     //Función de formateo de los packs
     const formatCustomerPacks = async (packs) => {
@@ -271,112 +286,127 @@ export default function Home(props) {
 
                 <header className='w-full max-w-6xl mb-8'>
                     <h2 className='text-3xl font-bold text-color_darkBlue mb-2'>{`Welcome back, ${name}`}</h2>
-                    <p className='text-color_strongGrey mb-6'>Here's an overview of your business</p>
 
-                    {/* Stats Dashboard */}
-                    <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6'>
-                        {/* Active Packs */}
+                    {providerSoldPacks.length > 0 && (
+                        <>
+                            <p className='text-color_strongGrey mb-6'>Here's an overview of your business</p>
 
-                        <StatCard
-                            label='Active Packs'
-                            value={providerSoldPacks.filter(p => p.status === 'Active').length}
-                            icon={
-                                <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
-                                    <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' />
-                                </svg>
-                            }
-                            borderColor='border-green-500'
-                            bgColor='bg-green-100'
-                            iconColor='text-green-600'
-                        />
+                            {/* Stats Dashboard */}
+                            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6'>
+                                <StatCard
+                                    label='Active Packs'
+                                    value={providerSoldPacks.filter(p => p.status === 'Active').length}
+                                    icon={
+                                        <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
+                                            <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' />
+                                        </svg>
+                                    }
+                                    borderColor='border-green-500'
+                                    bgColor='bg-green-100'
+                                    iconColor='text-green-600'
+                                />
 
-                        {/* Earned (placeholder) */}
-                        <StatCard
-                            label='Month Earned'
-                            value={monthEarned ? logic.formatCurrencyES(monthEarned) : logic.formatCurrencyES(0)}
-                            icon={
-                                <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
-                                    <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z' />
-                                </svg>
-                            }
-                            borderColor='border-blue-500'
-                            bgColor='bg-blue-100'
-                            iconColor='text-blue-600'
-                        />
+                                <StatCard
+                                    label='Month Earned'
+                                    value={monthEarned ? logic.formatCurrencyES(monthEarned) : logic.formatCurrencyES(0)}
+                                    icon={
+                                        <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
+                                            <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z' />
+                                        </svg>
+                                    }
+                                    borderColor='border-blue-500'
+                                    bgColor='bg-blue-100'
+                                    iconColor='text-blue-600'
+                                />
 
-                        {/* Payments received */}
-                        <StatCard
-                            label='Payments'
-                            value={monthPayments ? logic.formatCurrencyES(monthPayments) : logic.formatCurrencyES(0)}
-                            icon={
-                                <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
-                                    <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' />
-                                </svg>
-                            }
-                            borderColor='border-yellow-500'
-                            bgColor='bg-yellow-100'
-                            iconColor='text-yellow-600'
-                        />
+                                {/* Payments received */}
+                                <StatCard
+                                    label='Payments'
+                                    value={monthPayments ? logic.formatCurrencyES(monthPayments) : logic.formatCurrencyES(0)}
+                                    icon={
+                                        <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
+                                            <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' />
+                                        </svg>
+                                    }
+                                    borderColor='border-yellow-500'
+                                    bgColor='bg-yellow-100'
+                                    iconColor='text-yellow-600'
+                                />
 
+                                <StatCard
+                                    label='Pending Payments'
+                                    value={monthPendingPayments ? logic.formatCurrencyES(monthPendingPayments) : logic.formatCurrencyES(0)}
+                                    icon={
+                                        <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
+                                            <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' />
+                                        </svg>
+                                    }
+                                    borderColor='border-red-500'
+                                    bgColor='bg-red-100'
+                                    iconColor='text-red-600'
+                                />
 
-                        {/* Pending Payments (placeholder) */}
-                        <StatCard
-                            label='Pending Payments'
-                            value={monthPendingPayments ? logic.formatCurrencyES(monthPendingPayments) : logic.formatCurrencyES(0)}
-                            icon={
-                                <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
-                                    <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' />
-                                </svg>
-                            }
-                            borderColor='border-red-500'
-                            bgColor='bg-red-100'
-                            iconColor='text-red-600'
-                        />
+                                <StatCard
+                                    label='Hours Tracked'
+                                    value={monthHoursTracked
+                                        ? logic.getDecimalToTimeFormat(monthHoursTracked) + 'h'
+                                        : '0h'}
+                                    icon={
+                                        <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
+                                            <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z' />
+                                        </svg>
+                                    }
+                                    borderColor='border-purple-500'
+                                    bgColor='bg-purple-100'
+                                    iconColor='text-purple-600'
+                                />
 
-
-                        <StatCard
-                            label='Hours Tracked'
-                            value={monthHoursTracked
-                                ? logic.getDecimalToTimeFormat(monthHoursTracked) + 'h'
-                                : '0h'}
-                            icon={
-                                <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
-                                    <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z' />
-                                </svg>
-                            }
-                            borderColor='border-purple-500'
-                            bgColor='bg-purple-100'
-                            iconColor='text-purple-600'
-                        />
-
-                        <StatCard
-                            label='Units/Sesions Tracked'
-                            value={monthUnitsTracked
-                                ? monthUnitsTracked + ' un.'
-                                : '0'}
-                            icon={
-                                <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' strokeWidth='1.5' stroke='currentColor' className='size-6'>
-                                    <path strokeLinecap='round' strokeLinejoin='round' d='M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z' />
-                                    <path strokeLinecap='round' strokeLinejoin='round' d='M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z' />
-                                </svg>
-                            }
-                            borderColor='border-fuchsia-500'
-                            bgColor='bg-fuchsia-100'
-                            iconColor='text-fuchsia-600'
-                        />
-                    </div>
+                                <StatCard
+                                    label='Units/Sesions Tracked'
+                                    value={monthUnitsTracked
+                                        ? monthUnitsTracked + ' un.'
+                                        : '0'}
+                                    icon={
+                                        <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' strokeWidth='1.5' stroke='currentColor' className='size-6'>
+                                            <path strokeLinecap='round' strokeLinejoin='round' d='M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z' />
+                                            <path strokeLinecap='round' strokeLinejoin='round' d='M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z' />
+                                        </svg>
+                                    }
+                                    borderColor='border-fuchsia-500'
+                                    bgColor='bg-fuchsia-100'
+                                    iconColor='text-fuchsia-600'
+                                />
+                            </div>
+                        </>
+                    )}
 
                     {/* Quick Action Buttons */}
                     <div className='flex flex-wrap gap-3'>
-                        <button
-                            onClick={handleTrackerClick}
-                            className='flex items-center text-sm bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-md transition-colors duration-300'
-                        >
-                            <svg xmlns='http://www.w3.org/2000/svg' className='h-5 w-5 mr-2' viewBox='0 0 20 20' fill='currentColor'>
-                                <path fillRule='evenodd' d='M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z' clipRule='evenodd' />
-                            </svg>
-                            Track Time
-                        </button>
+                        {providerSoldPacks.length > 0 && (
+                            <>
+                                <button
+                                    onClick={handleTrackerClick}
+                                    className='flex items-center text-sm bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-md transition-colors duration-300'
+                                >
+                                    <svg xmlns='http://www.w3.org/2000/svg' className='h-5 w-5 mr-2' viewBox='0 0 20 20' fill='currentColor'>
+                                        <path fillRule='evenodd' d='M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z' clipRule='evenodd' />
+                                    </svg>
+                                    Track Time
+                                </button>
+
+                                <button
+                                    onClick={handleManageCustomers}
+                                    className='flex items-center text-sm bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-md transition-colors duration-300'
+                                >
+                                    <svg xmlns='http://www.w3.org/2000/svg' className='h-5 w-5 mr-2' viewBox='0 0 20 20' fill='currentColor'>
+                                        <path d='M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z' />
+                                    </svg>
+                                    Manage Customers
+                                </button>
+                            </>
+
+                        )}
+
                         <button
                             onClick={handleManagePacks}
                             className='flex items-center text-sm bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-md transition-colors duration-300'
@@ -387,15 +417,19 @@ export default function Home(props) {
                             </svg>
                             Manage Packs
                         </button>
+
                         <button
-                            onClick={handleManageCustomers}
+                            onClick={handleManagePurchasedPacks}
                             className='flex items-center text-sm bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-md transition-colors duration-300'
                         >
                             <svg xmlns='http://www.w3.org/2000/svg' className='h-5 w-5 mr-2' viewBox='0 0 20 20' fill='currentColor'>
-                                <path d='M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z' />
+                                <path d='M4 3a2 2 0 100 4h12a2 2 0 100-4H4z' />
+                                <path fillRule='evenodd' d='M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm5 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z' clipRule='evenodd' />
                             </svg>
-                            Manage Customers
+                            Bought Services
                         </button>
+
+
                     </div>
                 </header>
 
@@ -471,6 +505,7 @@ export default function Home(props) {
 
 
                 {customerBoughtPacks.length > 0 && (
+
                     <div className='w-full max-w-6xl'>
                         <StatusFilter
                             activeFilter={boughtPacksFilter}

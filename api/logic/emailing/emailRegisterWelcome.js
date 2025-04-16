@@ -8,8 +8,7 @@ const emailRegisterWelcome = (to, name, username) => {
     validate.name(name)
     validate.username(username)
 
-    const loginLink = process.env.MAIN_URL
-    console.log(loginLink)
+    const loginLink = 'https://hourify360.com'
 
     const subject = 'Welcome to Hourify'
     const text = `Hello ${name}, this is your confirmation email`

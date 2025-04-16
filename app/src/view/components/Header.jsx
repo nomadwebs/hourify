@@ -10,6 +10,7 @@ export default function Header({ onHomeClick,
     onTrackerClick,
     onManagePacksClick,
     onManageCustomersClick,
+    onManagePurchasedPacksClick,
     onTasksClick,
     onCalendarClick }) {
     const [name, setName] = useState(null)
@@ -80,6 +81,11 @@ export default function Header({ onHomeClick,
         onManageCustomersClick()
     };
 
+    const handleManagePurchasedPacks = event => {
+        event.preventDefault()
+        onManagePurchasedPacksClick()
+    };
+
     const handleTasksClick = event => {
         event.preventDefault()
         onTasksClick()
@@ -104,6 +110,7 @@ export default function Header({ onHomeClick,
                     <a href="#" className={`hover:underline ${location.pathname === '/tracker' ? 'text-color_green font-bold' : ''}`} onClick={handleTrackerClick}>Time Tracker</a>
                     <a href="#" className={`hover:underline ${location.pathname === '/manage-packs' ? 'text-color_green font-bold' : ''}`} onClick={handleManagePacks}>Manage Packs</a>
                     <a href="#" className={`hover:underline ${location.pathname === '/manage-customers' ? 'text-color_green font-bold' : ''}`} onClick={handleManageCustomers}>Manage Customers</a>
+                    <a href="#" className={`hover:underline ${location.pathname === '/manage-bought-packs' ? 'text-color_green font-bold' : ''}`} onClick={handleManagePurchasedPacks}>Bought Services</a>
                     <a href="#" className={`hover:underline ${location.pathname === '/tasks' ? 'text-color_green font-bold' : ''}`} onClick={handleTasksClick}>Tasks</a>
                     <a href="#" className={`hover:underline ${location.pathname === '/calendar' ? 'text-color_green font-bold' : ''}`} onClick={handleCalendarClick}>Calendar</a>
                 </>
@@ -122,6 +129,7 @@ export default function Header({ onHomeClick,
                     <div className="absolute right-0 mt-2 w-40 bg-white text-black rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                         <a href="#" className="block px-4 py-2 hover:bg-gray-100" onClick={handleTrackerClick}>⏱️ Time Tracker</a>
                         <a href="#" className="block px-4 py-2 hover:bg-gray-100" onClick={handleManagePacks}>📑 Packs</a>
+                        <a href="#" className="block px-4 py-2 hover:bg-gray-100" onClick={handleManagePurchasedPacks}>📑 Bought Services</a>
                         <a href="#" className="block px-4 py-2 hover:bg-gray-100" onClick={handleManageCustomers}>👥 Customers</a>
                         <a href="#" className="block px-4 py-2 hover:bg-gray-100" onClick={handleTasksClick}>📝 Tasks</a>
                         <a href="#" className="block px-4 py-2 hover:bg-gray-100" onClick={handleCalendarClick}>📅 Calendar</a>

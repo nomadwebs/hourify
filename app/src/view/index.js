@@ -5,6 +5,7 @@ import ManagePacks from './ManagePacks'
 import ManagePurchasedPacks from './ManagePurchasedPacks'
 import AssignPack from './AssignPack'
 import CreatePack from './CreatePack'
+import CustomerBoughtPacks from './CustomerBoughtPacks'
 
 //Customers Managing
 import ManageCustomers from './ManageCustomers'
@@ -42,6 +43,7 @@ export {
     CreatePack,
     UserProfile,
     CustomerPacks,
+    CustomerBoughtPacks,
 
 
     //Tracker

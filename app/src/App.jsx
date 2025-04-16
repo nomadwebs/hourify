@@ -4,7 +4,7 @@ import { Routes, Route, useNavigate, Navigate } from 'react-router-dom'
 
 import { Login, Register, Home, ManagePacks, ManageCustomers, ManagePurchasedPacks, AssignPack, CreatePack, Tracker, UserProfile, CustomerPacks, Tasks, Calendar } from './view'
 
-import { Header, Footer, Alert, Confirm, /* PrivacyPolicy */ } from './view/components'
+import { Header, Footer, Alert, Confirm, Error404 /* PrivacyPolicy */ } from './view/components'
 
 import { Context } from './view/useContext'
 
@@ -66,7 +66,7 @@ export default function App() {
   const handleCalendarClick = () => navigate('/calendar')
 
   const handleAddTaskClick = () => {
-    navigate('/tasks');
+    navigate('/tasks') //TODO: Entendre que passa aquí
     // When navigating to the tasks page, we want the add task form to be shown
     // This will be handled within the Tasks component
   }
@@ -115,6 +115,7 @@ export default function App() {
           onTrackerClick={handleTrackerPacksClick}
           onManagePacksClick={handleManagePacksClick}
           onManageCustomersClick={handleManageCustomersClick}
+          onManagePurchasedPacksClick={handleManagePurchasedPacksClick}
           onTasksClick={handleTasksClick}
           onCalendarClick={handleCalendarClick} />
       )}
@@ -161,7 +162,8 @@ export default function App() {
           <ManageCustomers onHomeClick={handleHomeClick}
             onCustomerPacksClick={handleCustomerPacks} /> :
           <Navigate to="/login" />} />
-
+        {/* {handleManageCustomerBoughtServicesClick}
+ */}
         <Route path="/manage-purchased-packs" element={logic.isUserLoggedIn() ?
           <ManagePurchasedPacks onHomeClick={handleHomeClick} /> :
           <Navigate to="/login" />} />
@@ -185,14 +187,7 @@ export default function App() {
         {/* <Route path="/privacy-policy" element={<PrivacyPolicy onHomeClick={handleHomeClick} />} />
  */}
         <Route path="*" element={
-          <div className="text-center">
-            <h1 className="text-red-600 text-2xl font-bold">Error 404</h1>
-            <p className="text-gray-700">This page does not exist or it was removed.</p>
-            <p>
-              You can try to{' '}
-              <a href="#" className="text-blue-500 underline hover:text-blue-700" onClick={handleNotfoundError}>go home</a>
-            </p>
-          </div>
+          <Error404 onBackHome={handleNotfoundError} />
         } />
       </Routes>
 

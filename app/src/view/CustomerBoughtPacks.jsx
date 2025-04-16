@@ -3,14 +3,15 @@ import { useState, useEffect, useRef } from 'react'
 import logic from '../logic'
 
 import { errors } from 'com'
-import { TagOK, TagWARN, TagKO, TagEXTRA, StatusFilter } from '../library/index'
+import { Button, TagOK, TagWARN, TagKO, TagEXTRA, StatusFilter } from '../library/index'
 
-import { ViewCustomerBoughtPack } from './components'
+import { UpdateCustomerPack } from './components'
 import { getDecimalToTimeFormat } from '../logic/helpers'
 
 const { SystemError } = errors
 
 export default function CustomerPacks(props) {
+    const { customerId } = useParams() // Obtén el customerId desde la URL
     const { state } = useLocation()
     const [view, setView] = useState(false)
     const customerName = state?.customerName || 'Unknow user'
@@ -19,13 +20,12 @@ export default function CustomerPacks(props) {
     const [loading, setLoading] = useState(true) //This is to show the loader as active by default
     const updatePackView = useRef(null)
     const [statusFilter, setStatusFilter] = useState('All')
-    const customerId = '67dde655985ba3a1a04fe271'
 
-    useEffect(() => {
+    /* useEffect(() => {
         const fetchCustomers = async () => {
             try {
                 setLoading(true)
-                const customerPacks = await logic.getCustomerBoughtPacks(customerId)
+                const customerPacks = await logic.getCustomerPacks(customerId)
                 const formattedPacks = await formatCustomerPacks(customerPacks)
                 setCustomerPacks(formattedPacks)
             } catch (error) {
@@ -36,7 +36,7 @@ export default function CustomerPacks(props) {
             }
         }
         fetchCustomers()
-    }, [customerId])
+    }, [customerId]) */
 
     useEffect(() => {
         if (view && updatePackView.current) {
@@ -48,13 +48,29 @@ export default function CustomerPacks(props) {
     const handleManageClick = (event, customerPack) => {
         event.preventDefault()
         setSelectedPack(customerPack) //Guarda el basePack en el estado
-        setView(view ? null : 'ViewCustomerBoughtPack')
+        setView(view ? null : 'UpdateCustomerPack')
     }
 
     const handleHomeClick = event => {
         event.preventDefault()
         props.onHomeClick()
     }
+
+    /* const handlePackUpdated = async () => {
+        setView(null) // Cierra el componente hijo
+        setSelectedPack(null) // Limpia el pack seleccionado
+
+        try {
+            const updatedPacks = await logic.getCustomerPacks(customerId) // Vuelve a obtener los datos actualizados
+            //setCustomerPacks(updatedPacks) // Actualiza la tabla de packs
+
+            const formattedPacks = await formatCustomerPacks(updatedPacks)
+            setCustomerPacks(formattedPacks)
+        } catch (error) {
+            alert(error.message)
+            console.error(error)
+        }
+    } */
 
     //Función de formateo de los packs
     const formatCustomerPacks = async (packs) => {
@@ -224,7 +240,8 @@ export default function CustomerPacks(props) {
                 </div>
             )}
 
-            <a href=""
+            <a
+                href=""
                 title="Go back home"
                 onClick={handleHomeClick}
                 className="mt-8 text-color_primary hover:underline"

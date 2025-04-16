@@ -10,12 +10,11 @@ const emailRegisterByProviderWelcome = (to, name, username, password, providerNa
     validate.name(providerName)
     validate.email(providerEmail)
 
-    const loginLink = process.env.MAIN_URL
-    console.log(loginLink)
+    const loginLink = 'https://hourify360.com'
 
     const subject = 'Welcome to Hourify Time Tracking'
     const text = `Hello ${name},
-This is your confirmation email. We just want to confirm that a new account has been created for you by ${providerName}. You can log in using the following credentials:
+This is your confirmation email. We just want to confirm that a new account has been created for you by ${providerName}. You can login on ${loginLink} using the following credentials:
 Username: ${username}
 Password: ${password}
 You can also contact your provider ${providerName} at ${providerEmail} if you have any questions or need assistance.
@@ -23,7 +22,7 @@ Please change your password after logging in for the first time to ensure your a
 If you have problems logging in, contact us on hola@nomadwebs.com`
     const html = `
         <p>Hello ${name}!!</p>
-        <p>This is your confirmation email. We just want to confirm that a new account has been created for you by ${providerName}. You can log in using the following credentials:</p>
+        <p>This is your confirmation email. We just want to confirm that a new account has been created for you by ${providerName}. You can login on <a href="${loginLink}">${loginLink}</a> using the following credentials:</p>
         <p>Username: ${username}</p>
         <p>Password: ${password}</p>
         <p>You can also contact your provider ${providerName} at ${providerEmail} if you have any questions or need assistance.</p>
