@@ -573,7 +573,45 @@ const event = new Schema({
         type: Date,
         default: Date.now
     }
-}, { versionKey: false });
+}, { versionKey: false })
+
+
+const message = new Schema({
+    sender: {
+        type: ObjectId,
+        ref: 'User',
+        required: true
+    },
+    recipient: {
+        type: ObjectId,
+        ref: 'User',
+        required: true
+    },
+    content: {
+        type: String,
+        required: true,
+        maxLength: 2000
+    },
+    sentAt: {
+        type: Date,
+        default: Date.now,
+        required: true
+    },
+    read: {
+        type: Boolean,
+        default: false,
+        required: true
+    },
+    readAt: {
+        type: Date,
+        default: null
+    },
+    archived: {
+        type: Boolean,
+        default: false
+    }
+}, { versionKey: false })
+
 
 
 const User = model('User', user)
@@ -583,6 +621,7 @@ const Activity = model('Activity', activity)
 const Payment = model('Payment', payment)
 const Task = model('Task', task)
 const Event = model('Event', event)
+const Message = model('Message', message)
 
 
 export {
@@ -592,5 +631,6 @@ export {
     Activity,
     Payment,
     Task,
-    Event
+    Event,
+    Message
 }

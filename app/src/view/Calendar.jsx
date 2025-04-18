@@ -32,7 +32,7 @@ export default function Calendar({ onHomeClick }) {
                 setEvents(events)
             } catch (error) {
                 console.error('Error loading events:', error.message)
-                alert('Error loading events: ' + error.message)
+                /* alert('Error loading events: ' + error.message) */
                 setEvents([])
             }
         }
@@ -68,7 +68,7 @@ export default function Calendar({ onHomeClick }) {
             startDateTime: selectedDate,
             endDateTime: new Date(selectedDate.getTime() + 60 * 60 * 1000),
             attendees: [],
-            typeEvent: 'Meeting' // ✅ FIX: aseguramos tipo por defecto
+            typeEvent: 'Meeting'
         })
     }
 
@@ -77,7 +77,7 @@ export default function Calendar({ onHomeClick }) {
             const userId = logic.getUserId()
             const { title, description, location, startDateTime, endDateTime, attendees, typeEvent } = newEvent
 
-            // ✅ FIX: validación mínima
+            // Validations alidación mínima
             if (!title || !startDateTime || !endDateTime) {
                 alert('Missing required fields.')
                 return
@@ -125,9 +125,6 @@ export default function Calendar({ onHomeClick }) {
             eventId: selectedEvent.id, // ✅ Aunque opcional, lo dejas por compatibilidad
             typeEvent: selectedEvent.typeEvent || 'Meeting' // ✅ FIX: fallback si no existe
         })
-
-        // ✅ FIX: este log no mostrará el valor actualizado, lo dejamos comentado para evitar confusión
-        // console.log("new event: ", newEvent)
     }
 
     const handleUpdateEvent = async () => {

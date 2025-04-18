@@ -11,20 +11,39 @@ import { getDecimalToTimeFormat } from '../logic/helpers'
 const { SystemError } = errors
 
 export default function CustomerPacks(props) {
-    const { state } = useLocation()
     const [view, setView] = useState(false)
-    const customerName = state?.customerName || 'Unknow user'
     const [selectedPack, setSelectedPack] = useState(null) // Estado para almacenar el pack seleccionado
     const [customerPacks, setCustomerPacks] = useState([])
     const [loading, setLoading] = useState(true) //This is to show the loader as active by default
     const updatePackView = useRef(null)
     const [statusFilter, setStatusFilter] = useState('All')
-    const customerId = '67dde655985ba3a1a04fe271'
+    const [userDetails, setUserDetails] = useState(null)
 
     useEffect(() => {
+        if (!userDetails) {
+            try {
+                logic.getUserDetails()
+                    .then(setUserDetails)
+
+                    .catch(error => {
+                        alert(error.error)
+                        console.error(error)
+                    })
+            } catch (error) {
+                alert(error.error)
+                console.error(error)
+            }
+        }
+    }, [])
+    const customerId = userDetails?.id
+
+
+    useEffect(() => {
+        if (!userDetails) return
         const fetchCustomers = async () => {
             try {
                 setLoading(true)
+                console.log('user details: ', userDetails)
                 const customerPacks = await logic.getCustomerBoughtPacks(customerId)
                 const formattedPacks = await formatCustomerPacks(customerPacks)
                 setCustomerPacks(formattedPacks)
@@ -123,17 +142,17 @@ export default function CustomerPacks(props) {
                     <StatusFilter
                         activeFilter={statusFilter}
                         setFilter={setStatusFilter}
-                        title={`${customerName}'s Packs`}
+                    /* title={`${customerName}'s Packs`} */
                     />
 
                     {filteredPacks.length === 0 ? (
                         <div className="bg-white shadow-md rounded p-6 text-center">
-                            <p className="text-gray-500">No {statusFilter.toLowerCase()} packs found for this customer.</p>
+                            <p className="text-gray-500">No {statusFilter.toLowerCase()} services found for this customer.</p>
                             <button
                                 onClick={() => setStatusFilter('All')}
                                 className="mt-2 text-color_primary hover:underline"
                             >
-                                Show all packs
+                                Show all Services
                             </button>
                         </div>
                     ) : (
@@ -144,8 +163,22 @@ export default function CustomerPacks(props) {
                                     className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 cursor-pointer border border-transparent hover:border-color_primary"
                                     onClick={(event) => handleManageClick(event, customerPack)}
                                 >
-                                    <div className="bg-gray-700 text-white py-2 px-4">
-                                        <h3 className="font-semibold truncate">{customerPack.description}</h3>
+                                    <div className="bg-gray-700 text-white py-2 px-4 flex items-center justify-between">
+                                        <h3 className="font-semibold truncate">{customerPack.providerName}</h3>
+                                        <div className="flex items-center space-x-2">
+                                            <a
+                                                href={`mailto:${customerPack.providerEmail}`}
+                                                title="Send an email"
+                                                className="hover:text-color_green transition-colors"
+                                                onClick={event => event.stopPropagation()}
+                                            >
+                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white hover:text-color_green" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8m-18 0a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z" />
+                                                </svg>
+                                            </a>
+                                            <p className="text-xs text-gray-300 truncate">{customerPack.providerEmail}</p>
+
+                                        </div>
                                     </div>
                                     <div className="p-4">
                                         {customerPack.timerActivated && (
@@ -163,6 +196,11 @@ export default function CustomerPacks(props) {
                                                 )}
                                             </div>
                                         )}
+
+                                        <div className="flex justify-between items-center mb-2">
+                                            <span className="text-sm font-medium text-gray-600">Description:</span>
+                                            <span className="font-semibold">{customerPack.description}</span>
+                                        </div>
 
                                         <div className="flex justify-between items-center mb-2">
                                             <span className="text-sm font-medium text-gray-600">Remaining:</span>

@@ -17,7 +17,7 @@ export default (userId) => {
                 return res.json()
             }
 
-            throw new SystemError('error fetching events')
+            return []
         })
         .catch(error => { throw new SystemError(error.message) })
 }

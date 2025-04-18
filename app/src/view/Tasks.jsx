@@ -60,7 +60,7 @@ export default function Tasks(props) {
                     setCustomers(customersResponse)
                 } catch (error) {
                     console.error('Error fetching customers:', error)
-                    alert('Failed to load customers: ' + error.message)
+                    /* alert('Failed to load customers: ' + error.message) */
                 }
 
                 // Fetch tasks separately, allowing customers to still load if this fails

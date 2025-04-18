@@ -49,7 +49,7 @@ export default function App() {
 
   const handleManageCustomersClick = () => navigate('/manage-customers')
 
-  const handleManagePurchasedPacksClick = () => navigate('/manage-purchased-packs')
+  const handleManagePurchasedPacksClick = () => navigate('/manage-bought-packs')
 
   const handleAssignPack = () => navigate('/assign-pack')
 
@@ -164,7 +164,7 @@ export default function App() {
           <Navigate to="/login" />} />
         {/* {handleManageCustomerBoughtServicesClick}
  */}
-        <Route path="/manage-purchased-packs" element={logic.isUserLoggedIn() ?
+        <Route path="/manage-bought-packs" element={logic.isUserLoggedIn() ?
           <ManagePurchasedPacks onHomeClick={handleHomeClick} /> :
           <Navigate to="/login" />} />
 

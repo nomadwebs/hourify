@@ -109,8 +109,8 @@ export default function ManagePacks(props) {
 
     return (
         <main className="flex flex-col items-center bg-color_backgroundGrey w-full flex-grow pt-12 px-4">
-            <h1 className="text-3xl font-bold mb-2">Manage Packs</h1>
-            <p className="text-gray-600 mb-6">Create, edit, and assign your service packs</p>
+            <h1 className="text-3xl font-bold mb-2">My Services</h1>
+            <p className="text-gray-600 mb-6">Create, edit, and assign your services</p>
 
             {/* Quick Action Buttons */}
             <div className="flex flex-wrap gap-3 mb-8 w-full max-w-6xl">
@@ -122,7 +122,7 @@ export default function ManagePacks(props) {
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                             <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
                         </svg>
-                        Assign Pack
+                        Assign Service
                     </button>
                 )}
                 <button
@@ -132,7 +132,7 @@ export default function ManagePacks(props) {
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                         <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
                     </svg>
-                    Create New Pack
+                    Create New Service
                 </button>
             </div>
 
@@ -142,15 +142,15 @@ export default function ManagePacks(props) {
                 </div>
             ) : basePacks.length === 0 ? (
                 <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-4xl">
-                    <h2 className="text-xl font-semibold text-color_darkBlue mb-4">No Packs Available</h2>
-                    <p className="text-gray-600 mb-4">You haven't created any service packs yet.</p>
+                    <h2 className="text-xl font-semibold text-color_darkBlue mb-4">No Services Available</h2>
+                    <p className="text-gray-600 mb-4">You haven't created any service yet.</p>
 
                     <div className="bg-gray-50 p-4 rounded-md mb-4">
                         <h3 className="font-medium text-gray-700 mb-2">Getting Started:</h3>
                         <ol className="list-decimal pl-5 space-y-2 text-gray-600">
-                            <li>Click the <span className="font-medium">"Create New Pack"</span> button above</li>
-                            <li>Define your service details (name, price, quantity, etc.)</li>
-                            <li>Save your pack to make it available for assignment to customers</li>
+                            <li>Click the <span className="font-medium">"Create New Service"</span> button above</li>
+                            <li>Define your service details (name, price, quantity, hours, units, etc.)</li>
+                            <li>Save your service to make it available for assignment to customers</li>
                         </ol>
                     </div>
 
