@@ -15,19 +15,30 @@ export default (name, email, username, password, passwordRepeat) => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, username, password, 'password-repeat': passwordRepeat })
     })
+
+        .then(async res => {
+            const data = await res.json()
+
+            if (res.ok) return data  // Devuelves { success, promoApplied, message }
+
+            throw new errors.SystemError(data.message || 'Registration failed')
+        })
         .catch(error => {
             throw new SystemError(error.message)
         })
-        .then(res => {
-            if (res.ok)
-                return
-
+    /* .catch(error => {
+        throw new SystemError(error.message)
+    })
+    .then(res => {
+        if (res.ok)
             return res.json()
-                .catch(error => {
-                    throw new SystemError(error.message)
-                })
-                .then(({ error, message }) => {
-                    throw new errors[error](message)
-                })
-        })
+
+        return res.json()
+            .catch(error => {
+                throw new SystemError(error.message)
+            })
+            .then(({ error, message }) => {
+                throw new errors[error](message)
+            })
+    }) */
 }

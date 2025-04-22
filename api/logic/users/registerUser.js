@@ -8,8 +8,8 @@ import { emailRegisterWelcome } from '../emailing/index.js'
 
 const { DuplicityError, SystemError } = errors
 
-const PROMO_START_DATE = new Date('2025-04-12T00:00:00Z')
-const PROMO_END_DATE = new Date('2025-04-20T23:59:59Z')
+const PROMO_START_DATE = new Date('2025-04-23T00:00:00Z')
+const PROMO_END_DATE = new Date('2025-04-30T23:59:59Z')
 const PROMO_MAX_USERS = 30
 const now = new Date()
 
@@ -123,6 +123,5 @@ export default (name, email, username, password, passwordRepeat) => {
                 ? '¡Felicidades! Has conseguido acceso vitalicio al plan Pro como early adopter 🚀'
                 : 'Usuario registrado correctamente.'
         }
-
     })()
 }

@@ -98,6 +98,7 @@ export default function Header({ onHomeClick,
     const isActive = (path) => location.pathname === path ? 'text-color_green font-bold' : 'hover:underline';
 
     const isProvider = userDetails?.ownPacks.length !== 0 ? true : false
+    const isCustomer = userDetails?.adquiredPacks.length !== 0 ? true : false
 
     return <header className="bg-color_darkBlue text-white p-4 flex justify-between items-center h-28">
         <h1 className="text-4xl font-bold">{location.pathname !== '/' ? <a href="" onClick={handleHomeClick}>Hourify</a> : 'Hourify'}</h1>
@@ -111,8 +112,15 @@ export default function Header({ onHomeClick,
                             <a href="#" className={`hover:underline ${location.pathname === '/manage-customers' ? 'text-color_green font-bold' : ''}`} onClick={handleManageCustomers}>My Customers</a>
                         </>
                     )}
+
                     <a href="#" className={`hover:underline ${location.pathname === '/manage-packs' ? 'text-color_green font-bold' : ''}`} onClick={handleManagePacks}>My Services</a>
-                    <a href="#" className={`hover:underline ${location.pathname === '/manage-bought-packs' ? 'text-color_green font-bold' : ''}`} onClick={handleManagePurchasedPacks}>Bought Services</a>
+
+                    {isCustomer && (
+                        <>
+                            <a href="#" className={`hover:underline ${location.pathname === '/manage-bought-packs' ? 'text-color_green font-bold' : ''}`} onClick={handleManagePurchasedPacks}>Bought Services</a>
+                        </>
+                    )}
+
                     <a href="#" className={`hover:underline ${location.pathname === '/tasks' ? 'text-color_green font-bold' : ''}`} onClick={handleTasksClick}>Tasks</a>
                     <a href="#" className={`hover:underline ${location.pathname === '/calendar' ? 'text-color_green font-bold' : ''}`} onClick={handleCalendarClick}>Calendar</a>
                 </>
@@ -136,7 +144,11 @@ export default function Header({ onHomeClick,
                             </>
                         )}
                         <a href="#" className="block px-4 py-2 hover:bg-gray-100" onClick={handleManagePacks}>📑 My Services</a>
-                        <a href="#" className="block px-4 py-2 hover:bg-gray-100" onClick={handleManagePurchasedPacks}>📑 Bought Services</a>
+                        {isCustomer && (
+                            <>
+                                <a href="#" className="block px-4 py-2 hover:bg-gray-100" onClick={handleManagePurchasedPacks}>📑 Bought Services</a>
+                            </>
+                        )}
                         <a href="#" className="block px-4 py-2 hover:bg-gray-100" onClick={handleTasksClick}>📝 Tasks</a>
                         <a href="#" className="block px-4 py-2 hover:bg-gray-100" onClick={handleCalendarClick}>📅 Calendar</a>
                         <a href="#" className="block px-4 py-2 hover:bg-gray-100" onClick={handleProfileClick}>👤 User profile</a>

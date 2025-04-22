@@ -279,6 +279,7 @@ export default function Home(props) {
     )
 
     {
+
         return (
             <main className='flex flex-col items-center bg-color_backgroundGrey w-full flex-grow p-4 pt-12'>
 
@@ -416,17 +417,18 @@ export default function Home(props) {
                             My Services
                         </button>
 
-                        <button
-                            onClick={handleManagePurchasedPacks}
-                            className='flex items-center text-sm bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-md transition-colors duration-300'
-                        >
-                            <svg xmlns='http://www.w3.org/2000/svg' className='h-5 w-5 mr-2' viewBox='0 0 20 20' fill='currentColor'>
-                                <path d='M4 3a2 2 0 100 4h12a2 2 0 100-4H4z' />
-                                <path fillRule='evenodd' d='M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm5 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z' clipRule='evenodd' />
-                            </svg>
-                            Bought Services
-                        </button>
-
+                        {customerBoughtPacks.length > 0 && (
+                            <button
+                                onClick={handleManagePurchasedPacks}
+                                className='flex items-center text-sm bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-md transition-colors duration-300'
+                            >
+                                <svg xmlns='http://www.w3.org/2000/svg' className='h-5 w-5 mr-2' viewBox='0 0 20 20' fill='currentColor'>
+                                    <path d='M4 3a2 2 0 100 4h12a2 2 0 100-4H4z' />
+                                    <path fillRule='evenodd' d='M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm5 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z' clipRule='evenodd' />
+                                </svg>
+                                Bought Services
+                            </button>
+                        )}
 
                     </div>
                 </header>
@@ -464,7 +466,6 @@ export default function Home(props) {
                                                 <span className='text-sm font-medium text-gray-600'>Remaining:</span>
                                                 <span className='font-semibold'>{pack.formattedRemaining}</span>
                                             </div>
-
 
 
                                             <div className='mb-3 text-sm text-gray-600 line-clamp-2'>

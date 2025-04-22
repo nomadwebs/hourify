@@ -21,23 +21,18 @@ export default function Register(props) {
             ['password-repeat']: { value: passwordRepeat }
         } = form
 
-        try {
-            logic.registerUser(name, email, username, password, passwordRepeat)
-                .then(() => {
-                    form.reset()
-                    alert('New user was successfully registered', 'success')
-                    props.onRegistered()
-                })
-                .catch(error => {
-                    if (error instanceof SystemError) alert('Sorry, try again later.')
-                    else alert(error.message)
-                    console.error(error)
-                })
-        } catch (error) {
-            alert(error.message)
-            console.error(error)
-        }
+        logic.registerUser(name, email, username, password, passwordRepeat)
+            .then(response => {
+                form.reset()
+                alert(response.message, 'success')
+                props.onRegistered()
+            })
+            .catch(error => {
+                alert(error.message, 'error')
+                console.error(error)
+            })
     }
+
 
     const handleLoginClick = event => {
         event.preventDefault()

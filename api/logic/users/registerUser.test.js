@@ -8,12 +8,10 @@ await db.connect(process.env.MONGO_URL)
 //TEST: 
 // Datos de prueba para el registro
 const name = 'Gandalf';
-const username = 'greygandalf11';
+const username = 'greygandalf13';
 const password = 'greygandalf';
 const passwordRepeat = 'greygandalf';
-const email = 'greygandalf110@themiddleearth.com';
-
-
+const email = 'greygandalf130@themiddleearth.com';
 
 try {
     const result = await registerUser(name,

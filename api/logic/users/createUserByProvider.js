@@ -79,7 +79,8 @@ export default async function createUserByProvider(name, email, username, create
             website: null,
             customers: [],
             ownPacks: [],
-            adquiredPacks: []
+            adquiredPacks: [],
+            createdDate,
         })
 
         // Send welcome email asynchronously
