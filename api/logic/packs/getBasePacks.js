@@ -29,7 +29,10 @@ export default (userId) => {
         try {
             const basePacksWithCount = await Promise.all(
                 basePacks.map(async (basePack) => {
-                    const packCount = await Pack.countDocuments({ refPack: basePack._id })
+                    const packCount = await Pack.countDocuments({
+                        refPack: basePack._id,
+                        status: 'Active'
+                    })
 
                     basePack.id = basePack._id.toString()
                     delete basePack._id

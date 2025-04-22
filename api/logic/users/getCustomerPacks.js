@@ -20,7 +20,7 @@ export default (userId, targetUserId) => {
         try {
             user = await User.findById(targetUserId).lean()
         } catch (error) {
-
+            throw new SystemError(error.message)
         }
         if (!user) throw new NotFoundError('targetUserId not found')
 

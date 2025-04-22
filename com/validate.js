@@ -167,6 +167,15 @@ const validateTaskPriority = priority => {
     if (!validPriorities.includes(priority)) throw new ValidationError('Invalid priority value')
 }
 
+const validateAttendees = attendees => {
+    if (!Array.isArray(attendees)) throw new ValidationError('attendees must be an array')
+    //TODO: Validate attendees id
+    /* for (const attendee of attendees) {
+        if (!Types.ObjectId.isValid(attendee)) {
+            throw new ValidationError(`Invalid attendee ID: ${attendee}`)
+        }
+    } */
+}
 
 
 const validate = {
@@ -198,7 +207,8 @@ const validate = {
     paymentMethod: validatePaymentMethod,
     timeFormat: validateTimeFormat,
     taskStatus: validateTaskStatus,
-    taskPriority: validateTaskPriority
+    taskPriority: validateTaskPriority,
+    attendees: validateAttendees
 }
 
 export default validate

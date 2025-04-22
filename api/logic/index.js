@@ -7,7 +7,8 @@ import {
     getUserDetails,
     updateUser,
     getCustomerPacks,
-    createUserByProvider
+    createUserByProvider,
+    updateUserPlan
 } from './users/index.js'
 
 //PACKS & BASEPACKS
@@ -53,12 +54,28 @@ import {
     updateTask
 } from './tasks/index.js'
 
+//CALENDAR
+import {
+    addEvent,
+    getEvents,
+    updateEvent,
+    deleteEvent
+} from './calendar/index.js'
 
+//PAYMENTS
 import {
     addPayment,
     getPayments,
     deletePayment
 } from './payments/index.js'
+
+//STATS
+import {
+    getMonthEarned,
+    getMonthPayments,
+    getMonthHoursTracked,
+    getMonthUnitsTracked
+} from './stats/index.js'
 
 const logic = {
     //Users
@@ -70,6 +87,7 @@ const logic = {
     updateUser,
     getCustomerPacks,
     createUserByProvider,
+    updateUserPlan,
 
 
     //Packs and basebacks
@@ -98,7 +116,6 @@ const logic = {
     //Activity
     getActivityByPackId,
 
-
     //Payments
     addPayment,
     getPayments,
@@ -108,7 +125,19 @@ const logic = {
     addTask,
     getTasks,
     deleteTask,
-    updateTask
+    updateTask,
+
+    //Calendar
+    addEvent,
+    getEvents,
+    updateEvent,
+    deleteEvent,
+
+    //Stats
+    getMonthEarned,
+    getMonthPayments,
+    getMonthHoursTracked,
+    getMonthUnitsTracked
 }
 
 export default logic

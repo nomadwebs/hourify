@@ -1,0 +1,1 @@
+curl -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2N2RkZTBkMjk4NWJhM2ExYTA0ZmUxYTQiLCJyb2xlIjoic3RhbmRhcmQiLCJpYXQiOjE3NDQwOTc1NzQsImV4cCI6MTc0NDExMTk3NH0.PfHFCBEqoO6xqU6ph2QVDDCfCbFNG2Wkuzxrer8Qoik' http://localhost:8080/stats/get-units-tracked -v

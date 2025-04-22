@@ -13,11 +13,6 @@ export default (userId) => {
 
             return Pack.find({ provider: userId }).lean()
                 .then(packs => {
-                    //If the user is new we don't need to show this error
-                    /* if (!packs || packs.length === 0) {
-                        throw new NotFoundError('No Sold packs found ')
-                    } */
-
                     // Creamos un array de promesas para obtener los nombres de los clientes
                     const packformatted = packs.map(pack =>
                         getUserName(pack.customer.toString(), pack.customer.toString())

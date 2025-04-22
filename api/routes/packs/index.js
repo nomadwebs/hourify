@@ -15,7 +15,6 @@ import {
     getCustomerBoughtPacksHandler,
     getPackDetailsHandler,
 } from './handlers/index.js'
-import getCustomerBoughtPacks from "../../logic/packs/getCustomerBoughtPacks.js"
 
 const packsRouter = Router()
 

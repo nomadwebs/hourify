@@ -16,8 +16,7 @@ export default (userId) => {
             if (res.ok) {
                 return res.json()
             }
-
-            throw new SystemError('error fetching tasks')
+            return []
         })
         .catch(error => { throw new SystemError(error.message) })
 }

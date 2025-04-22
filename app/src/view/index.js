@@ -5,6 +5,7 @@ import ManagePacks from './ManagePacks'
 import ManagePurchasedPacks from './ManagePurchasedPacks'
 import AssignPack from './AssignPack'
 import CreatePack from './CreatePack'
+import CustomerBoughtPacks from './CustomerBoughtPacks'
 
 //Customers Managing
 import ManageCustomers from './ManageCustomers'
@@ -20,6 +21,9 @@ import Tracker from "./Tracker"
 
 //Tasks Managing
 import Tasks from "./Tasks"
+
+//Calendar Managing
+import Calendar from "./Calendar"
 
 import { Alert, Confirm } from "./components"
 
@@ -39,6 +43,7 @@ export {
     CreatePack,
     UserProfile,
     CustomerPacks,
+    CustomerBoughtPacks,
 
 
     //Tracker
@@ -46,6 +51,9 @@ export {
 
     //Tasks
     Tasks,
+
+    //Calendar
+    Calendar,
 
     //Others
     Alert,

@@ -1,6 +1,6 @@
 import { validate, errors } from 'com'
 
-const { SystemError } = errors
+const { SystemError, CredentialsError } = errors
 
 export default (username, password) => {
     validate.username(username)
@@ -13,9 +13,19 @@ export default (username, password) => {
     })
         .catch(error => { throw new SystemError(error.message) })
         .then(res => {
-            if (res.ok)
+            if (res.ok) {
                 return res.json()
                     .catch(error => { throw new SystemError(error.message) })
-                    .then(token => { localStorage.token = token })
+                    .then(token => {
+                        localStorage.token = token
+                        return { success: true }
+                    })
+            } else {
+                return res.json()
+                    .catch(error => { throw new SystemError(error.message) })
+                    .then(error => {
+                        throw new CredentialsError(error.message)
+                    })
+            }
         })
 }

@@ -73,19 +73,19 @@ export default function Create(props) {
     }
 
     return <main className="flex flex-col items-center bg-color_backgroundGrey w-full flex-grow pt-12">
-        <h2 className="text-2xl font-bold mb-6">Create new pack</h2>
+        <h2 className="text-2xl font-bold mb-6">Create new service</h2>
 
         <div className="bg-white shadow-md rounded p-6 w-full max-w-4xl">
             <form className="grid grid-cols-1 md:grid-cols-2 gap-6" onSubmit={handleSubmit}>
 
                 <div className="space-y-4">
                     <Field>
-                        <Label htmlFor="packName">Pack name</Label>
+                        <Label htmlFor="packName">Service name</Label>
                         <Input personalClasses="border-2 rounded-lg w-full" type="text" id="packName" placeholder="Pack name" />
                     </Field>
 
                     <Field>
-                        <Label htmlFor="packDescription">Pack description</Label>
+                        <Label htmlFor="packDescription">Service description</Label>
                         <Textarea personalClasses="border-2 rounded-lg w-full h-28 p-2" id="packDescription" placeholder="Pack description goes here" />
                     </Field>
 
@@ -105,7 +105,7 @@ export default function Create(props) {
                     </Field>
 
                     <Field>
-                        <Label htmlFor="expiringTime">Expiring pack time</Label>
+                        <Label htmlFor="expiringTime">Expiring service time</Label>
                         <select id="expiringTime" name="expiringTime" className="border-2 rounded-lg w-full p-2">
                             <option value="-1">Unlimited</option>
                             <option value="1">1 Month</option>
@@ -131,7 +131,7 @@ export default function Create(props) {
                 </div>
 
                 <div className="md:col-span-2 flex justify-center">
-                    <Button type="submit">Create Pack</Button>
+                    <Button type="submit">Create Service</Button>
                 </div>
             </form>
         </div>

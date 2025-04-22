@@ -30,6 +30,11 @@ const user = new Schema({
         enum: ['free', 'pro'],
         default: 'free'
     },
+    reason: {
+        type: String,
+        required: false,
+        enum: ['', 'earlyAdopterPromo']
+    },
     planExpiryDate: {
         type: Date,
         required: false,
@@ -153,7 +158,12 @@ const user = new Schema({
         type: ObjectId,
         required: false,
         ref: 'User'
-    }
+    },
+    lastLogin: {
+        type: Date,
+        required: false,
+        default: null
+    },
 }, { versionKey: false })
 
 
@@ -221,6 +231,12 @@ const basePack = new Schema({
     priceWithVat: {
         type: Number,
         required: false,
+    },
+
+    archived: {
+        type: Boolean,
+        required: false,
+        default: false
     }
 
 }, { versionKey: false })
@@ -306,7 +322,6 @@ const pack = new Schema({
         type: Date,
         required: false,
         default: null
-
     },
 
     status: {
@@ -314,6 +329,12 @@ const pack = new Schema({
         required: true,
         enum: ['Pending', 'Active', 'Expired', 'Finished'],
         default: 'Pending'
+    },
+
+    archived: {
+        type: Boolean,
+        required: false,
+        default: false
     }
 }, { versionKey: false })
 
@@ -505,12 +526,102 @@ const task = new Schema({
     */
 }, { versionKey: false })
 
+const event = new Schema({
+    title: {
+        type: String,
+        required: true
+    },
+
+    description: {
+        type: String,
+        required: false
+    },
+
+    location: {
+        type: String,
+        required: false
+    },
+
+    creator: {
+        type: ObjectId,
+        ref: 'User',
+        required: true
+    },
+
+    attendees: [{
+        type: ObjectId,
+        ref: 'User'
+    }],
+
+    startDateTime: {
+        type: Date,
+        required: true
+    },
+
+    endDateTime: {
+        type: Date,
+        required: true
+    },
+
+    typeEvent: {
+        type: String,
+        required: false,
+        enum: ['Meeting', 'Call', 'Delivery', 'Training', 'Others']
+    },
+
+    createdAt: {
+        type: Date,
+        default: Date.now
+    }
+}, { versionKey: false })
+
+
+const message = new Schema({
+    sender: {
+        type: ObjectId,
+        ref: 'User',
+        required: true
+    },
+    recipient: {
+        type: ObjectId,
+        ref: 'User',
+        required: true
+    },
+    content: {
+        type: String,
+        required: true,
+        maxLength: 2000
+    },
+    sentAt: {
+        type: Date,
+        default: Date.now,
+        required: true
+    },
+    read: {
+        type: Boolean,
+        default: false,
+        required: true
+    },
+    readAt: {
+        type: Date,
+        default: null
+    },
+    archived: {
+        type: Boolean,
+        default: false
+    }
+}, { versionKey: false })
+
+
+
 const User = model('User', user)
 const BasePack = model('BasePack', basePack)
 const Pack = model('Pack', pack)
 const Activity = model('Activity', activity)
 const Payment = model('Payment', payment)
 const Task = model('Task', task)
+const Event = model('Event', event)
+const Message = model('Message', message)
 
 
 export {
@@ -519,5 +630,7 @@ export {
     Pack,
     Activity,
     Payment,
-    Task
+    Task,
+    Event,
+    Message
 }
