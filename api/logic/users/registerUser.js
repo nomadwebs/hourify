@@ -120,8 +120,8 @@ export default (name, email, username, password, passwordRepeat) => {
             success: true,
             promoApplied,
             message: promoApplied
-                ? '¡Felicidades! Has conseguido acceso vitalicio al plan Pro como early adopter 🚀'
-                : 'Usuario registrado correctamente.'
+                ? 'Congratulations! You have gained lifetime access to the Pro plan as an early adopter 🚀'
+                : 'User registered successfully.'
         }
     })()
 }

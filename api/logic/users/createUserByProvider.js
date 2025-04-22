@@ -31,6 +31,8 @@ export default async function createUserByProvider(name, email, username, create
     validate.username(username)
     validate.id(createdBy, 'userId')
 
+    const createdDate = new Date()
+
     // Find the user who is creating the new user
     let provider
     try {
