@@ -11,7 +11,6 @@ const { DuplicityError, SystemError } = errors
 const PROMO_START_DATE = new Date('2025-04-23T00:00:00Z')
 const PROMO_END_DATE = new Date('2025-04-30T23:59:59Z')
 const PROMO_MAX_USERS = 30
-const now = new Date()
 
 const assignRandomProfileImage = () => {
     const imageNumber = Math.floor(Math.random() * 12) + 1; //from 1 to 12
@@ -37,6 +36,7 @@ export default (name, email, username, password, passwordRepeat) => {
     return (async () => {
         let hash
 
+        const now = new Date()
         const isInPromoPeriod = now >= PROMO_START_DATE && now <= PROMO_END_DATE
 
         //In the register moment all users will be free
