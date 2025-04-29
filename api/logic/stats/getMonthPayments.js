@@ -21,8 +21,8 @@ export default async function (userId) { //User is find as a provider id
             }
         }, { _id: 1 }).lean()
 
-        const packIds = packs.map(pack => pack._id.toString())
-        //console.log('✅ packIds del proveedor:', packIds)
+        const packIds = packs.map(pack => pack._id)
+        console.log('✅ packIds del proveedor:', packIds)
 
         if (packIds.length === 0) return 0
 

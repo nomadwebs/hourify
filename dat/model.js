@@ -27,7 +27,7 @@ const user = new Schema({
     plan: {
         type: String,
         required: true,
-        enum: ['free', 'pro'],
+        enum: ['free', 'pro', 'lifeTime'],
         default: 'free'
     },
     reason: {
@@ -343,7 +343,7 @@ const pack = new Schema({
 //Model activity to follow up projects and repporting 
 const activity = new Schema({
     pack: {
-        type: String,
+        type: ObjectId,
         required: true,
         ref: 'Pack'
     },
@@ -383,7 +383,7 @@ const activity = new Schema({
 //Model to payment control. 
 const payment = new Schema({
     pack: {
-        type: String,
+        type: ObjectId,
         required: true,
         ref: 'Pack'
     },
