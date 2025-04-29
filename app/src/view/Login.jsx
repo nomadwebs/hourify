@@ -35,10 +35,8 @@ export default function Login(props) {
         } catch (error) {
             alert(error.message)
             console.error(error)
-
         }
     }
-
 
     const handleRegisterClick = event => {
         event.preventDefault()
@@ -57,8 +55,8 @@ export default function Login(props) {
 
                 <form className="flex flex-col gap-4 w-full" onSubmit={handleSubmit}>
                     <Field>
-                        <Label htmlFor="username">Username</Label>
-                        <Input type="text" id="username" placeholder="Your username" required={true}
+                        <Label htmlFor="username">Username or Email</Label>
+                        <Input type="text" id="username" placeholder="Your username or email" required={true}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-color_primary" />
                     </Field>
 

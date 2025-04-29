@@ -23,7 +23,7 @@ export default async (userId) => { //find as a providerId
             } */
         }).select('_id').lean()
 
-        const packIds = packs.map(pack => pack._id.toString())
+        const packIds = packs.map(pack => pack._id)
 
         if (packIds.length === 0) {
             console.log('No hay packs vendidos este mes para este proveedor.')

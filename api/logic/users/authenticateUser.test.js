@@ -5,7 +5,7 @@ import authenticateUser from './authenticateUser.js'
 await db.connect(process.env.MONGO_URL)
 
 const username = 'risto'
-const password = 'youshallnotpass'
+const password = '123456'
 
 try {
     const user = await authenticateUser(username, password)

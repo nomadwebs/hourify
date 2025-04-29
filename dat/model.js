@@ -27,7 +27,7 @@ const user = new Schema({
     plan: {
         type: String,
         required: true,
-        enum: ['free', 'pro'],
+        enum: ['free', 'pro', 'lifeTime'],
         default: 'free'
     },
     reason: {

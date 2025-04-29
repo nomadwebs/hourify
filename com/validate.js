@@ -53,6 +53,28 @@ const validateEmail = email => {
         throw new ValidationError('invalid email')
 }
 
+const validateUsername = username => {
+    if (typeof username !== 'string') throw new ValidationError('invalid username')
+    if (username.length < 5 || username.length > 25)
+        throw new ValidationError('Username should be between 4 to 25 chars')
+}
+
+const validateUsernameOrEmail = input => {
+    if (typeof input !== 'string') throw new ValidationError('input must be a string')
+
+    const emailRegex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
+    const isEmail = emailRegex.test(input)
+
+    if (isEmail) {
+        if (input.length > 254) throw new ValidationError('email is too long')
+        return
+    }
+
+    // If it's not an email, treat it as username
+    if (input.length < 5 || input.length > 25)
+        throw new ValidationError('username must be between 5 and 25 characters')
+}
+
 const validateUrl = url => {
     if (typeof url !== 'string') throw new ValidationError('invalid url')
     if (url.length > 254) throw new ValidationError('url is too long')
@@ -60,11 +82,6 @@ const validateUrl = url => {
         throw new ValidationError('invalid url')
 }
 
-const validateUsername = username => {
-    if (typeof username !== 'string') throw new ValidationError('invalid username')
-    if (username.length < 5 || username.length > 25)
-        throw new ValidationError('Username should be between 4 to 25 chars')
-}
 
 const validatePassword = password => {
     if (typeof password !== 'string') throw new ValidationError('invalid password')
@@ -184,6 +201,7 @@ const validate = {
     description: validateDescription,
     email: validateEmail,
     username: validateUsername,
+    usernameOrEmail: validateUsernameOrEmail,
     password: validatePassword,
     passwordsMatch: validatePasswordsMatch,
     image: validateImage,
