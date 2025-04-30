@@ -18,18 +18,26 @@ export default (name, email, username, password, passwordRepeat) => {
 
         .then(async res => {
             const data = await res.json()
+            console.log('Server response:', data)
 
-            if (res.ok) return data  // Devuelves { success, promoApplied, message }
 
-            throw new errors.SystemError(data.message || 'Registration failed')
+            if (data.success) {
+                return data  // Devuelves { success, promoApplied, message }
+            } else {
+                if (data.error && errors[data.error]) {
+                    throw new errors[data.error](data.message)
+                } else {
+                    throw new SystemError(data.message || 'Registration failed')
+                }
+            }
         })
-        .catch(error => {
-            throw new SystemError(error.message)
-        })
+    /*  .catch(error => {
+         throw new SystemError(error.message)
+     }) */
     /* .catch(error => {
         throw new SystemError(error.message)
     })
-    .then(res => {
+    .then(data => {
         if (res.ok)
             return res.json()
 
