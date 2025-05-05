@@ -67,9 +67,8 @@ export default function AssignPack(props) {
         const { target: form } = event
         const selectedPack = basePacks.find(pack => pack.id === selectedPackId)
 
-        // Usar el precio promocional si existe, de lo contrario usar el precio normal del pack
-        let finalPrice = promoPrice && !isNaN(promoPrice) ? promoPrice : selectedPack?.price
-        console.log('Final price:', finalPrice)
+        // Usar el precio promocional si existe, de lo contrario no lo informamos, lo pillará del pack en la logica
+        let finalPrice = promoPrice && !isNaN(promoPrice) ? promoPrice : undefined
 
         let {
             customerSearch: { value: customerSearch },
@@ -84,7 +83,7 @@ export default function AssignPack(props) {
         payedAmount = formattedPayedAmount
 
         try {
-            await assignPack(customerSearch, selectedPackId, description, payedAmount, paymentMethod, paymentReference)
+            await assignPack(customerSearch, selectedPackId, description, payedAmount, paymentMethod, paymentReference, finalPrice)
             alert('Pack successfully assigned to customer!', 'success')
         } catch (error) {
             if (error instanceof NotFoundError && error.message === 'Customer not found') {

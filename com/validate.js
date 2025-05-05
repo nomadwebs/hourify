@@ -131,6 +131,12 @@ const validatePayedAmount = (payed) => {
     if (payed.length > 10) { throw new ValidationError('payments cannot be grater than 9999999.99') }
 }
 
+const validatePromoAmount = (promoPayed) => {
+    console.log('en el validate tenemos: ', typeof promoPayed)
+    if (typeof promoPayed !== 'string') throw new ValidationError('invalid promo amount')
+    if (promoPayed.length > 10) { throw new ValidationError('promo payments cannot be grater than 9999999.99') }
+}
+
 const validateId = (id, explain = 'id') => {
     if (typeof id !== 'string') throw new ValidationError(`invalid ${explain}`)
     if (id.length !== 24) throw new ValidationError(`invalid ${explain} length`)
@@ -222,6 +228,7 @@ const validate = {
     expiring: validateExpiringTime,
     status: validateStatus,
     payedAmount: validatePayedAmount,
+    promoAmount: validatePromoAmount,
     paymentMethod: validatePaymentMethod,
     timeFormat: validateTimeFormat,
     taskStatus: validateTaskStatus,

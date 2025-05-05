@@ -6,13 +6,12 @@ import getBasePackDetails from '../packs/getBasePackDetails.js'
 
 const { SystemError, NotFoundError } = errors
 
-export default (userId, customerSearch, selectPack, description, payedAmount, paymentMethod, paymentReference) => {
+export default (userId, customerSearch, selectPack, description, payedAmount, paymentMethod, paymentReference, finalPrice = null) => {
     validate.id(userId, 'userId')
     validate.id(selectPack, 'packId')
     validate.description(description)
     validate.text(paymentMethod, 'paymentMethod')
     validate.text(paymentReference, 'payment reference')
-
 
     const descriptionProvided = description
 
@@ -64,12 +63,20 @@ export default (userId, customerSearch, selectPack, description, payedAmount, pa
 
 
         try {
-            const { description, quantity, unit, expiringTime, price, currency, } = basePack
+            const { description, quantity, unit, expiringTime, price, currency } = basePack
             const purchaseDate = new Date()
             const expiryDate = expiringTime === -1 ? new Date('9999-12-31') :
                 new Date(new Date().setMonth(new Date().getMonth() + expiringTime))
 
             const status = (payedAmount > 0 ? 'Active' : 'Pending')
+
+            //Find if user applyed promo price, if not, get default price
+            let definitivePrice = 0
+            if (price !== finalPrice && finalPrice !== null) {
+                definitivePrice = finalPrice
+            } else {
+                definitivePrice = price
+            }
 
             //First we're going to create the pack
             //Check if description of relationship pack is empty, if empty, we add the basePack default description
@@ -82,7 +89,7 @@ export default (userId, customerSearch, selectPack, description, payedAmount, pa
                 originalQuantity: quantity,
                 remainingQuantity: quantity,
                 unit,
-                price,
+                price: definitivePrice,
                 currency,
                 purchaseDate,
                 expiryDate,
