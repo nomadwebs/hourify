@@ -7,7 +7,7 @@ import { errorHandler } from './routes/helpers/index.js'
 import { usersRouter, packsRouter, trackerRouter, activitiesRouter, paymentsRouter, tasksRouter, calendarRouter, statsRouter } from './routes/index.js'
 
 db.connect(process.env.MONGO_URL).then(() => {
-    console.log('database connected')
+    //console.log('database connected')
 
     const server = express()
 

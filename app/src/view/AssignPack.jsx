@@ -6,7 +6,7 @@ const { SystemError, NotFoundError } = errors
 
 import useContext from './useContext'
 
-import { Button, Field, Input, Label, Image, Textarea } from '../library'
+import { Button, Field, Input, InputOnChange, Label, Image, Textarea } from '../library'
 import { getCurrencySymbol } from '../util'
 import { assignPack } from '../logic/packs'
 import { CreateUserByProvider } from './components'
@@ -200,7 +200,7 @@ export default function AssignPack(props) {
 
                                 <Field>
                                     <Label htmlFor="discount">Discount %</Label>
-                                    <Input
+                                    <InputOnChange
                                         id="discount"
                                         onChange={handleDiscountChange}
                                         value={discount}
@@ -212,7 +212,7 @@ export default function AssignPack(props) {
 
                                 <Field>
                                     <Label htmlFor="promoPrice">Promo price</Label>
-                                    <Input
+                                    <InputOnChange
                                         id="promoPrice"
                                         onChange={handlePromoPriceChange}
                                         value={promoPrice}

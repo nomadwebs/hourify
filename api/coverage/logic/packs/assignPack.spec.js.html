@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">80.48% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>82/82</span>
+                <span class='fraction'>66/82</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">80.48% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>82/82</span>
+                <span class='fraction'>66/82</span>
             </div>
         
             
@@ -231,20 +231,20 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -254,15 +254,15 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -362,15 +362,15 @@ describe('assignPack', () =&gt; {
 &nbsp;
         await assignPack(newUserProvider._id.toString(), customerSearchByUsername, createdBasePack._id.toString(), 'Descripción del pack asignado', 500, 'cash')
 &nbsp;
-        const checkpackAssigned = await Pack.findOne({ provider: newUserProvider._id.toString() })
+<span class="cstat-no" title="statement not covered" >        const checkpackAssigned = await Pack.findOne({ provider: newUserProvider._id.toString() })</span>
 &nbsp;
-        expect(checkpackAssigned).to.exist //.not.to.be.null
-        expect(checkpackAssigned.description).to.equal('Descripción del pack asignado')
-        expect(checkpackAssigned.description).to.be.a.string
-        expect(checkpackAssigned.originalQuantity).to.equal(5)
-        expect(checkpackAssigned.unit).to.equal('hours')
-        expect(checkpackAssigned.price).to.equal(1000)
-        expect(checkpackAssigned.currency).to.equal('EUR')
+<span class="cstat-no" title="statement not covered" >        expect(checkpackAssigned).to.exist </span>//.not.to.be.null
+<span class="cstat-no" title="statement not covered" >        expect(checkpackAssigned.description).to.equal('Descripción del pack asignado')</span>
+<span class="cstat-no" title="statement not covered" >        expect(checkpackAssigned.description).to.be.a.string</span>
+<span class="cstat-no" title="statement not covered" >        expect(checkpackAssigned.originalQuantity).to.equal(5)</span>
+<span class="cstat-no" title="statement not covered" >        expect(checkpackAssigned.unit).to.equal('hours')</span>
+<span class="cstat-no" title="statement not covered" >        expect(checkpackAssigned.price).to.equal(1000)</span>
+<span class="cstat-no" title="statement not covered" >        expect(checkpackAssigned.currency).to.equal('EUR')</span>
     })
 &nbsp;
     it('succeeds on new assign pack by email', async () =&gt; {
@@ -385,15 +385,15 @@ describe('assignPack', () =&gt; {
 &nbsp;
         await assignPack(newUserProvider._id.toString(), customerSearchByEmail, createdBasePack._id.toString(), 'Descripción del pack asignado', 500, 'cash')
 &nbsp;
-        const checkpackAssigned = await Pack.findOne({ provider: newUserProvider._id.toString() })
+<span class="cstat-no" title="statement not covered" >        const checkpackAssigned = await Pack.findOne({ provider: newUserProvider._id.toString() })</span>
 &nbsp;
-        expect(checkpackAssigned).to.exist //.not.to.be.null
-        expect(checkpackAssigned.description).to.equal('Descripción del pack asignado')
-        expect(checkpackAssigned.description).to.be.a.string
-        expect(checkpackAssigned.originalQuantity).to.equal(5)
-        expect(checkpackAssigned.unit).to.equal('hours')
-        expect(checkpackAssigned.price).to.equal(1000)
-        expect(checkpackAssigned.currency).to.equal('EUR')
+<span class="cstat-no" title="statement not covered" >        expect(checkpackAssigned).to.exist </span>//.not.to.be.null
+<span class="cstat-no" title="statement not covered" >        expect(checkpackAssigned.description).to.equal('Descripción del pack asignado')</span>
+<span class="cstat-no" title="statement not covered" >        expect(checkpackAssigned.description).to.be.a.string</span>
+<span class="cstat-no" title="statement not covered" >        expect(checkpackAssigned.originalQuantity).to.equal(5)</span>
+<span class="cstat-no" title="statement not covered" >        expect(checkpackAssigned.unit).to.equal('hours')</span>
+<span class="cstat-no" title="statement not covered" >        expect(checkpackAssigned.price).to.equal(1000)</span>
+<span class="cstat-no" title="statement not covered" >        expect(checkpackAssigned.currency).to.equal('EUR')</span>
     })
 &nbsp;
     it('fails on non existing customer by username', () =&gt;
@@ -463,7 +463,7 @@ describe('assignPack', () =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-02-05T23:50:58.250Z
+                at 2025-05-05T14:01:46.204Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

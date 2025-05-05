@@ -26,33 +26,23 @@ export default function App() {
 
   //Navigation functions
   const handleHomeClick = () => navigate('/')
-
   const handleUserProfileClick = () => navigate('/user-profile')
 
 
   //Navigation throw user things
   const handleUserLoggedOut = () => navigate('/login')
-
   const handleUserLoggedIn = () => navigate('/')
-
   const handleRegisterClick = () => navigate('/register')
-
   const handleLoginClick = () => navigate('/login')
-
   const handleUserRegistered = () => navigate('/login')
-
   const handleCustomerPacks = () => navigate('/customer-packs')
 
 
   //Navigation throw packs things
   const handleManagePacksClick = () => navigate('/manage-packs')
-
   const handleManageCustomersClick = () => navigate('/manage-customers')
-
   const handleManagePurchasedPacksClick = () => navigate('/manage-bought-packs')
-
   const handleAssignPack = () => navigate('/assign-pack')
-
   const handleCreatePack = () => navigate('/create-pack')
 
 

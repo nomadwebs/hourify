@@ -4,8 +4,8 @@ import updateUserPlan from './updateUserPlan.js'
 
 await db.connect(process.env.MONGO_URL)
 
-const userId = '67dde0d2985ba3a1a04fe1a4' //risto
-const plan = 'lifeTime' //annual, lifeTime, monthly, free
+const userId = '67dde655985ba3a1a04fe271' //cirera
+const plan = 'annual' //annual, lifeTime, monthly, free
 
 
 try {

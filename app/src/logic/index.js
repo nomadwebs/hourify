@@ -9,7 +9,8 @@ import {
     getUserDetails,
     updateUser,
     getCustomerPacks,
-    createUserByProvider
+    createUserByProvider,
+    changePassword
 } from './users'
 
 import {
@@ -90,6 +91,7 @@ const logic = {
     updateUser,
     getCustomerPacks,
     createUserByProvider,
+    changePassword,
 
     //Packs
     createPack,

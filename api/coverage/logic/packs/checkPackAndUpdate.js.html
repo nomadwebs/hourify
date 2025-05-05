@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">86.84% </span>
+                <span class="strong">84.21% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>33/38</span>
+                <span class='fraction'>32/38</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">76.92% </span>
+                <span class="strong">84.61% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>20/26</span>
+                <span class='fraction'>22/26</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">86.84% </span>
+                <span class="strong">84.21% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>33/38</span>
+                <span class='fraction'>32/38</span>
             </div>
         
             
@@ -192,12 +192,12 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">10x</span>
-<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -209,16 +209,16 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">10x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Pack, User } from 'dat'
@@ -271,7 +271,7 @@ export default async (packId) =&gt; {
             await emailFinishedPack(userInfo.email, userInfo.name, packInfo.description)
 &nbsp;
             // Actualizar el estado del pack
-            await Pack.findByIdAndUpdate(packId, { status: 'Finished' }, { new: true, runValidators: true }).lean()
+<span class="cstat-no" title="statement not covered" >            await Pack.findByIdAndUpdate(packId, { status: 'Finished' }, { new: true, runValidators: true }).lean()</span>
         }
 &nbsp;
         // 3. Validar si expiryDate está a 2 meses o menos
@@ -288,16 +288,16 @@ export default async (packId) =&gt; {
             await emailExpirationWarning(userInfo.email, userInfo.name, packInfo.description, packInfo.expiryDate)
 &nbsp;
             // Actualizar el estado del pack
-            await Pack.findByIdAndUpdate(packId, { status: 'Expired' }, { new: true, runValidators: true }).lean()
+<span class="cstat-no" title="statement not covered" >            await Pack.findByIdAndUpdate(packId, { status: 'Expired' }, { new: true, runValidators: true }).lean()</span>
         }
 &nbsp;
         // Devuelve la información encontrada
         return packInfo
     } catch (error) {
-        if (error instanceof NotFoundError || <span class="branch-1 cbranch-no" title="branch not covered" >error instanceof ValidationError)</span> {
+        if (error instanceof NotFoundError || error instanceof ValidationError) {
             throw error
-        } else <span class="branch-1 cbranch-no" title="branch not covered" >{</span>
-<span class="cstat-no" title="statement not covered" >            throw new SystemError(error.message)</span>
+        } else {
+            throw new SystemError(error.message)
         }
     }
 }</pre></td></tr></table></pre>
@@ -307,7 +307,7 @@ export default async (packId) =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-02-05T23:50:58.250Z
+                at 2025-05-05T14:01:46.204Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

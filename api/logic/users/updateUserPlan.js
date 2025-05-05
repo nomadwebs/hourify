@@ -49,7 +49,8 @@ export default (userId, adquiredPlan) => {
             return User.findByIdAndUpdate(
                 userId,
                 {
-                    plan: adquiredPlan,
+                    //plan: adquiredPlan,
+                    plan: 'pro',
                     planExpiryDate
                 },
                 { new: true } // Para devolver el documento actualizado

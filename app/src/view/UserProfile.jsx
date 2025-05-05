@@ -1,6 +1,7 @@
 import { errors } from 'com'
 
 import logic from '../logic'
+import getFormattedDate from '../logic/helpers/getFormattedDate'
 
 const { SystemError } = errors
 
@@ -12,14 +13,44 @@ import { useEffect, useState } from 'react'
 export default function UserProfile(props) {
     const [userData, setUserData] = useState(null)
     const [isLoading, setIsLoading] = useState(true)
+    const [formattedExpiryDate, setFormattedExpiryDate] = useState('N/A')
+
+    // Formatear fecha de caducidad del plan
+    const formatExpiryDate = (expiryDate) => {
+        if (!expiryDate) {
+            setFormattedExpiryDate('N/A');
+            return;
+        }
+
+        // Verificar si es una fecha vitalicia (31/12/9999)
+        if (expiryDate && (expiryDate.includes('9999') || expiryDate === '31/12/9999')) {
+            setFormattedExpiryDate('Lifetime');
+            return;
+        }
+
+        // Usar la función getFormattedDate para formatear la fecha
+        getFormattedDate(new Date(expiryDate))
+            .then(formatted => {
+                setFormattedExpiryDate(formatted);
+            })
+            .catch(error => {
+                console.error('Error formatting date:', error);
+                setFormattedExpiryDate(expiryDate.toString()); // Usamos el string original como fallback
+            });
+    };
 
     const fetchData = () => {
         if (logic.isUserLoggedIn()) {
             logic.getUserDetails()
                 .then((userData) => {
                     setUserData(userData)
-                    setIsLoading(false) // Datos cargados
 
+                    // Formatear la fecha de caducidad del plan si existe
+                    if (userData && userData.planExpiryDate) {
+                        formatExpiryDate(userData.planExpiryDate);
+                    }
+
+                    setIsLoading(false) // Datos cargados
                 })
                 .catch((error) => {
                     alert(error.message)
@@ -53,6 +84,33 @@ export default function UserProfile(props) {
                 props.onProfileCancel()
             }
         }, 'warn')
+    }
+
+    const handleUpdatePassword = event => {
+        event.preventDefault()
+
+        const { target: form } = event
+        const {
+            password: { value: oldPassword },
+            'new-password': { value: newPassword },
+            'new-repeat-password': { value: newPasswordRepeat }
+        } = form
+
+        try {
+            logic.changePassword(oldPassword, newPassword, newPasswordRepeat)
+                .then(result => {
+                    alert(result.message || 'Password updated successfully!', 'success')
+                    form.reset()
+                })
+                .catch(error => {
+                    // Siempre mostrar el mensaje de error específico
+                    alert(error.message, 'error')
+                    console.error('Password change error:', error)
+                })
+        } catch (error) {
+            alert(error.message, 'error')
+            console.error('Validation error:', error)
+        }
     }
 
     const handleUpdateClick = event => {
@@ -100,6 +158,11 @@ export default function UserProfile(props) {
 
     const profileImageUrl = logic.getProfileImage(userData)
 
+    const handleUpgradePlan = (event) => {
+        event.preventDefault();
+        alert('Upgrade to Premium plan will be available soon!', 'info');
+    };
+
     if (isLoading) {
         return <p>Loading...</p>
     }
@@ -108,12 +171,55 @@ export default function UserProfile(props) {
         {/* Container to center content */}
         <div className="bg-white shadow-md rounded-md p-8 w-full max-w-4xl">
             <div className="flex flex-col items-center">
-
                 <h2 className="text-2xl font-bold text-color_darkBlue mb-4">User Profile</h2>
                 <form className="flex flex-col gap-4 w-full" onSubmit={handleUpdateClick}>
                     {userData ? (
                         <>
-                            <img src={profileImageUrl} alt="User profile" className="w-40 h-40 rounded-full border-2 border-white cursor-pointer" />
+                            <div className="flex flex-col md:flex-row items-center mb-6">
+                                <div className="relative">
+                                    <img
+                                        src={profileImageUrl}
+                                        alt="User profile"
+                                        className="w-40 h-40 rounded-full border-2 border-white cursor-pointer"
+                                    />
+                                    {userData.plan === 'pro' && (
+                                        <div className="absolute -bottom-1 -right-1 bg-yellow-500 text-xs font-bold text-black px-1.5 py-0.5 rounded-full shadow-md">
+                                            PRO
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="ml-0 md:ml-6 mt-4 md:mt-0 text-center md:text-left flex flex-col">
+                                    <h3 className="text-xl font-bold text-gray-800">{userData.name} {userData.surname1}</h3>
+                                    <div className="mt-2 space-y-1">
+                                        <div className="flex flex-col md:flex-row md:items-center">
+                                            <span className="font-semibold text-gray-700 mr-2">Plan:</span>
+                                            <span className={`px-2 py-1 rounded-full text-xs font-bold ${userData.plan === 'pro' ? 'bg-yellow-100 text-yellow-800' :
+                                                userData.plan === 'premium' ? 'bg-purple-100 text-purple-800' :
+                                                    'bg-blue-100 text-blue-800'
+                                                }`}>
+                                                {userData.plan?.toUpperCase() || 'FREE'}
+                                            </span>
+                                        </div>
+                                        <div className="flex flex-col md:flex-row md:items-center">
+                                            <span className="font-semibold text-gray-700 mr-2">Expires:</span>
+                                            <span className="text-gray-600">
+                                                {formattedExpiryDate}
+                                            </span>
+                                        </div>
+
+                                        {/* Botón de upgrade para usuarios con plan free */}
+                                        {(!userData.plan || userData.plan === 'free') && (
+                                            <button
+                                                onClick={handleUpgradePlan}
+                                                className="mt-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-4 py-2 rounded-md text-sm font-medium shadow-md hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105"
+                                            >
+                                                Upgrade to Premium
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+
                             <Field>
                                 <Label htmlFor="username">Username</Label>
                                 <Input type="text" id="username" defaultValue={userData.username} placeholder="Your username" className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-color_primary" />
@@ -194,6 +300,42 @@ export default function UserProfile(props) {
                     ) : (
                         <p>Loading user data...</p>
                     )}
+                </form>
+                <form className="flex flex-col gap-4 w-full bg-red-50 p-2 rounded-b-md mt-10 border-red-200" onSubmit={handleUpdatePassword}>
+                    <h2 className='text-2xl text-red-950'>Change password</h2>
+                    <Field>
+                        <Label htmlFor="password">Old Password</Label>
+                        <Input
+                            id="password"
+                            type="password"
+                            placeholder="Your old password"
+                            required
+                            className="w-full px-1 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-color_primary"
+                        />
+                    </Field>
+
+                    <Field>
+                        <Label htmlFor="password-repeat">New Password</Label>
+                        <Input
+                            id="new-password"
+                            type="password"
+                            placeholder="New password"
+                            required
+                            className="w-full px-1 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-color_primary"
+                        />
+                    </Field>
+
+                    <Field>
+                        <Label htmlFor="password-repeat">Repeat new Password</Label>
+                        <Input
+                            id="new-repeat-password"
+                            type="password"
+                            placeholder="Repeat your new password"
+                            required
+                            className="w-full px-1 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-color_primary"
+                        />
+                    </Field>
+                    <Button type="submit" className="btn m-2" >Change password</Button>
                 </form>
             </div>
         </div>

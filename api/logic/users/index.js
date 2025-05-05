@@ -7,6 +7,7 @@ import updateUser from './updateUser.js'
 import getCustomerPacks from './getCustomerPacks.js'
 import createUserByProvider from './createUserByProvider.js'
 import updateUserPlan from './updateUserPlan.js'
+import changePassword from './changePassword.js'
 
 export {
     authenticateUser,
@@ -17,5 +18,6 @@ export {
     updateUser,
     getCustomerPacks,
     createUserByProvider,
-    updateUserPlan
+    updateUserPlan,
+    changePassword
 }

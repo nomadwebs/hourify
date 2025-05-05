@@ -9,7 +9,8 @@ import {
     getUserDetailsHandler,
     updateUserHandler,
     getCustomerPacksHandler,
-    createUserByProviderHandler
+    createUserByProviderHandler,
+    changePasswordHandler
 } from "./handlers/index.js"
 
 const usersRouter = Router()
@@ -22,5 +23,6 @@ usersRouter.get('/customerpacks/:customerId', authorizationHandler, getCustomerP
 usersRouter.get('/user/:targetUserId', authorizationHandler, getUserDetailsHandler)
 usersRouter.put('/update/:targetUserId', authorizationHandler, jsonBodyParser, updateUserHandler)
 usersRouter.post('/createByProvider', authorizationHandler, jsonBodyParser, createUserByProviderHandler)
+usersRouter.put('/changePassword', authorizationHandler, jsonBodyParser, changePasswordHandler)
 
 export default usersRouter  
