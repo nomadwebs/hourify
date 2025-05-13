@@ -1,4 +1,4 @@
-import { User } from "dat";
+import { User } from 'dat';
 import { validate, errors } from 'com';
 
 const { SystemError, NotFoundError } = errors;
@@ -6,12 +6,16 @@ const { SystemError, NotFoundError } = errors;
 export default (userId, adquiredPlan) => {
     validate.id(userId, 'userId');
 
+    console.log(userId)
+    console.log(adquiredPlan)
+
     // Validar que adquiredPlan tenga un valor permitido
     const allowedPlans = ['lifeTime', 'annual', 'monthly', 'free'];
     if (!allowedPlans.includes(adquiredPlan)) {
         throw new Error(`Invalid plan type: ${adquiredPlan}`);
     }
 
+    // Calcula la fecha de expiración según el plan adquirido
     function calculatePlanExpiryDate(adquiredPlan) {
         const result = new Date();
 
@@ -19,11 +23,9 @@ export default (userId, adquiredPlan) => {
             case 'lifeTime':
                 return new Date('9999-12-31');
             case 'annual':
-                // Usar setFullYear es más seguro que sumar 12 meses
                 result.setFullYear(result.getFullYear() + 1);
                 return result;
             case 'monthly':
-                // Manejo especial para fin de mes
                 const originalDate = result.getDate();
                 result.setMonth(result.getMonth() + 1);
                 if (result.getDate() !== originalDate) {
@@ -32,12 +34,12 @@ export default (userId, adquiredPlan) => {
                 return result;
             case 'free':
             default:
-                return null;
+                return null; // 👈 Los planes 'free' no tienen fecha de expiración
         }
     }
 
     return User.findById(userId)
-        .catch(error => { throw new SystemError(error.message) })
+        .catch(error => { throw new SystemError(error.message); })
         .then(user => {
             if (!user) {
                 throw new NotFoundError('User not found');
@@ -45,15 +47,14 @@ export default (userId, adquiredPlan) => {
 
             const planExpiryDate = calculatePlanExpiryDate(adquiredPlan);
 
-            // Actualizar ambos campos: plan y planExpiryDate
+            // 👇 Ahora sí usamos el plan pasado por parámetro
             return User.findByIdAndUpdate(
                 userId,
                 {
-                    //plan: adquiredPlan,
-                    plan: 'pro',
+                    plan: adquiredPlan,
                     planExpiryDate
                 },
-                { new: true } // Para devolver el documento actualizado
+                { new: true } // Devolver el documento actualizado
             )
                 .catch(error => {
                     throw new SystemError(error.message);

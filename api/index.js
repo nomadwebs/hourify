@@ -2,6 +2,7 @@ import 'dotenv/config'
 import db from 'dat'
 import express, { json } from 'express'
 import cors from 'cors'
+import './cron/downgradePlansJob.js';
 
 import { errorHandler } from './routes/helpers/index.js'
 import { usersRouter, packsRouter, trackerRouter, activitiesRouter, paymentsRouter, tasksRouter, calendarRouter, statsRouter } from './routes/index.js'
