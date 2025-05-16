@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
+import { Tooltip } from 'react-tooltip'
 import logic from '../logic'
 
 export default function ManageCustomers(props) {
@@ -12,6 +13,7 @@ export default function ManageCustomers(props) {
             try {
                 const customers = await logic.getCustomers()
                 setCustomers(customers)
+                console.log('customers con mucha info: ', customers)
             } catch (error) {
                 console.error(error)
             } finally {
@@ -73,34 +75,88 @@ export default function ManageCustomers(props) {
             <p className="text-gray-600 mb-6">View and manage your customers</p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full max-w-6xl">
-                {customers.map(customer => (
-                    <div
-                        key={customer.id}
-                        className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 cursor-pointer border border-transparent hover:border-color_primary"
-                        onClick={() => handleCustomerPacksClick(customer.id, customer.name)}
-                    >
-                        <div className="p-5">
-                            <div className="flex justify-between items-start mb-2">
-                                <h3 className="text-xl font-semibold text-color_darkBlue truncate">
-                                    {customer.name} {customer.surname1 ?? ''}
-                                </h3>
-                                <span className="inline-block bg-gray-200 text-gray-800 text-sm font-semibold rounded-full px-3 py-1">
-                                    {customer.packCount} {customer.packCount === 1 ? 'pack' : 'packs'}
+                {customers.map(customer => {
+                    const hasPendingPayments = customer.packs?.some(pack => pack.totalDue > 0);
+                    const hasLowQuantity = customer.packs?.some(pack => pack.remainingQuantity < 2 && pack.remainingQuantity > 0);
+                    const totalByUnit = customer.packs?.reduce(
+                        (acc, pack) => {
+                            if (!pack.remainingQuantity || isNaN(pack.remainingQuantity)) return acc;
+                            const unit = pack.unit === 'hours' ? 'horas' : 'sesiones';
+                            acc[unit] = (acc[unit] || 0) + pack.remainingQuantity;
+                            return acc;
+                        },
+                        {}
+                    );
+                    const isAllOk = !hasPendingPayments && !hasLowQuantity;
+
+                    return (
+                        <div
+                            key={customer.id}
+                            className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 cursor-pointer border border-transparent hover:border-color_primary"
+                            onClick={() => handleCustomerPacksClick(customer.id, customer.name)}
+                        >
+                            <div className="p-5">
+                                <div className="flex justify-between items-start mb-2">
+                                    <h3 className="text-xl font-semibold text-color_darkBlue truncate flex items-center gap-2">
+                                        {customer.name} {customer.surname1 ?? ''}
+                                        {isAllOk && (
+                                            <span
+                                                data-tooltip-id="tooltip"
+                                                data-tooltip-content="All good"
+                                                className="text-green-600 text-lg"
+                                            >
+                                                ✅
+                                            </span>
+                                        )}
+
+                                        {hasPendingPayments && (
+                                            <span
+                                                data-tooltip-id="tooltip"
+                                                data-tooltip-content="This customer has unpaid packs"
+                                                className="text-yellow-500 text-lg"
+                                            >
+                                                ⚠️
+                                            </span>
+                                        )}
+
+                                        {hasLowQuantity && (
+                                            <span
+                                                data-tooltip-id="tooltip"
+                                                data-tooltip-content="Less than 2 units remaining in one or more packs"
+                                                className="text-orange-500 text-lg"
+                                            >
+                                                🪫
+                                            </span>
+                                        )}
+                                    </h3>
+                                    <span className="inline-block bg-gray-200 text-gray-800 text-sm font-semibold rounded-full px-3 py-1">
+                                        {customer.packCount} {customer.packCount === 1 ? 'pack' : 'packs'}
+                                    </span>
+                                </div>
+                                <p className="text-gray-600 mb-4 truncate">
+                                    {customer.email}
+                                </p>
+                                <span>
+                                    {totalByUnit && (
+                                        <p className="text-sm text-gray-700 mt-1">
+                                            {totalByUnit.horas && `🕒 ${totalByUnit.horas.toFixed(1)} horas `}
+                                            {totalByUnit.sesiones && `🎯 ${totalByUnit.sesiones.toFixed(0)} sesiones`}
+                                        </p>
+                                    )}
                                 </span>
+
+                                <button
+                                    className="w-full bg-color_primary text-white py-2 px-4 rounded-md hover:bg-color_primaryHover transition-colors duration-300 mt-2"
+                                >
+                                    View Customer Packs
+                                </button>
                             </div>
-
-                            <p className="text-gray-600 mb-4 truncate">
-                                {customer.email}
-                            </p>
-
-                            <button
-                                className="w-full bg-color_primary text-white py-2 px-4 rounded-md hover:bg-color_primaryHover transition-colors duration-300 mt-2"
-                            >
-                                View Customer Packs
-                            </button>
                         </div>
-                    </div>
-                ))}
+                    );
+                })}
+                <Tooltip id="tooltip"
+                    place="top"
+                    className="!bg-white !text-gray-800 !rounded-md !px-3 !py-2 !text-sm !border !border-gray-300 !shadow-md" />
             </div>
 
             <a

@@ -137,7 +137,7 @@ const validatePromoAmount = (promoPayed) => {
     if (promoPayed.length > 10) { throw new ValidationError('promo payments cannot be grater than 9999999.99') }
 }
 
-const validateId = (id, explain = 'id') => {
+const validateId = (id, explain) => {
     if (typeof id !== 'string') throw new ValidationError(`invalid ${explain}`)
     if (id.length !== 24) throw new ValidationError(`invalid ${explain} length`)
 }

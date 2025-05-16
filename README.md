@@ -2,7 +2,7 @@
 
 ## Intro
 
-![Logo](../doc/modernlogo.png)
+![Logo](./doc/modernlogo.png)
 
 This project develops an application focused on time management or "session units" for anyone who may sell or buy services that involve time or sessions from another person. Ideally, it is designed for freelancers, although it is extendable to practically the entire population.
 
