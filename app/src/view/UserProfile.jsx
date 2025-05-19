@@ -203,7 +203,11 @@ export default function UserProfile(props) {
                                         <div className="flex flex-col md:flex-row md:items-center">
                                             <span className="font-semibold text-gray-700 mr-2">Expires:</span>
                                             <span className="text-gray-600">
-                                                {formattedExpiryDate}
+                                                {new Date(formattedExpiryDate).toLocaleDateString('es-ES', {
+                                                    day: '2-digit',
+                                                    month: '2-digit',
+                                                    year: 'numeric'
+                                                })}
                                             </span>
                                         </div>
 
