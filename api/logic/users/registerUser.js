@@ -9,7 +9,9 @@ import { emailRegisterWelcome } from '../emailing/index.js'
 const { DuplicityError, SystemError } = errors
 
 const PROMO_START_DATE = new Date('2025-04-23T00:00:00Z')
-const PROMO_END_DATE = new Date('2025-04-30T23:59:59Z')
+
+//Promo filter is active forever, change following line to deactive
+const PROMO_END_DATE = new Date('9999-04-30T23:59:59Z')
 const PROMO_MAX_USERS = 30
 
 const assignRandomProfileImage = () => {
@@ -51,6 +53,18 @@ export default (name, email, username, password, passwordRepeat) => {
 
             if (isInPromoPeriod) {
                 try {
+                    plan = 'pro'
+                    const currentDate = new Date()
+                    planExpiryDate = new Date(currentDate.setDate(currentDate.getDate() + 15))
+                    reason = '15dayPro'
+                    promoApplied = true
+                } catch (error) {
+                    throw new SystemError(error.message)
+                }
+
+
+                //Code to assign lifetime plan to some users
+                /* try {
                     const usersPromoCount = await User.countDocuments(
                         {
                             plan: 'pro',
@@ -65,7 +79,7 @@ export default (name, email, username, password, passwordRepeat) => {
                     }
                 } catch (error) {
                     throw new SystemError(error.message)
-                }
+                } */
             }
 
             try {
@@ -122,7 +136,7 @@ export default (name, email, username, password, passwordRepeat) => {
                 success: true,
                 promoApplied,
                 message: promoApplied
-                    ? 'Congratulations! You have gained lifetime access to the Pro plan as an early adopter 🚀'
+                    ? 'User successfully registered with a 15-day Pro Plan.'
                     : 'User registered successfully.'
             }
 

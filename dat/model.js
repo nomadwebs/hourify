@@ -33,7 +33,7 @@ const user = new Schema({
     reason: {
         type: String,
         required: false,
-        enum: ['', 'earlyAdopterPromo']
+        enum: ['', 'earlyAdopterPromo', '15dayPro']
     },
     planExpiryDate: {
         type: Date,
@@ -43,7 +43,7 @@ const user = new Schema({
     role: {
         type: String,
         required: false, //WILL BE TRUE
-        enum: ['standard', 'provider'],
+        enum: ['standard', 'provider', 'superAdministrator'],
         default: 'standard'
     },
     dni: {

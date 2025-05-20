@@ -11,6 +11,7 @@ import TagKO from './TagKO'
 import Card from './Card'
 import StatusFilter from './StatusFilter'
 import InputOnChange from './InputOnChange'
+import PackCard from './PackCard'
 
 
 export {
@@ -26,5 +27,6 @@ export {
     TagKO,
     Card,
     StatusFilter,
-    InputOnChange
+    InputOnChange,
+    PackCard
 }

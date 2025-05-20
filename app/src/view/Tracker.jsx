@@ -19,11 +19,38 @@ export default function Tracker(props) {
     const [selectedCustomer, setSelectedCustomer] = useState('')
     const [selectedPack, setSelectedPack] = useState(null)
     const [description, setDescription] = useState('')
+    const [searchTerm, setSearchTerm] = useState('')
+    const [showSearch, setShowSearch] = useState(false)
 
     const [elapsedTime, setElapsedTime] = useState(0)
     const [intervalId, setIntervalId] = useState(null)
 
     const { alert } = useContex()
+
+    // Filter customers based on search term
+    const filteredCustomers = customers.filter(customer =>
+        customer.name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+
+    // Handle search input change
+    const handleSearchChange = (e) => {
+        const value = e.target.value
+        setSearchTerm(value)
+
+        // If there's only one match, select it automatically
+        const matches = customers.filter(customer =>
+            customer.name.toLowerCase().includes(value.toLowerCase())
+        )
+
+        if (matches.length === 1) {
+            const event = {
+                target: {
+                    value: matches[0].id
+                }
+            }
+            handleCustomerChange(event)
+        }
+    }
 
     useEffect(() => {
         const fetchData = async () => {
@@ -375,16 +402,40 @@ export default function Tracker(props) {
                     <h2 className="text-xl font-semibold text-color_darkBlue mb-4">Select Customer & Pack</h2>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                        {/* Select Customer */}
+                        {/* Customer Search and Select */}
                         <Field>
-                            <Label htmlFor="selectCustomer" className="text-gray-700 font-medium mb-1 block">Customer</Label>
+                            <div className="flex items-center justify-between mb-2">
+                                <Label htmlFor="selectCustomer" className="text-gray-700 font-medium">Customer</Label>
+                                <button
+                                    onClick={() => setShowSearch(!showSearch)}
+                                    className="text-gray-500 hover:text-gray-700 transition-colors duration-200"
+                                    title={showSearch ? "Hide search" : "Show search"}
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <div className={`overflow-hidden transition-all duration-300 ease-in-out ${showSearch ? 'max-h-12 opacity-100' : 'max-h-0 opacity-0'}`}>
+                                <input
+                                    type="text"
+                                    id="customerSearch"
+                                    className="border-2 border-gray-300 rounded-lg w-full p-2 mb-2 focus:border-color_primary focus:ring-1 focus:ring-color_primary transition-colors"
+                                    placeholder="Type to search customers..."
+                                    value={searchTerm}
+                                    onChange={handleSearchChange}
+                                />
+                            </div>
+
                             <select
                                 id="selectCustomer"
                                 name="selectCustomer"
                                 className="border-2 border-gray-300 rounded-lg w-full p-2 focus:border-color_primary focus:ring-1 focus:ring-color_primary transition-colors"
                                 onChange={handleCustomerChange}
+                                value={selectedCustomer}
                             >
-                                {customers.map((customer) => (
+                                {filteredCustomers.map((customer) => (
                                     <option key={customer.id} value={customer.id}>{customer.name}</option>
                                 ))}
                             </select>
@@ -419,6 +470,18 @@ export default function Tracker(props) {
                                         ? `${getDecimalToTimeFormat(selectedPack.remainingQuantity)} h`
                                         : `${selectedPack.remainingQuantity} un.`}
                                     </p>
+                                    <div className='relative w-full h-2 bg-gray-200 rounded-full mt-2 overflow-hidden'>
+                                        <div
+                                            className={`absolute top-0 left-0 h-full transition-all duration-300 ${(selectedPack.remainingQuantity / selectedPack.originalQuantity) * 100 < 20
+                                                ? 'bg-red-500'
+                                                : 'bg-purple-500'
+                                                }`}
+                                            style={{
+                                                width: `${Math.max(0, Math.min(100, (selectedPack.remainingQuantity / selectedPack.originalQuantity) * 100))}%`,
+                                                minWidth: '2px'
+                                            }}
+                                        ></div>
+                                    </div>
                                 </div>
                                 {selectedPack.timerActivated && (
                                     <div className="flex items-center mt-2 sm:mt-0">
