@@ -150,7 +150,7 @@ const validateDni = dni => {
     if (typeof dni !== 'string') throw new ValidationError('invalid dni')
     if (dni.length > 9) throw new ValidationError('dni is too long')
     if (!/^[0-9]{8}[A-Z]$/i.test(dni))
-        throw new ValidationError('invalid dni')
+        throw new ValidationError('invalid DNI')
 }
 
 const validateExpiringTime = expiringTime => {

@@ -10,6 +10,7 @@ import updateUser from './updateUser'
 import getCustomerPacks from './getCustomerPacks'
 import createUserByProvider from './createUserByProvider'
 import changePassword from './changePassword'
+import updateProfileImage from './updateProfileImage'
 
 export {
     registerUser,
@@ -23,5 +24,6 @@ export {
     updateUser,
     getCustomerPacks,
     createUserByProvider,
-    changePassword
+    changePassword,
+    updateProfileImage,
 }

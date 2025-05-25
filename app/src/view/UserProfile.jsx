@@ -8,12 +8,14 @@ const { SystemError } = errors
 import useContex from './useContext'
 
 import { Button, Field, Input, Label, Image, Textarea } from '../library'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
+import ImageEditModal from './components/ImageEditModal'
 
 export default function UserProfile(props) {
     const [userData, setUserData] = useState(null)
     const [isLoading, setIsLoading] = useState(true)
     const [formattedExpiryDate, setFormattedExpiryDate] = useState('N/A')
+    const [isImageModalOpen, setIsImageModalOpen] = useState(false)
 
     // Formatear fecha de caducidad del plan
     const formatExpiryDate = (expiryDate) => {
@@ -163,6 +165,20 @@ export default function UserProfile(props) {
         alert('Upgrade to Premium plan will be available soon!', 'info');
     };
 
+    const handleImageClick = (event) => {
+        event.preventDefault()
+        setIsImageModalOpen(true)
+    }
+
+    const handleImageUpdate = (newImageUrl) => {
+        console.log('Updating image URL:', newImageUrl)
+        setUserData(prev => ({
+            ...prev,
+            profileImage: newImageUrl
+        }))
+        console.log('Updated user data:', userData)
+    }
+
     if (isLoading) {
         return <p>Loading...</p>
     }
@@ -176,12 +192,25 @@ export default function UserProfile(props) {
                     {userData ? (
                         <>
                             <div className="flex flex-col md:flex-row items-center mb-6">
-                                <div className="relative">
-                                    <img
-                                        src={profileImageUrl}
-                                        alt="User profile"
-                                        className="w-40 h-40 rounded-full border-2 border-white cursor-pointer"
-                                    />
+                                <div className="relative group">
+                                    <div
+                                        onClick={handleImageClick}
+                                        className="cursor-pointer"
+                                    >
+                                        <img
+                                            src={profileImageUrl}
+                                            alt="User profile"
+                                            className="w-40 h-40 rounded-full border-2 border-white transition-transform duration-300 group-hover:scale-105"
+                                        />
+                                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                            <div className="bg-black bg-opacity-50 rounded-full p-2">
+                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
                                     {userData.plan === 'pro' && (
                                         <div className="absolute -bottom-1 -right-1 bg-yellow-500 text-xs font-bold text-black px-1.5 py-0.5 rounded-full shadow-md">
                                             PRO
@@ -203,11 +232,13 @@ export default function UserProfile(props) {
                                         <div className="flex flex-col md:flex-row md:items-center">
                                             <span className="font-semibold text-gray-700 mr-2">Expires:</span>
                                             <span className="text-gray-600">
-                                                {new Date(formattedExpiryDate).toLocaleDateString('es-ES', {
-                                                    day: '2-digit',
-                                                    month: '2-digit',
-                                                    year: 'numeric'
-                                                })}
+                                                {formattedExpiryDate === 'Lifetime' ? 'Lifetime' :
+                                                    formattedExpiryDate === 'N/A' ? 'N/A' :
+                                                        new Date(userData.planExpiryDate).toLocaleDateString('es-ES', {
+                                                            day: '2-digit',
+                                                            month: '2-digit',
+                                                            year: 'numeric'
+                                                        })}
                                             </span>
                                         </div>
 
@@ -343,5 +374,17 @@ export default function UserProfile(props) {
                 </form>
             </div>
         </div>
+
+        {isImageModalOpen && (
+            <ImageEditModal
+                isOpen={isImageModalOpen}
+                onClose={() => {
+                    console.log('Closing modal')
+                    setIsImageModalOpen(false)
+                }}
+                onSave={handleImageUpdate}
+                currentImage={profileImageUrl}
+            />
+        )}
     </main>
 }

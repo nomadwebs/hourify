@@ -3,6 +3,7 @@ import db from 'dat'
 import express, { json } from 'express'
 import cors from 'cors'
 import './cron/downgradePlansJob.js';
+import multer from 'multer'
 
 import { errorHandler } from './routes/helpers/index.js'
 import { usersRouter, packsRouter, trackerRouter, activitiesRouter, paymentsRouter, tasksRouter, calendarRouter, statsRouter } from './routes/index.js'
@@ -12,7 +13,18 @@ db.connect(process.env.MONGO_URL).then(() => {
 
     const server = express()
 
+    // Configuración de límites para JSON y URL-encoded
+    server.use(json({ limit: '10mb' }))
+    server.use(express.urlencoded({ limit: '10mb', extended: true }))
+
     server.use(cors())
+
+    // Configuración básica de multer
+    const upload = multer({
+        limits: {
+            fileSize: 2 * 1024 * 1024 // límite de 2MB
+        }
+    })
 
     server.get('/', (_, res) => res.send('API is Up Ready to go'))
 

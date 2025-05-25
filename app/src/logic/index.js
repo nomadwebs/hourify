@@ -10,7 +10,8 @@ import {
     updateUser,
     getCustomerPacks,
     createUserByProvider,
-    changePassword
+    changePassword,
+    updateProfileImage,
 } from './users'
 
 import {
@@ -92,6 +93,7 @@ const logic = {
     getCustomerPacks,
     createUserByProvider,
     changePassword,
+    updateProfileImage,
 
     //Packs
     createPack,

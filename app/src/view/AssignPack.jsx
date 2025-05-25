@@ -172,12 +172,19 @@ export default function AssignPack(props) {
                             <div className="space-y-4">
                                 <Field>
                                     <Label htmlFor="customerSearch">Find customer</Label>
-                                    <Input
-                                        id="customerSearch"
-                                        personalClasses="border-2 rounded-lg w-full"
-                                        type="text"
-                                        placeholder="Use email or username"
-                                    />
+                                    <div className="flex gap-2">
+                                        <Input
+                                            id="customerSearch"
+                                            personalClasses="border-2 rounded-lg w-full"
+                                            type="text"
+                                            placeholder="Use email or username"
+                                        />
+
+                                    </div>
+                                    <span className="text-sm hover:cursor-pointer text-gray-500 hover:text-gray-800 font-bold"
+                                        type="button"
+                                        onClick={() => setShowCreateUser(true)}
+                                    >➕ Create customer</span>
                                 </Field>
 
                                 <Field>

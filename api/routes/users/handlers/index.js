@@ -7,6 +7,8 @@ import updateUserHandler from './updateUserHandler.js'
 import getCustomerPacksHandler from './getCustomerPacksHandler.js'
 import createUserByProviderHandler from './createUserByProviderHandler.js'
 import changePasswordHandler from './changePasswordHandler.js'
+import updateProfileImageHandler from './updateProfileImageHandler.js'
+import uploadProfileImageHandler from './uploadProfileImageHandler.js'
 
 export {
     authenticateUserHandler,
@@ -17,5 +19,7 @@ export {
     updateUserHandler,
     getCustomerPacksHandler,
     createUserByProviderHandler,
-    changePasswordHandler
+    changePasswordHandler,
+    updateProfileImageHandler,
+    uploadProfileImageHandler,
 }

@@ -8,7 +8,7 @@ import getCustomerPacks from './getCustomerPacks.js'
 import createUserByProvider from './createUserByProvider.js'
 import updateUserPlan from './updateUserPlan.js'
 import changePassword from './changePassword.js'
-
+import updateProfileImage from './updateProfileImage.js'
 export {
     authenticateUser,
     registerUser,
@@ -19,5 +19,6 @@ export {
     getCustomerPacks,
     createUserByProvider,
     updateUserPlan,
-    changePassword
+    changePassword,
+    updateProfileImage
 }

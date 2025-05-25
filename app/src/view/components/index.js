@@ -9,6 +9,7 @@ import ActivityTable from './ActivityTable.jsx'
 import CreateUserByProvider from './CreateUserByProvider.jsx'
 import AddTask from './AddTask.jsx'
 import Error404 from './Error404.jsx'
+import ImageEditModal from './ImageEditModal.jsx'
 /* import PrivacyPolicy from './PrivacyPolicy.jsx' */
 
 import StatCard from './home/StatCard.jsx'
@@ -32,5 +33,6 @@ export {
     /*  PrivacyPolicy */
     Error404,
 
-    StatCard
+    StatCard,
+    ImageEditModal,
 }

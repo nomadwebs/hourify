@@ -10,7 +10,12 @@ export default (userId, targetUserId, username, email, name, surname1, surname2,
     validate.username(username)
     validate.email(email)
     validate.name(name)
-    if (dni !== '') validate.dni(dni)
+    if (dni !== '') {
+        // Convertir la letra del DNI a mayúscula si existe
+        const dniWithUpperCase = dni.toUpperCase()
+        validate.dni(dniWithUpperCase)
+        dni = dniWithUpperCase
+    }
     if (surname1 !== '') validate.text(surname1, 'surname1')
     if (surname2 !== '') validate.text(surname2, 'surname2')
     if (biography !== '') validate.bio(biography)

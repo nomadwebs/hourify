@@ -9,7 +9,8 @@ import {
     getCustomerPacks,
     createUserByProvider,
     updateUserPlan,
-    changePassword
+    changePassword,
+    updateProfileImage,
 } from './users/index.js'
 
 //PACKS & BASEPACKS
@@ -90,7 +91,7 @@ const logic = {
     createUserByProvider,
     updateUserPlan,
     changePassword,
-
+    updateProfileImage,
 
     //Packs and basebacks
     createBasePack,
