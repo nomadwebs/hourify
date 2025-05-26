@@ -12,7 +12,8 @@ export default function Header({ onHomeClick,
     onManageCustomersClick,
     onManagePurchasedPacksClick,
     onTasksClick,
-    onCalendarClick }) {
+    onCalendarClick,
+    onContactsClick }) {
     const [name, setName] = useState(null)
     const [userDetails, setUserDetails] = useState(null)
     const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -124,6 +125,12 @@ export default function Header({ onHomeClick,
         setIsMenuOpen(false)
     }
 
+    const handleContactsClick = event => {
+        event.preventDefault()
+        onContactsClick()
+        setIsMenuOpen(false)
+    }
+
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen)
     }
@@ -159,6 +166,7 @@ export default function Header({ onHomeClick,
                         </>
                     )}
 
+                    <a href="#" className={`hover:underline ${location.pathname === '/contacts' ? 'text-color_green font-bold' : ''}`} onClick={handleContactsClick}>Contacts</a>
                     <a href="#" className={`hover:underline ${location.pathname === '/tasks' ? 'text-color_green font-bold' : ''}`} onClick={handleTasksClick}>Tasks</a>
                     <a href="#" className={`hover:underline ${location.pathname === '/calendar' ? 'text-color_green font-bold' : ''}`} onClick={handleCalendarClick}>Calendar</a>
                 </>
@@ -197,6 +205,7 @@ export default function Header({ onHomeClick,
                                     <a href="#" className="block px-4 py-2 hover:bg-gray-100" onClick={handleManagePurchasedPacks}>📑 Bought Services</a>
                                 </>
                             )}
+                            <a href="#" className="block px-4 py-2 hover:bg-gray-100" onClick={handleContactsClick}>👥 Contacts</a>
                             <a href="#" className="block px-4 py-2 hover:bg-gray-100" onClick={handleTasksClick}>📝 Tasks</a>
                             <a href="#" className="block px-4 py-2 hover:bg-gray-100" onClick={handleCalendarClick}>📅 Calendar</a>
                             <a href="#" className="block px-4 py-2 hover:bg-gray-100" onClick={handleProfileClick}>👤 User profile</a>

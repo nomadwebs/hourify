@@ -12,6 +12,7 @@ import {
     createUserByProvider,
     changePassword,
     updateProfileImage,
+    getUserNameByUserId,
 } from './users'
 
 import {
@@ -30,6 +31,7 @@ import {
 
 import {
     getActivitiesByPackId,
+    addActivityComment,
 } from './activities'
 
 
@@ -94,6 +96,7 @@ const logic = {
     createUserByProvider,
     changePassword,
     updateProfileImage,
+    getUserNameByUserId,
 
     //Packs
     createPack,
@@ -110,6 +113,7 @@ const logic = {
 
     //Activities
     getActivitiesByPackId,
+    addActivityComment,
 
     //Helpers
     getDecimalToTimeFormat,

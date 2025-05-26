@@ -45,6 +45,7 @@ import {
 //ACTIVITY
 import {
     getActivityByPackId,
+    addActivityComment,
 
 } from './activity/index.js'
 
@@ -118,6 +119,7 @@ const logic = {
 
     //Activity
     getActivityByPackId,
+    addActivityComment,
 
     //Payments
     addPayment,

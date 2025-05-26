@@ -11,6 +11,7 @@ import getCustomerPacks from './getCustomerPacks'
 import createUserByProvider from './createUserByProvider'
 import changePassword from './changePassword'
 import updateProfileImage from './updateProfileImage'
+import getUserNameByUserId from './getUserNameByUserId'
 
 export {
     registerUser,
@@ -26,4 +27,5 @@ export {
     createUserByProvider,
     changePassword,
     updateProfileImage,
+    getUserNameByUserId
 }

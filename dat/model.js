@@ -349,6 +349,25 @@ const pack = new Schema({
 }, { versionKey: false })
 
 
+//Schema for activity comments
+const activityComment = new Schema({
+    commentDate: {
+        type: Date,
+        required: true,
+        default: Date.now
+    },
+    userId: {
+        type: ObjectId,
+        required: true,
+        ref: 'User'
+    },
+    comment: {
+        type: String,
+        required: true,
+        maxLength: 1000
+    }
+}, { versionKey: false })
+
 
 //Model activity to follow up projects and repporting 
 const activity = new Schema({
@@ -384,7 +403,9 @@ const activity = new Schema({
     remainingQuantity: {
         type: Number,
         required: false, //TODO: Modificar a true cuando cambie de base de datos
-    }
+    },
+
+    comments: [activityComment]
 
 }, { versionKey: false })
 
