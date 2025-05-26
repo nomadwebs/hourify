@@ -59,7 +59,7 @@ export default function ImageEditModal({ isOpen, onClose, onSave, currentImage }
                         <img
                             src={preview || currentImage}
                             alt="Preview"
-                            className="w-full h-full object-cover rounded-lg"
+                            className="w-full h-full object-cover rounded-full"
                         />
                     </div>
                     <input

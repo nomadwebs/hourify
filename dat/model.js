@@ -40,6 +40,16 @@ const user = new Schema({
         required: false,
         default: null
     },
+    autoRenew: {
+        type: Boolean,
+        required: false,
+        default: false // o true si tu modelo es "renovación por defecto"
+    },
+    autoRenewConsentDate: {
+        type: Date,
+        required: false,
+        default: null
+    },
     role: {
         type: String,
         required: false, //WILL BE TRUE
