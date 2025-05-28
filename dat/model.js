@@ -607,6 +607,68 @@ const event = new Schema({
 }, { versionKey: false })
 
 
+const contact = new Schema({
+    creator: {
+        type: ObjectId,
+        ref: 'User',
+        required: true
+    },
+
+    name: {
+        type: String,
+        required: true
+    },
+
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+        match: /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i,
+        maxLength: 255,
+    },
+
+    phone: {
+        type: String,
+        required: false,
+    },
+
+    contactType: {
+        type: String,
+        required: false,
+        enum: ['lead', 'provider', 'customer', 'default'],
+        default: 'default'
+    },
+
+    notes: {
+        type: String,
+        required: false
+    },
+
+    lastInteraction: {
+        type: Date,
+        required: false,
+        default: null
+    },
+
+    linkedUserId: {
+        type: ObjectId,
+        ref: 'User',
+        default: null,
+        required: false
+    },
+
+    createdAt: {
+        type: Date,
+        default: Date.now
+    },
+
+    updatedAt: {
+        type: Date,
+        default: Date.now
+    },
+
+}, { versionKey: false })
+
 const message = new Schema({
     sender: {
         type: ObjectId,
@@ -652,6 +714,7 @@ const Activity = model('Activity', activity)
 const Payment = model('Payment', payment)
 const Task = model('Task', task)
 const Event = model('Event', event)
+const Contact = model('Contact', contact)
 const Message = model('Message', message)
 
 
@@ -663,5 +726,6 @@ export {
     Payment,
     Task,
     Event,
+    Contact,
     Message
 }
