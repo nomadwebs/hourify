@@ -6,7 +6,7 @@ import createContact from './createContact.js'
 await db.connect(process.env.MONGO_URL)
 
 const creator = '67dde655985ba3a1a04fe271'
-const name = 'Manuel Azaña'
+const name = 'Camilo Sesto'
 const email = 'test@exampleeeee.com'
 const phone = '345444345'
 const contactType = 'default'

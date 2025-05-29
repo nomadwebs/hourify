@@ -13,6 +13,7 @@ import {
     changePassword,
     updateProfileImage,
     getUserNameByUserId,
+    getCreatedUsers
 } from './users'
 
 import {
@@ -81,6 +82,10 @@ import {
     getMonthUnitsTracked
 } from './stats'
 
+import {
+    getContacts
+} from './contacts'
+
 const logic = {
     //Users
     registerUser,
@@ -97,6 +102,7 @@ const logic = {
     changePassword,
     updateProfileImage,
     getUserNameByUserId,
+    getCreatedUsers,
 
     //Packs
     createPack,
@@ -145,7 +151,6 @@ const logic = {
     updateEvent,
     deleteEvent,
 
-
     //Home
     getUserStats,
     usePendingPayments,
@@ -154,7 +159,10 @@ const logic = {
     getMonthEarned,
     getMonthHoursTracked,
     getMonthPayments,
-    getMonthUnitsTracked
+    getMonthUnitsTracked,
+
+    //Contacts
+    getContacts
 }
 
 export default logic

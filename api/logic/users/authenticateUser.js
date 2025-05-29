@@ -35,6 +35,11 @@ export default (validationString, password) => {
         try {
             // Actualizar o crear el campo lastLogin con la fecha actual
             user.lastLogin = new Date()
+
+            //Revisa si es un usuario creado por otro y si es la primera vez que accede
+            if (user.creationStatus === 'false' && user.createdBy) {
+                user.creationStatus = 'true'
+            }
             await user.save()
         } catch (error) {
             throw new SystemError('Error updating lastLogin: ' + error.message)

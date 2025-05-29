@@ -4,8 +4,8 @@ import { validate, errors } from "com";
 
 const { SystemError, NotFoundError } = errors
 
-export default (creatorId, name, email, phone, contactType, notes) => {
-    validate.id(creatorId, 'creatorId')
+export default (userId, name, email, phone, contactType, notes) => {
+    validate.id(userId, 'userId')
     validate.text(name, 'name')
     validate.email(email)
     if (phone) validate.text(phone, 'phone')
@@ -13,12 +13,12 @@ export default (creatorId, name, email, phone, contactType, notes) => {
     if (notes) validate.text(notes, 'notes')
 
     return (async () => {
-        const user = await User.findById(creatorId)
+        const user = await User.findById(userId)
         if (!user) throw new NotFoundError('user not found')
 
         try {
             return await Contact.create({
-                creator: creatorId,
+                creator: userId,
                 name,
                 email,
                 phone,

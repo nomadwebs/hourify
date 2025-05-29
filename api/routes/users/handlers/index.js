@@ -9,6 +9,7 @@ import createUserByProviderHandler from './createUserByProviderHandler.js'
 import changePasswordHandler from './changePasswordHandler.js'
 import updateProfileImageHandler from './updateProfileImageHandler.js'
 import uploadProfileImageHandler from './uploadProfileImageHandler.js'
+import getCreatedUsersHandler from './getCreatedUsersHandler.js'
 
 export {
     authenticateUserHandler,
@@ -22,4 +23,5 @@ export {
     changePasswordHandler,
     updateProfileImageHandler,
     uploadProfileImageHandler,
+    getCreatedUsersHandler
 }

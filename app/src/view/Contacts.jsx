@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Tooltip } from 'react-tooltip'
 import ContactDetails from './components/ContactDetails'
+import logic from '../logic'
 
 export default function Contacts(props) {
     const [loading, setLoading] = useState(true)
@@ -11,35 +12,20 @@ export default function Contacts(props) {
     const [showDetails, setShowDetails] = useState(false)
 
     useEffect(() => {
-        // Dummy data for now
-        const dummyContacts = [
-            {
-                id: 1,
-                name: 'Juan Pérez',
-                address: 'Calle Mayor 123',
-                city: 'Madrid',
-                email: 'juan@example.com',
-                phone: '912345678',
-                nif: '12345678A',
-                type: 'Cliente',
-                notes: 'Cliente preferente'
-            },
-            {
-                id: 2,
-                name: 'María García',
-                address: 'Avenida Libertad 45',
-                city: 'Barcelona',
-                email: 'maria@example.com',
-                phone: '934567890',
-                nif: '87654321B',
-                type: 'Proveedor',
-                notes: 'Contacto principal'
-            },
-            // Add more dummy contacts as needed
-        ]
+        const fetchContacts = async () => {
+            try {
+                setLoading(true)
+                const contacts = await logic.getContacts()
+                setContacts(contacts)
+            } catch (error) {
+                console.error('Error fetching contacts:', error)
+                setContacts([])
+            } finally {
+                setLoading(false)
+            }
+        }
 
-        setContacts(dummyContacts)
-        setLoading(false)
+        fetchContacts()
     }, [])
 
     const handleContactClick = (contact) => {
@@ -158,7 +144,7 @@ export default function Contacts(props) {
                                     <div className="space-y-3">
                                         <div className="flex items-center justify-between text-sm">
                                             <span className="text-gray-500">Type</span>
-                                            <span className="font-medium text-gray-700">{contact.type}</span>
+                                            <span className="font-medium text-gray-700">{contact.contactType}</span>
                                         </div>
                                         <div className="flex items-center justify-between text-sm">
                                             <span className="text-gray-500">City</span>

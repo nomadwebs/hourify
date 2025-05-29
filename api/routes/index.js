@@ -6,6 +6,7 @@ import paymentsRouter from './payments/index.js'
 import tasksRouter from './tasks/index.js'
 import calendarRouter from './calendar/index.js'
 import statsRouter from './stats/index.js'
+import contactsRouter from './contacts/index.js'
 
 export {
     usersRouter,
@@ -15,5 +16,6 @@ export {
     paymentsRouter,
     tasksRouter,
     calendarRouter,
-    statsRouter
+    statsRouter,
+    contactsRouter
 }

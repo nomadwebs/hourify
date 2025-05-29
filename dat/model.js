@@ -174,6 +174,12 @@ const user = new Schema({
         required: false,
         default: null
     },
+    language: {
+        type: String,
+        required: false,
+        enum: ['en', 'es'],
+        default: 'en'
+    }
 }, { versionKey: false })
 
 
@@ -637,6 +643,34 @@ const contact = new Schema({
         required: false,
         enum: ['lead', 'provider', 'customer', 'default'],
         default: 'default'
+    },
+
+    // Información básica
+    nif: {
+        type: String,
+        required: false,
+        match: /^[A-Z0-9]{8,9}$/i
+    },
+
+    address: {
+        type: String,
+        required: false
+    },
+
+    city: {
+        type: String,
+        required: false
+    },
+
+    postalCode: {
+        type: String,
+        required: false,
+        match: /^[0-9]{5}$/
+    },
+
+    website: {
+        type: String,
+        required: false
     },
 
     notes: {

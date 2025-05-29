@@ -1,0 +1,1 @@
+curl -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2N2RkZTBkMjk4NWJhM2ExYTA0ZmUxYTQiLCJyb2xlIjoic3RhbmRhcmQiLCJpYXQiOjE3NDg1MTg1NjgsImV4cCI6MTc0ODUzMjk2OH0.Pi787Cj1iPsKuVFxoPnpH12B5HpA2VXH5dIw30kO_0Y' http://localhost:8080/contacts/get-contacts/ -v

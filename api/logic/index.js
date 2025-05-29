@@ -11,6 +11,7 @@ import {
     updateUserPlan,
     changePassword,
     updateProfileImage,
+    getCreatedUsers,
 } from './users/index.js'
 
 //PACKS & BASEPACKS
@@ -80,6 +81,13 @@ import {
     getMonthUnitsTracked
 } from './stats/index.js'
 
+//CONTACTS
+import {
+    createContact,
+    getContacts,
+    deleteContact
+} from './contacts/index.js'
+
 const logic = {
     //Users
     registerUser,
@@ -93,6 +101,7 @@ const logic = {
     updateUserPlan,
     changePassword,
     updateProfileImage,
+    getCreatedUsers,
 
     //Packs and basebacks
     createBasePack,
@@ -142,7 +151,12 @@ const logic = {
     getMonthEarned,
     getMonthPayments,
     getMonthHoursTracked,
-    getMonthUnitsTracked
+    getMonthUnitsTracked,
+
+    //Contacts
+    createContact,
+    getContacts,
+    deleteContact
 }
 
 export default logic

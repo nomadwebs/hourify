@@ -4,6 +4,7 @@ import { errors, validate } from 'com'
 const { SystemError, NotFoundError } = errors
 
 export default (userId) => {
+    console.log('llego a la función getContacts: ', userId)
     validate.id(userId, 'userId')
 
     return (async () => {

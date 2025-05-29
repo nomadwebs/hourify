@@ -6,7 +6,7 @@ import './cron/downgradePlansJob.js';
 import multer from 'multer'
 
 import { errorHandler } from './routes/helpers/index.js'
-import { usersRouter, packsRouter, trackerRouter, activitiesRouter, paymentsRouter, tasksRouter, calendarRouter, statsRouter } from './routes/index.js'
+import { usersRouter, packsRouter, trackerRouter, activitiesRouter, paymentsRouter, tasksRouter, calendarRouter, statsRouter, contactsRouter } from './routes/index.js'
 
 db.connect(process.env.MONGO_URL).then(() => {
     //console.log('database connected')
@@ -37,6 +37,7 @@ db.connect(process.env.MONGO_URL).then(() => {
     server.use('/tasks', tasksRouter)
     server.use('/calendar', calendarRouter)
     server.use('/stats', statsRouter)
+    server.use('/contacts', contactsRouter)
     server.use('/images/profile', express.static('public/images/profile'))
 
     server.use(errorHandler)

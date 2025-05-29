@@ -9,6 +9,8 @@ import createUserByProvider from './createUserByProvider.js'
 import updateUserPlan from './updateUserPlan.js'
 import changePassword from './changePassword.js'
 import updateProfileImage from './updateProfileImage.js'
+import getCreatedUsers from './getCreatedUsers.js'
+
 export {
     authenticateUser,
     registerUser,
@@ -20,5 +22,6 @@ export {
     createUserByProvider,
     updateUserPlan,
     changePassword,
-    updateProfileImage
+    updateProfileImage,
+    getCreatedUsers
 }

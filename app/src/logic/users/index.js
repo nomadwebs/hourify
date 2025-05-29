@@ -12,6 +12,7 @@ import createUserByProvider from './createUserByProvider'
 import changePassword from './changePassword'
 import updateProfileImage from './updateProfileImage'
 import getUserNameByUserId from './getUserNameByUserId'
+import getCreatedUsers from './getCreatedUsers'
 
 export {
     registerUser,
@@ -27,5 +28,6 @@ export {
     createUserByProvider,
     changePassword,
     updateProfileImage,
-    getUserNameByUserId
+    getUserNameByUserId,
+    getCreatedUsers
 }
