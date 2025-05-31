@@ -627,8 +627,7 @@ const contact = new Schema({
 
     email: {
         type: String,
-        required: true,
-        unique: true,
+        required: false,
         match: /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i,
         maxLength: 255,
     },
@@ -701,6 +700,22 @@ const contact = new Schema({
         default: Date.now
     },
 
+    numberOfSessions: {
+        type: Number,
+        required: false
+    },
+
+    sessionsRecurrency: {
+        type: String,
+        enum: ['weekly', 'month'],
+        default: 'weekly',
+        required: false
+    },
+
+    timeSchedule: {
+        type: String,
+        required: false
+    }
 }, { versionKey: false })
 
 const message = new Schema({

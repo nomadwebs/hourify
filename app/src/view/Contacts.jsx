@@ -154,6 +154,26 @@ export default function Contacts(props) {
                                             <span className="text-gray-500">Phone</span>
                                             <span className="font-medium text-gray-700">{contact.phone}</span>
                                         </div>
+                                        {contact.numberOfSessions && (
+                                            <div className="flex items-center justify-between text-sm">
+                                                <span className="text-gray-500">Sessions</span>
+                                                <span className="font-medium text-gray-700">
+                                                    {contact.numberOfSessions} ({contact.sessionsRecurrency})
+                                                </span>
+                                            </div>
+                                        )}
+                                        {contact.lastInteraction && (
+                                            <div className="flex items-center justify-between text-sm">
+                                                <span className="text-gray-500">Last Interaction</span>
+                                                <span className="font-medium text-gray-700">
+                                                    {new Date(contact.lastInteraction).toLocaleDateString('es-ES', {
+                                                        day: '2-digit',
+                                                        month: '2-digit',
+                                                        year: 'numeric'
+                                                    })}
+                                                </span>
+                                            </div>
+                                        )}
                                     </div>
 
                                     <button className="w-full mt-4 bg-color_darkBlue text-white py-2 px-4 rounded-md hover:bg-color_lightBlue transition-colors duration-300 flex items-center justify-center space-x-2">
@@ -175,6 +195,8 @@ export default function Contacts(props) {
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">City</th>
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sessions</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Interaction</th>
                                     <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                                 </tr>
                             </thead>
@@ -203,13 +225,27 @@ export default function Contacts(props) {
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="text-sm text-gray-900">{contact.type}</div>
+                                            <div className="text-sm text-gray-900">{contact.contactType}</div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="text-sm text-gray-900">{contact.city}</div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="text-sm text-gray-900">{contact.phone}</div>
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            <div className="text-sm text-gray-900">
+                                                {contact.numberOfSessions ? `${contact.numberOfSessions} (${contact.sessionsRecurrency})` : '-'}
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            <div className="text-sm text-gray-900">
+                                                {contact.lastInteraction ? new Date(contact.lastInteraction).toLocaleDateString('es-ES', {
+                                                    day: '2-digit',
+                                                    month: '2-digit',
+                                                    year: 'numeric'
+                                                }) : '-'}
+                                            </div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                             <button className="text-color_darkBlue hover:text-color_lightBlue">
