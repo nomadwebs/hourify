@@ -33,7 +33,8 @@ export default (userId) => {
                     creationStatus: 1,
                     profileImage: 1,
                     createdDate: 1,
-                    lastLogin: 1
+                    lastLogin: 1,
+                    adquiredPacks: 1
                 }
             ).lean()
         } catch (error) {
@@ -43,8 +44,31 @@ export default (userId) => {
         if (!createdUsers || createdUsers.length === 0)
             throw new NotFoundError('No users found created by this user')
 
-        // 4. Formatear la respuesta
-        const formattedUsers = createdUsers.map(user => {
+        // 4. Filtrar usuarios que no tengan packs adquiridos del creador
+        const creatorOwnPacks = user.ownPacks || []
+        const creatorOwnPackIds = creatorOwnPacks.map(pack => pack.toString())
+
+        const filteredUsers = createdUsers.filter(createdUser => {
+            const userAdquiredPacks = createdUser.adquiredPacks || []
+            const userAdquiredPackIds = userAdquiredPacks.map(pack => pack.toString())
+
+            // Si el creationStatus es false, mostrar siempre el usuario
+            // para indicar que nunca se ha conectado
+            if (createdUser.creationStatus === 'false') {
+                return true
+            }
+
+            // Verificar si hay algún pack adquirido que coincida con los ownPacks del creador
+            const hasAcquiredCreatorPack = userAdquiredPackIds.some(packId =>
+                creatorOwnPackIds.includes(packId)
+            )
+
+            // Incluir solo usuarios que NO tengan packs adquiridos del creador
+            return !hasAcquiredCreatorPack
+        })
+
+        // 5. Formatear la respuesta
+        const formattedUsers = filteredUsers.map(user => {
             const userId = user._id.toString()
             return {
                 id: userId,
