@@ -83,7 +83,10 @@ import {
 } from './stats'
 
 import {
-    getContacts
+    getContacts,
+    createContact,
+    deleteContact,
+    updateContact
 } from './contacts'
 
 const logic = {
@@ -162,7 +165,10 @@ const logic = {
     getMonthUnitsTracked,
 
     //Contacts
-    getContacts
+    getContacts,
+    createContact,
+    deleteContact,
+    updateContact
 }
 
 export default logic

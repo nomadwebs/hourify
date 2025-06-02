@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { Tooltip } from 'react-tooltip'
 import logic from '../logic'
+import CreateUserByProvider from './components/CreateUserByProvider'
 
 export default function ManageCustomers(props) {
     const [loading, setLoading] = useState(true)
@@ -9,7 +10,17 @@ export default function ManageCustomers(props) {
     const [invitedUsers, setInvitedUsers] = useState([])
     const [viewMode, setViewMode] = useState('grid')
     const [searchQuery, setSearchQuery] = useState('')
+    const [showCreateUser, setShowCreateUser] = useState(false)
     const navigate = useNavigate()
+
+    const refreshInvitedUsers = async () => {
+        try {
+            const invitedUsersData = await logic.getCreatedUsers()
+            setInvitedUsers(invitedUsersData)
+        } catch (error) {
+            console.error(error)
+        }
+    }
 
     useEffect(() => {
         const fetchData = async () => {
@@ -344,15 +355,35 @@ export default function ManageCustomers(props) {
                 )}
 
                 {/* Invited Users Section */}
-                {invitedUsers.length > 0 && (
-                    <div className="mt-12">
-                        <div className="flex justify-between items-center mb-6">
-                            <div>
-                                <h2 className="text-2xl font-bold text-gray-800">Invited Users</h2>
-                                <p className="text-gray-600">Users who have been invited to the platform. Their status will change once they complete their registration.</p>
-                            </div>
+                <div className="mt-12">
+                    <div className="flex justify-between items-center mb-6">
+                        <div>
+                            <h2 className="text-2xl font-bold text-gray-800">Invited Users</h2>
+                            <p className="text-gray-600">Users who have been invited to the platform. Their status will change once they complete their registration.</p>
                         </div>
+                        <button
+                            onClick={() => setShowCreateUser(true)}
+                            className="bg-color_darkBlue text-white px-4 py-2 rounded-lg hover:bg-color_lightBlue transition-colors duration-300 flex items-center space-x-2"
+                        >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+                            </svg>
+                            <span>Invite New User</span>
+                        </button>
+                    </div>
 
+                    {showCreateUser && (
+                        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+                            <CreateUserByProvider
+                                onUserCreated={() => {
+                                    setShowCreateUser(false)
+                                    refreshInvitedUsers()
+                                }}
+                            />
+                        </div>
+                    )}
+
+                    {invitedUsers.length > 0 ? (
                         <div className="bg-white rounded-lg shadow-sm overflow-hidden">
                             <table className="min-w-full divide-y divide-gray-200">
                                 <thead className="bg-gray-50">
@@ -397,7 +428,6 @@ export default function ManageCustomers(props) {
                                                         Confirmed
                                                     </span>
                                                 }
-
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <div className="text-sm text-gray-500">
@@ -409,8 +439,12 @@ export default function ManageCustomers(props) {
                                 </tbody>
                             </table>
                         </div>
-                    </div>
-                )}
+                    ) : (
+                        <div className="bg-white rounded-lg shadow-sm p-6 text-center">
+                            <p className="text-gray-600">No invited users yet. Click the button above to invite a new user.</p>
+                        </div>
+                    )}
+                </div>
             </div>
 
             <Tooltip id="tooltip"

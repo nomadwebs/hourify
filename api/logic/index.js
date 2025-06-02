@@ -85,7 +85,8 @@ import {
 import {
     createContact,
     getContacts,
-    deleteContact
+    deleteContact,
+    updateContact
 } from './contacts/index.js'
 
 const logic = {
@@ -156,7 +157,8 @@ const logic = {
     //Contacts
     createContact,
     getContacts,
-    deleteContact
+    deleteContact,
+    updateContact
 }
 
 export default logic
