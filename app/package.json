@@ -1,5 +1,5 @@
 {
-  "name": "hourify",
+  "name": "hourify360",
   "private": true,
   "version": "1.0.0",
   "type": "module",
@@ -16,7 +16,8 @@
     "react": "^18.3.1",
     "react-day-picker": "^9.6.5",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^6.28.0"
+    "react-router-dom": "^6.28.0",
+    "react-tooltip": "^5.28.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.11.1",

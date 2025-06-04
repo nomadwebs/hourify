@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">81.81% </span>
+                <span class="strong">75% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>18/22</span>
+                <span class='fraction'>18/24</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">66.66% </span>
+                <span class="strong">62.5% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>4/6</span>
+                <span class='fraction'>5/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">57.14% </span>
+                <span class="strong">44.44% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>4/7</span>
+                <span class='fraction'>4/9</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">85% </span>
+                <span class="strong">78.26% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>17/20</span>
+                <span class='fraction'>18/23</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -101,7 +101,9 @@
 <a name='L36'></a><a href='#L36'>36</a>
 <a name='L37'></a><a href='#L37'>37</a>
 <a name='L38'></a><a href='#L38'>38</a>
-<a name='L39'></a><a href='#L39'>39</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L39'></a><a href='#L39'>39</a>
+<a name='L40'></a><a href='#L40'>40</a>
+<a name='L41'></a><a href='#L41'>41</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -112,11 +114,9 @@
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -133,8 +133,12 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -145,18 +149,16 @@ import { validate, errors } from 'com';
 &nbsp;
 const { SystemError, NotFoundError } = errors
 &nbsp;
-export default (userId, packId, amount, currency, method, paymentStatus) =&gt; {
+export default (userId, packId, amount, currency, method, paymentReference) =&gt; {
     validate.id(packId, 'packId')
     validate.id(userId, 'userId')
     validate.currency(currency)
     validate.method(method)
+    validate.text(paymentReference, 'payment reference')
 &nbsp;
     const floatAmount = parseFloat(amount)
     //if (!floatAmount || floatAmount &lt;= 0) throw new ValidationError("Invalid payment amount");
     validate.number(floatAmount)
-&nbsp;
-    //TODO: TO DELETE PAYMENT STATUS FROM PAYMENTS COLLECTION
-    if (!paymentStatus) { paymentStatus = 'partially payed' }
 &nbsp;
     return User.findById(userId).lean()
         .catch(<span class="fstat-no" title="function not covered" >error =&gt; {</span> <span class="cstat-no" title="statement not covered" >throw new SystemError(error.message) </span>})
@@ -170,11 +172,15 @@ export default (userId, packId, amount, currency, method, paymentStatus) =&gt; {
                 .then(pack =&gt; {
                     if (!pack) <span class="cstat-no" title="statement not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >throw new NotFoundError('Pack not found')</span></span>
 &nbsp;
-                    return Payment.create({ pack: packId, amount: floatAmount, currency, method, date: new Date() })
-                        .catch(<span class="fstat-no" title="function not covered" >error =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >                            throw new SystemError(error.message)</span>
+                    return Payment.create({ pack: packId, amount: floatAmount, currency, method, date: new Date(), reference: paymentReference })
+                        .catch(<span class="fstat-no" title="function not covered" >error =&gt; {</span> <span class="cstat-no" title="statement not covered" >throw new SystemError(error.message) </span>})
+                        .then((paymentAdded) =&gt; {
+                            if (pack.status === 'Pending' &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >floatAmount &gt; 0)</span> <span class="branch-0 cbranch-no" title="branch not covered" >{</span>
+<span class="cstat-no" title="statement not covered" >                                return Pack.findByIdAndUpdate(packId, { status: 'Active' }).lean()</span>
+                                    .catch(<span class="fstat-no" title="function not covered" >error =&gt; {</span> <span class="cstat-no" title="statement not covered" >throw new SystemError(error.message) </span>})
+                                    .then(<span class="fstat-no" title="function not covered" >() =&gt; {</span> })
+                            }
                         })
-                        .then(() =&gt; { })
                 })
         })
 }</pre></td></tr></table></pre>
@@ -184,7 +190,7 @@ export default (userId, packId, amount, currency, method, paymentStatus) =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-02-05T23:50:58.250Z
+                at 2025-05-05T14:01:46.204Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">84.61% </span>
+                <span class="strong">93.75% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>11/13</span>
+                <span class='fraction'>15/16</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">84.61% </span>
+                <span class="strong">93.75% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>11/13</span>
+                <span class='fraction'>15/16</span>
             </div>
         
             
@@ -85,48 +85,75 @@
 <a name='L20'></a><a href='#L20'>20</a>
 <a name='L21'></a><a href='#L21'>21</a>
 <a name='L22'></a><a href='#L22'>22</a>
-<a name='L23'></a><a href='#L23'>23</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L23'></a><a href='#L23'>23</a>
+<a name='L24'></a><a href='#L24'>24</a>
+<a name='L25'></a><a href='#L25'>25</a>
+<a name='L26'></a><a href='#L26'>26</a>
+<a name='L27'></a><a href='#L27'>27</a>
+<a name='L28'></a><a href='#L28'>28</a>
+<a name='L29'></a><a href='#L29'>29</a>
+<a name='L30'></a><a href='#L30'>30</a>
+<a name='L31'></a><a href='#L31'>31</a>
+<a name='L32'></a><a href='#L32'>32</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span></td><td class="text"><pre class="prettyprint lang-js">import { sendEmail } from "./index.js"
 import { validate } from "com"
+import 'dotenv/config'
 &nbsp;
 //Confirmation register email
-const emailRegisterWelcome = (to, name) =&gt; {
+const emailRegisterWelcome = (to, name, username) =&gt; {
     validate.email(to)
     validate.name(name)
+    validate.username(username)
 &nbsp;
+    const loginLink = 'https://hourify360.com'
 &nbsp;
     const subject = 'Welcome to Hourify'
     const text = `Hello ${name}, this is your confirmation email`
-    const html = `&lt;p&gt;Hello ${name}!!&lt;/p&gt;&lt;p&gt;this is your confirmation email. We just want to confirm you than your new account has been createt correctly and you can get in just &lt;a href="http://localhost:5173/login"&gt;clicking here&lt;/a&gt;&lt;/p&gt;`
+    const html = `
+        &lt;p&gt;Hello ${name}!!&lt;/p&gt;
+        &lt;p&gt;Your username is: ${username}&lt;/p&gt;
+        &lt;p&gt;This is your confirmation email. We just want to confirm you that your new account has been created correctly and you can get in just &lt;a href='${loginLink}/login'&gt;clicking here&lt;/a&gt; or visiting ${loginLink}/login&lt;/p&gt;
+        &lt;br&gt;
+        &lt;p&gt;If you have problems login in, contact us on hola@nomadwebs.com&lt;/p&gt;
+    `
 &nbsp;
     return sendEmail(to, subject, text, html)
-        .then((info) =&gt; {
-            return info // Retornar para permitir manejar la promesa en otro lugar si es necesario
+        .then(<span class="fstat-no" title="function not covered" >(info) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >            return info </span>// Retornar para permitir manejar la promesa en otro lugar si es necesario
         })
-        .catch(<span class="fstat-no" title="function not covered" >(error) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >            console.error('Error sending welcome email:', error.message)</span>
-<span class="cstat-no" title="statement not covered" >            throw error</span>
+        .catch((error) =&gt; {
+            console.error('Error sending welcome email:', error.message)
+            throw error
         })
 }
 export default emailRegisterWelcome</pre></td></tr></table></pre>
@@ -136,7 +163,7 @@ export default emailRegisterWelcome</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-02-05T23:50:58.250Z
+                at 2025-05-05T14:01:46.204Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

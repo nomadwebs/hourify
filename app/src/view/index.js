@@ -19,6 +19,9 @@ import UserProfile from "./UserProfile"
 //Tracker Managing
 import Tracker from "./Tracker"
 
+//Contacts
+import Contacts from './Contacts'
+
 //Tasks Managing
 import Tasks from "./Tasks"
 
@@ -48,6 +51,9 @@ export {
 
     //Tracker
     Tracker,
+
+    //Contacts
+    Contacts,
 
     //Tasks
     Tasks,

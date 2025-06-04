@@ -33,9 +33,19 @@ const user = new Schema({
     reason: {
         type: String,
         required: false,
-        enum: ['', 'earlyAdopterPromo']
+        enum: ['', 'earlyAdopterPromo', '15dayPro']
     },
     planExpiryDate: {
+        type: Date,
+        required: false,
+        default: null
+    },
+    autoRenew: {
+        type: Boolean,
+        required: false,
+        default: false // o true si tu modelo es "renovación por defecto"
+    },
+    autoRenewConsentDate: {
         type: Date,
         required: false,
         default: null
@@ -43,7 +53,7 @@ const user = new Schema({
     role: {
         type: String,
         required: false, //WILL BE TRUE
-        enum: ['standard', 'provider'],
+        enum: ['standard', 'provider', 'superAdministrator'],
         default: 'standard'
     },
     dni: {
@@ -164,6 +174,12 @@ const user = new Schema({
         required: false,
         default: null
     },
+    language: {
+        type: String,
+        required: false,
+        enum: ['en', 'es'],
+        default: 'en'
+    }
 }, { versionKey: false })
 
 
@@ -339,6 +355,25 @@ const pack = new Schema({
 }, { versionKey: false })
 
 
+//Schema for activity comments
+const activityComment = new Schema({
+    commentDate: {
+        type: Date,
+        required: true,
+        default: Date.now
+    },
+    userId: {
+        type: ObjectId,
+        required: true,
+        ref: 'User'
+    },
+    comment: {
+        type: String,
+        required: true,
+        maxLength: 1000
+    }
+}, { versionKey: false })
+
 
 //Model activity to follow up projects and repporting 
 const activity = new Schema({
@@ -374,7 +409,9 @@ const activity = new Schema({
     remainingQuantity: {
         type: Number,
         required: false, //TODO: Modificar a true cuando cambie de base de datos
-    }
+    },
+
+    comments: [activityComment]
 
 }, { versionKey: false })
 
@@ -576,6 +613,111 @@ const event = new Schema({
 }, { versionKey: false })
 
 
+const contact = new Schema({
+    creator: {
+        type: ObjectId,
+        ref: 'User',
+        required: true
+    },
+
+    name: {
+        type: String,
+        required: true
+    },
+
+    email: {
+        type: String,
+        required: false,
+        match: /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i,
+        maxLength: 255,
+    },
+
+    phone: {
+        type: String,
+        required: false,
+    },
+
+    contactType: {
+        type: String,
+        required: false,
+        enum: ['lead', 'provider', 'customer', 'default'],
+        default: 'default'
+    },
+
+    // Información básica
+    nif: {
+        type: String,
+        required: false,
+        match: /^[A-Z0-9]{8,9}$/i
+    },
+
+    address: {
+        type: String,
+        required: false
+    },
+
+    city: {
+        type: String,
+        required: false
+    },
+
+    postalCode: {
+        type: String,
+        required: false,
+        match: /^[0-9]{5}$/
+    },
+
+    website: {
+        type: String,
+        required: false
+    },
+
+    notes: {
+        type: String,
+        required: false
+    },
+
+    lastInteraction: {
+        type: Date,
+        required: false,
+        default: null
+    },
+
+    linkedUserId: {
+        type: ObjectId,
+        ref: 'User',
+        default: null,
+        required: false
+    },
+
+    createdAt: {
+        type: Date,
+        default: Date.now
+    },
+
+    updatedAt: {
+        type: Date,
+        default: Date.now
+    },
+
+    numberOfSessions: {
+        type: Number,
+        required: false
+    },
+
+    sessionsRecurrency: {
+        type: String,
+        enum: ['weekly', 'month'],
+        default: 'weekly',
+        required: false
+    },
+
+    timeSchedule: {
+        type: String,
+        required: false
+    }
+}, { versionKey: false })
+
 const message = new Schema({
     sender: {
         type: ObjectId,
@@ -621,6 +763,7 @@ const Activity = model('Activity', activity)
 const Payment = model('Payment', payment)
 const Task = model('Task', task)
 const Event = model('Event', event)
+const Contact = model('Contact', contact)
 const Message = model('Message', message)
 
 
@@ -632,5 +775,6 @@ export {
     Payment,
     Task,
     Event,
+    Contact,
     Message
 }

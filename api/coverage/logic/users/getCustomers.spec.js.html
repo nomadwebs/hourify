@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">68.62% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>51/51</span>
+                <span class='fraction'>35/51</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">90% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>10/10</span>
+                <span class='fraction'>9/10</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">68.62% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>51/51</span>
+                <span class='fraction'>35/51</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -201,31 +201,31 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -294,31 +294,31 @@ describe('getCustomerPacks', () =&gt; {
         const createdBasePack = await BasePack.findOne({ user: newUserProvider._id.toString() })
 &nbsp;
         await assignPack(newUserProvider._id.toString(), customerSearchByUsername1, createdBasePack._id.toString(), 'Descripción del pack asignado', 500, 'cash')
-        await assignPack(newUserProvider._id.toString(), customerSearchByUsername2, createdBasePack._id.toString(), 'Descripción del pack asignado', 500, 'cash')
-        await assignPack(newUserProvider._id.toString(), customerSearchByUsername3, createdBasePack._id.toString(), 'Descripción del pack asignado', 500, 'cash')
+<span class="cstat-no" title="statement not covered" >        await assignPack(newUserProvider._id.toString(), customerSearchByUsername2, createdBasePack._id.toString(), 'Descripción del pack asignado', 500, 'cash')</span>
+<span class="cstat-no" title="statement not covered" >        await assignPack(newUserProvider._id.toString(), customerSearchByUsername3, createdBasePack._id.toString(), 'Descripción del pack asignado', 500, 'cash')</span>
 &nbsp;
         // Ahora comprobamos que se hayan creado 3 packs
-        const checkpacksAssigned = await Pack.find({
+<span class="cstat-no" title="statement not covered" >        const checkpacksAssigned = await Pack.find({</span>
             provider: newUserProvider._id.toString()
         })
 &nbsp;
-        expect(checkpacksAssigned).to.exist
-        expect(checkpacksAssigned).to.be.an('array')
-        expect(checkpacksAssigned).to.have.lengthOf(3)
+<span class="cstat-no" title="statement not covered" >        expect(checkpacksAssigned).to.exist</span>
+<span class="cstat-no" title="statement not covered" >        expect(checkpacksAssigned).to.be.an('array')</span>
+<span class="cstat-no" title="statement not covered" >        expect(checkpacksAssigned).to.have.lengthOf(3)</span>
 &nbsp;
-        checkpacksAssigned.forEach(assigned =&gt; {
-            expect(assigned.description).to.equal('Descripción del pack asignado')
-            expect(assigned.description).to.be.a('string')
-            expect(assigned.originalQuantity).to.equal(5)
-            expect(assigned.unit).to.equal('hours')
-            expect(assigned.price).to.equal(1000)
-            expect(assigned.currency).to.equal('EUR')
+<span class="cstat-no" title="statement not covered" >        checkpacksAssigned.forEach(<span class="fstat-no" title="function not covered" >assigned =&gt; {</span></span>
+<span class="cstat-no" title="statement not covered" >            expect(assigned.description).to.equal('Descripción del pack asignado')</span>
+<span class="cstat-no" title="statement not covered" >            expect(assigned.description).to.be.a('string')</span>
+<span class="cstat-no" title="statement not covered" >            expect(assigned.originalQuantity).to.equal(5)</span>
+<span class="cstat-no" title="statement not covered" >            expect(assigned.unit).to.equal('hours')</span>
+<span class="cstat-no" title="statement not covered" >            expect(assigned.price).to.equal(1000)</span>
+<span class="cstat-no" title="statement not covered" >            expect(assigned.currency).to.equal('EUR')</span>
         })
 &nbsp;
-        const customerPacks = await getCustomers(newUserProvider._id.toString())
+<span class="cstat-no" title="statement not covered" >        const customerPacks = await getCustomers(newUserProvider._id.toString())</span>
 &nbsp;
-        expect(customerPacks).to.be.an('array')
-        expect(customerPacks).to.have.lengthOf(3)
+<span class="cstat-no" title="statement not covered" >        expect(customerPacks).to.be.an('array')</span>
+<span class="cstat-no" title="statement not covered" >        expect(customerPacks).to.have.lengthOf(3)</span>
 &nbsp;
     })
 &nbsp;
@@ -349,7 +349,7 @@ describe('getCustomerPacks', () =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-02-05T23:50:58.250Z
+                at 2025-05-05T14:01:46.204Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

@@ -3,11 +3,15 @@ import { validate, errors } from 'com'
 const { SystemError, NotFoundError, PaymentError } = errors
 
 
-export default (customerSearch, selectPack, description, payedAmount, paymentMethod, paymentReference) => {
+export default (customerSearch, selectPack, description, payedAmount, paymentMethod, paymentReference, finalPrice) => {
     validate.text(customerSearch)
     validate.id(selectPack)
     validate.description(description)
     validate.payedAmount(payedAmount)
+
+    console.log('logic final price: ', finalPrice, typeof finalPrice)
+    if (finalPrice) validate.promoAmount(finalPrice)
+
     validate.paymentMethod(paymentMethod)
     validate.text(paymentReference, 'payment reference')
 
@@ -17,7 +21,7 @@ export default (customerSearch, selectPack, description, payedAmount, paymentMet
             'Content-Type': 'application/json',
             Authorization: `Bearer ${localStorage.token}`
         },
-        body: JSON.stringify({ customerSearch, selectPack, description, payedAmount, paymentMethod, paymentReference })
+        body: JSON.stringify({ customerSearch, selectPack, description, payedAmount, paymentMethod, paymentReference, finalPrice })
     })
         .catch(error => {
             throw new SystemError(error.message)

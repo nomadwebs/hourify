@@ -1,5 +1,7 @@
-import getActivitiesByPackId from './getActivitiesByPackId';
+import getActivitiesByPackId from './getActivitiesByPackId'
+import addActivityComment from './addActivityComment'
 
 export {
-    getActivitiesByPackId
+    getActivitiesByPackId,
+    addActivityComment
 }

@@ -1,5 +1,7 @@
-import getActivityByPackIdHandler from './getActivityByPackIdHandler.js';
+import getActivityByPackIdHandler from './getActivityByPackIdHandler.js'
+import addActivityCommentHandler from './addActivityCommentHandler.js'
 
 export {
-    getActivityByPackIdHandler
+    getActivityByPackIdHandler,
+    addActivityCommentHandler
 }

@@ -8,7 +8,10 @@ import {
     updateUser,
     getCustomerPacks,
     createUserByProvider,
-    updateUserPlan
+    updateUserPlan,
+    changePassword,
+    updateProfileImage,
+    getCreatedUsers,
 } from './users/index.js'
 
 //PACKS & BASEPACKS
@@ -43,6 +46,7 @@ import {
 //ACTIVITY
 import {
     getActivityByPackId,
+    addActivityComment,
 
 } from './activity/index.js'
 
@@ -77,6 +81,14 @@ import {
     getMonthUnitsTracked
 } from './stats/index.js'
 
+//CONTACTS
+import {
+    createContact,
+    getContacts,
+    deleteContact,
+    updateContact
+} from './contacts/index.js'
+
 const logic = {
     //Users
     registerUser,
@@ -88,7 +100,9 @@ const logic = {
     getCustomerPacks,
     createUserByProvider,
     updateUserPlan,
-
+    changePassword,
+    updateProfileImage,
+    getCreatedUsers,
 
     //Packs and basebacks
     createBasePack,
@@ -115,6 +129,7 @@ const logic = {
 
     //Activity
     getActivityByPackId,
+    addActivityComment,
 
     //Payments
     addPayment,
@@ -137,7 +152,13 @@ const logic = {
     getMonthEarned,
     getMonthPayments,
     getMonthHoursTracked,
-    getMonthUnitsTracked
+    getMonthUnitsTracked,
+
+    //Contacts
+    createContact,
+    getContacts,
+    deleteContact,
+    updateContact
 }
 
 export default logic

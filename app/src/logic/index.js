@@ -9,7 +9,11 @@ import {
     getUserDetails,
     updateUser,
     getCustomerPacks,
-    createUserByProvider
+    createUserByProvider,
+    changePassword,
+    updateProfileImage,
+    getUserNameByUserId,
+    getCreatedUsers
 } from './users'
 
 import {
@@ -28,6 +32,7 @@ import {
 
 import {
     getActivitiesByPackId,
+    addActivityComment,
 } from './activities'
 
 
@@ -77,6 +82,13 @@ import {
     getMonthUnitsTracked
 } from './stats'
 
+import {
+    getContacts,
+    createContact,
+    deleteContact,
+    updateContact
+} from './contacts'
+
 const logic = {
     //Users
     registerUser,
@@ -90,6 +102,10 @@ const logic = {
     updateUser,
     getCustomerPacks,
     createUserByProvider,
+    changePassword,
+    updateProfileImage,
+    getUserNameByUserId,
+    getCreatedUsers,
 
     //Packs
     createPack,
@@ -106,6 +122,7 @@ const logic = {
 
     //Activities
     getActivitiesByPackId,
+    addActivityComment,
 
     //Helpers
     getDecimalToTimeFormat,
@@ -137,7 +154,6 @@ const logic = {
     updateEvent,
     deleteEvent,
 
-
     //Home
     getUserStats,
     usePendingPayments,
@@ -146,7 +162,13 @@ const logic = {
     getMonthEarned,
     getMonthHoursTracked,
     getMonthPayments,
-    getMonthUnitsTracked
+    getMonthUnitsTracked,
+
+    //Contacts
+    getContacts,
+    createContact,
+    deleteContact,
+    updateContact
 }
 
 export default logic

@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 import { Routes, Route, useNavigate, Navigate } from 'react-router-dom'
 
-import { Login, Register, Home, ManagePacks, ManageCustomers, ManagePurchasedPacks, AssignPack, CreatePack, Tracker, UserProfile, CustomerPacks, Tasks, Calendar } from './view'
+import { Login, Register, Home, ManagePacks, ManageCustomers, ManagePurchasedPacks, AssignPack, CreatePack, Tracker, UserProfile, CustomerPacks, Tasks, Calendar, Contacts } from './view'
 
 import { Header, Footer, Alert, Confirm, Error404 /* PrivacyPolicy */ } from './view/components'
 
@@ -26,33 +26,23 @@ export default function App() {
 
   //Navigation functions
   const handleHomeClick = () => navigate('/')
-
   const handleUserProfileClick = () => navigate('/user-profile')
 
 
   //Navigation throw user things
   const handleUserLoggedOut = () => navigate('/login')
-
   const handleUserLoggedIn = () => navigate('/')
-
   const handleRegisterClick = () => navigate('/register')
-
   const handleLoginClick = () => navigate('/login')
-
   const handleUserRegistered = () => navigate('/login')
-
   const handleCustomerPacks = () => navigate('/customer-packs')
 
 
   //Navigation throw packs things
   const handleManagePacksClick = () => navigate('/manage-packs')
-
   const handleManageCustomersClick = () => navigate('/manage-customers')
-
   const handleManagePurchasedPacksClick = () => navigate('/manage-bought-packs')
-
   const handleAssignPack = () => navigate('/assign-pack')
-
   const handleCreatePack = () => navigate('/create-pack')
 
 
@@ -64,6 +54,9 @@ export default function App() {
 
   //Navigation throw Calendar things
   const handleCalendarClick = () => navigate('/calendar')
+
+  //Navigation throw Contacts things
+  const handleContactsClick = () => navigate('/contacts')
 
   const handleAddTaskClick = () => {
     navigate('/tasks') //TODO: Entendre que passa aquí
@@ -117,7 +110,8 @@ export default function App() {
           onManageCustomersClick={handleManageCustomersClick}
           onManagePurchasedPacksClick={handleManagePurchasedPacksClick}
           onTasksClick={handleTasksClick}
-          onCalendarClick={handleCalendarClick} />
+          onCalendarClick={handleCalendarClick}
+          onContactsClick={handleContactsClick} />
       )}
       <Routes>
         <Route path="/login" element={logic.isUserLoggedIn() ?
@@ -182,6 +176,10 @@ export default function App() {
 
         <Route path="/calendar" element={logic.isUserLoggedIn() ?
           <Calendar onHomeClick={handleHomeClick} /> :
+          <Navigate to="/login" />} />
+
+        <Route path="/contacts" element={logic.isUserLoggedIn() ?
+          <Contacts onHomeClick={handleHomeClick} /> :
           <Navigate to="/login" />} />
 
         {/* <Route path="/privacy-policy" element={<PrivacyPolicy onHomeClick={handleHomeClick} />} />

@@ -53,6 +53,14 @@ const validateEmail = email => {
         throw new ValidationError('invalid email')
 }
 
+const validatePhone = phone => {
+    if (typeof phone !== 'string') throw new ValidationError('invalid phone number')
+    if (phone.length > 20) throw new ValidationError('phone number is too long')
+    // Permite números internacionales (+34...), paréntesis, espacios y guiones. Mínimo 8 dígitos
+    if (!/^\+?[\d\s\-()]{8,20}$/.test(phone))
+        throw new ValidationError('invalid phone number')
+}
+
 const validateUsername = username => {
     if (typeof username !== 'string') throw new ValidationError('invalid username')
     if (username.length < 5 || username.length > 25)
@@ -131,7 +139,13 @@ const validatePayedAmount = (payed) => {
     if (payed.length > 10) { throw new ValidationError('payments cannot be grater than 9999999.99') }
 }
 
-const validateId = (id, explain = 'id') => {
+const validatePromoAmount = (promoPayed) => {
+    console.log('en el validate tenemos: ', typeof promoPayed)
+    if (typeof promoPayed !== 'string') throw new ValidationError('invalid promo amount')
+    if (promoPayed.length > 10) { throw new ValidationError('promo payments cannot be grater than 9999999.99') }
+}
+
+const validateId = (id, explain) => {
     if (typeof id !== 'string') throw new ValidationError(`invalid ${explain}`)
     if (id.length !== 24) throw new ValidationError(`invalid ${explain} length`)
 }
@@ -144,7 +158,7 @@ const validateDni = dni => {
     if (typeof dni !== 'string') throw new ValidationError('invalid dni')
     if (dni.length > 9) throw new ValidationError('dni is too long')
     if (!/^[0-9]{8}[A-Z]$/i.test(dni))
-        throw new ValidationError('invalid dni')
+        throw new ValidationError('invalid DNI')
 }
 
 const validateExpiringTime = expiringTime => {
@@ -182,6 +196,11 @@ const validateTaskPriority = priority => {
     if (typeof priority !== 'string') throw new ValidationError('invalid priority')
     const validPriorities = ['Low', 'Medium', 'High', 'Urgent']
     if (!validPriorities.includes(priority)) throw new ValidationError('Invalid priority value')
+}
+
+const validateNotes = notes => {
+    if (typeof notes !== 'string') throw new ValidationError('invalid notes')
+    if (notes.length > 255) throw new ValidationError('notes is too long, max 255 characters')
 }
 
 const validateAttendees = attendees => {
@@ -222,11 +241,14 @@ const validate = {
     expiring: validateExpiringTime,
     status: validateStatus,
     payedAmount: validatePayedAmount,
+    promoAmount: validatePromoAmount,
     paymentMethod: validatePaymentMethod,
     timeFormat: validateTimeFormat,
     taskStatus: validateTaskStatus,
     taskPriority: validateTaskPriority,
-    attendees: validateAttendees
+    attendees: validateAttendees,
+    phone: validatePhone,
+    notes: validateNotes
 }
 
 export default validate
