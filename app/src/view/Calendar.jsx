@@ -9,8 +9,9 @@ import EventList from './components/EventList'
 import logic from '../logic'
 
 export default function Calendar({ onHomeClick }) {
-    const [selectedDate, setSelectedDate] = useState(new Date())
+    // Estados del calendario simple
     const [events, setEvents] = useState([])
+    const [selectedDate, setSelectedDate] = useState(new Date())
     const [selectedEvent, setSelectedEvent] = useState(null)
     const [isAddingEvent, setIsAddingEvent] = useState(false)
     const [isEditingEvent, setIsEditingEvent] = useState(false)
@@ -28,11 +29,10 @@ export default function Calendar({ onHomeClick }) {
         const fetchEvents = async () => {
             try {
                 const userId = logic.getUserId()
-                const events = await logic.getEvents(userId)
-                setEvents(events)
+                const eventsData = await logic.getEvents(userId)
+                setEvents(eventsData || [])
             } catch (error) {
                 console.error('Error loading events:', error.message)
-                /* alert('Error loading events: ' + error.message) */
                 setEvents([])
             }
         }
@@ -72,12 +72,25 @@ export default function Calendar({ onHomeClick }) {
         })
     }
 
+    const handleCancelEvent = () => {
+        setIsAddingEvent(false)
+        setIsEditingEvent(false)
+        setNewEvent({
+            title: '',
+            description: '',
+            location: '',
+            startDateTime: new Date(),
+            endDateTime: new Date(),
+            attendees: [],
+            typeEvent: 'Meeting'
+        })
+    }
+
     const handleSaveEvent = async () => {
         try {
             const userId = logic.getUserId()
             const { title, description, location, startDateTime, endDateTime, attendees, typeEvent } = newEvent
 
-            // Validations alidación mínima
             if (!title || !startDateTime || !endDateTime) {
                 alert('Missing required fields.')
                 return
@@ -85,8 +98,9 @@ export default function Calendar({ onHomeClick }) {
 
             await logic.addEvent(title, description, location, attendees, startDateTime, endDateTime, typeEvent)
 
-            const updatedEvents = await logic.getEvents(userId)
-            setEvents(updatedEvents)
+            // Refrescar eventos
+            const updatedEventsData = await logic.getEvents(userId)
+            setEvents(updatedEventsData || [])
 
             setIsAddingEvent(false)
             setNewEvent({
@@ -104,26 +118,13 @@ export default function Calendar({ onHomeClick }) {
         }
     }
 
-    const handleCancelEvent = () => {
-        setIsAddingEvent(false)
-        setIsEditingEvent(false)
-        setNewEvent({
-            title: '',
-            description: '',
-            location: '',
-            startDateTime: new Date(),
-            endDateTime: new Date(),
-            attendees: [],
-            typeEvent: 'Meeting' // ✅ FIX: añadimos el campo que faltaba
-        })
-    }
-
     const handleEditEvent = () => {
         setIsEditingEvent(true)
+        setIsAddingEvent(false)
         setNewEvent({
             ...selectedEvent,
-            eventId: selectedEvent.id, // ✅ Aunque opcional, lo dejas por compatibilidad
-            typeEvent: selectedEvent.typeEvent || 'Meeting' // ✅ FIX: fallback si no existe
+            eventId: selectedEvent.id,
+            typeEvent: selectedEvent.typeEvent || 'Meeting'
         })
     }
 
@@ -134,7 +135,7 @@ export default function Calendar({ onHomeClick }) {
             const formattedStartDateTime = startDateTime ? new Date(startDateTime) : null
             const formattedEndDateTime = endDateTime ? new Date(endDateTime) : null
 
-            const updatedEvent = await logic.updateEvent(
+            await logic.updateEvent(
                 eventId || newEvent.id,
                 title,
                 description,
@@ -145,21 +146,13 @@ export default function Calendar({ onHomeClick }) {
                 typeEvent
             )
 
-            const updatedEvents = events.map(event =>
-                event.id === (eventId || newEvent.id) ? { ...event, ...newEvent, id: event.id } : event
-            )
-            setEvents(updatedEvents)
-            setSelectedEvent(updatedEvents.find(event => event.id === (eventId || newEvent.id)))
+            // Refrescar eventos
+            const userId = logic.getUserId()
+            const updatedEventsData = await logic.getEvents(userId)
+            setEvents(updatedEventsData || [])
+
             setIsEditingEvent(false)
-            setNewEvent({
-                title: '',
-                description: '',
-                location: '',
-                startDateTime: new Date(),
-                endDateTime: new Date(),
-                attendees: [],
-                typeEvent: 'Meeting'
-            })
+            setSelectedEvent(null)
         } catch (error) {
             console.error('Error updating event:', error.message)
             alert('Error updating event: ' + error.message)
@@ -177,37 +170,31 @@ export default function Calendar({ onHomeClick }) {
         }
     }
 
-    const modifiers = {
-        hasEvent: (date) => getEventsForDate(date).length > 0
-    }
-
-    const modifiersStyles = {
-        hasEvent: {
-            fontWeight: 'bold',
-            color: '#2563eb',
-            textDecoration: 'underline'
-        }
-    }
-
     return (
-        <main className="flex flex-col items-center bg-color_backgroundGrey w-full flex-grow pt-12 px-4">
-            <div className="w-full max-w-6xl">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center mb-6 gap-4">
+        <main className="flex flex-col bg-color_backgroundGrey w-full flex-grow pt-6 px-4">
+            <div className="w-full max-w-7xl mx-auto">
+                {/* Header */}
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
                     <div>
-                        <h1 className="text-3xl font-bold">Calendar</h1>
+                        <h1 className="text-3xl font-bold text-gray-800">Calendar</h1>
                         <p className="text-gray-600">Manage your events and appointments</p>
                     </div>
-                    <button
-                        onClick={handleAddEvent}
-                        className="flex items-center bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-md transition-colors duration-300 shadow-md w-full sm:w-auto justify-center sm:justify-start font-medium"
-                    >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                            <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
-                        </svg>
-                        Add Event
-                    </button>
+
+                    <div className="flex items-center gap-4">
+                        {/* Botón Agregar Evento */}
+                        <button
+                            onClick={handleAddEvent}
+                            className="flex items-center bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-lg transition-colors duration-300 shadow-md font-medium"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+                            </svg>
+                            Add Event
+                        </button>
+                    </div>
                 </div>
 
+                {/* Calendario Simple */}
                 <div className="bg-white shadow-md rounded-lg overflow-hidden">
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 p-6">
                         {/* Calendar Section */}
@@ -216,21 +203,27 @@ export default function Calendar({ onHomeClick }) {
                                 mode="single"
                                 selected={selectedDate}
                                 onSelect={handleDateSelect}
-                                modifiers={modifiers}
-                                modifiersStyles={modifiersStyles}
+                                modifiers={{
+                                    hasEvent: (date) => getEventsForDate(date).length > 0
+                                }}
+                                modifiersStyles={{
+                                    hasEvent: {
+                                        fontWeight: 'bold',
+                                        color: '#2563eb',
+                                        textDecoration: 'underline'
+                                    }
+                                }}
                                 locale={enGB}
+                                weekStartsOn={1}
                                 className="w-full"
                             />
                         </div>
 
                         {/* Events Section */}
                         <div className="lg:col-span-7 bg-gray-50 rounded-lg p-4">
-                            {/* <h2 className="text-xl font-semibold mb-4 text-color_darkBlue">
-                                {format(selectedDate, "EEEE d 'de' MMMM", { locale: enGB })}
-                            </h2> */}
                             {selectedDate && (
                                 <h2 className="text-xl font-semibold mb-4 text-color_darkBlue">
-                                    {format(selectedDate, "EEEE d 'de' MMMM", { locale: enGB })}
+                                    {format(selectedDate, "EEEE d MMMM yyyy", { locale: enGB })}
                                 </h2>
                             )}
 

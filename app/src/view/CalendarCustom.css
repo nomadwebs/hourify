@@ -1,0 +1,287 @@
+/* Estilos personalizados para react-big-calendar */
+
+/* Override de estilos generales */
+.rbc-calendar {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* Header del calendario */
+.rbc-header {
+    background-color: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 12px 8px;
+    font-weight: 600;
+    color: #374151;
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+}
+
+/* Toolbar (navegación) */
+.rbc-toolbar {
+    margin-bottom: 20px;
+    padding: 0 10px;
+}
+
+.rbc-toolbar button {
+    background-color: white;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin: 0 2px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #374151;
+    transition: all 0.2s ease;
+}
+
+.rbc-toolbar button:hover {
+    background-color: #f3f4f6;
+    border-color: #9ca3af;
+}
+
+.rbc-toolbar button.rbc-active {
+    background-color: #374151;
+    color: white;
+    border-color: #374151;
+}
+
+.rbc-toolbar .rbc-toolbar-label {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 15px;
+}
+
+/* Días de la semana en vista mensual */
+.rbc-month-view .rbc-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-weight: 600;
+    border: none;
+    text-transform: capitalize;
+    font-size: 12px;
+}
+
+/* Celdas del calendario */
+.rbc-month-view .rbc-date-cell {
+    padding: 8px;
+    text-align: right;
+    color: #374151;
+    font-weight: 500;
+    border-right: 1px solid #f1f5f9;
+    border-bottom: 1px solid #f1f5f9;
+    min-height: 120px;
+    background-color: white;
+    transition: background-color 0.2s ease;
+}
+
+.rbc-month-view .rbc-date-cell:hover {
+    background-color: #f8fafc;
+}
+
+/* Fechas fuera del mes actual */
+.rbc-off-range-bg {
+    background-color: #f9fafb;
+}
+
+.rbc-off-range {
+    color: #9ca3af;
+}
+
+/* Día actual */
+.rbc-today {
+    background-color: #eff6ff !important;
+    border: 2px solid #3b82f6;
+    border-radius: 8px;
+}
+
+.rbc-date-cell.rbc-today .rbc-button-link {
+    background-color: #3b82f6;
+    color: white;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    margin-left: auto;
+}
+
+/* Eventos */
+.rbc-event {
+    border: none;
+    border-radius: 6px;
+    padding: 2px 6px;
+    margin: 1px 0;
+    font-size: 11px;
+    font-weight: 500;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.rbc-event:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.rbc-event.rbc-selected {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    transform: translateY(-1px);
+}
+
+/* Vista semanal y diaria */
+.rbc-time-view .rbc-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 12px;
+    font-weight: 600;
+}
+
+.rbc-time-view .rbc-allday-cell {
+    background-color: #f8fafc;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.rbc-time-slot {
+    border-top: 1px solid #f1f5f9;
+}
+
+.rbc-time-slot.rbc-label {
+    color: #6b7280;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.rbc-current-time-indicator {
+    background-color: #ef4444;
+    height: 2px;
+    box-shadow: 0 1px 3px rgba(239, 68, 68, 0.3);
+}
+
+/* Agenda view */
+.rbc-agenda-view table {
+    border: none;
+}
+
+.rbc-agenda-view .rbc-agenda-date-cell {
+    background-color: #f8fafc;
+    border: none;
+    font-weight: 600;
+    color: #374151;
+    padding: 12px;
+}
+
+.rbc-agenda-view .rbc-agenda-time-cell {
+    background-color: white;
+    border: none;
+    color: #6b7280;
+    padding: 12px;
+    font-size: 12px;
+}
+
+.rbc-agenda-view .rbc-agenda-event-cell {
+    background-color: white;
+    border: none;
+    padding: 12px;
+}
+
+/* Popup de eventos */
+.rbc-overlay {
+    background-color: white;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    padding: 12px;
+    max-width: 300px;
+}
+
+.rbc-overlay-header {
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+/* Mostrar más eventos */
+.rbc-show-more {
+    background-color: transparent;
+    border: none;
+    color: #3b82f6;
+    font-size: 11px;
+    font-weight: 500;
+    text-decoration: underline;
+    padding: 2px 0;
+    cursor: pointer;
+}
+
+.rbc-show-more:hover {
+    color: #1d4ed8;
+}
+
+/* Selección de slots */
+.rbc-slot-selection {
+    background-color: rgba(59, 130, 246, 0.1);
+    border: 1px dashed #3b82f6;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .rbc-toolbar {
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+    }
+
+    .rbc-toolbar .rbc-btn-group {
+        display: flex;
+        justify-content: center;
+    }
+
+    .rbc-toolbar .rbc-toolbar-label {
+        text-align: center;
+        order: -1;
+    }
+
+    .rbc-month-view .rbc-date-cell {
+        min-height: 80px;
+        font-size: 12px;
+    }
+
+    .rbc-event {
+        font-size: 10px;
+        padding: 1px 3px;
+    }
+}
+
+/* Animaciones suaves */
+.rbc-calendar * {
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Mejorar la legibilidad en diferentes tipos de eventos */
+.rbc-event[style*="background-color: rgb(49, 116, 173)"] {
+    /* Meetings - Azul */
+    background: linear-gradient(135deg, #3174ad 0%, #4a90e2 100%) !important;
+}
+
+.rbc-event[style*="background-color: rgb(240, 173, 78)"] {
+    /* Personal - Naranja */
+    background: linear-gradient(135deg, #f0ad4e 0%, #f39c12 100%) !important;
+}
+
+.rbc-event[style*="background-color: rgb(92, 184, 92)"] {
+    /* Work - Verde */
+    background: linear-gradient(135deg, #5cb85c 0%, #27ae60 100%) !important;
+}
+
+.rbc-event[style*="background-color: rgb(217, 83, 79)"] {
+    /* Health - Rojo */
+    background: linear-gradient(135deg, #d9534f 0%, #e74c3c 100%) !important;
+}
