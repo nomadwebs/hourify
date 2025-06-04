@@ -311,9 +311,12 @@ export default function ContactDetails({ contact, onClose, isCreating = false, o
                             <Textarea
                                 id="notes"
                                 name="notes"
+                                maxLength={255}
+                                placeholder="Write your notes (255 chars maximum)"
                                 defaultValue={contact.notes}
                             />
                         </Field>
+                        <small style={{ color: '#888' }}>Maximum 255 characters</small>
 
                         {!isCreating && (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-gray-50 p-4 rounded-lg">

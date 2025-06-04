@@ -3,6 +3,11 @@ import { validate, errors } from 'com'
 const { SystemError } = errors
 
 export default (name, email, phone, contactType, nif, address, city, postalCode, website, notes, linkedUserId, numberOfSessions, sessionsRecurrency, timeSchedule) => {
+    validate.name(name)
+    if (nif) validate.dni(nif)
+    if (phone) validate.phone(phone)
+    if (email) validate.email(email)
+    if (notes) validate.notes(notes)
 
     return fetch(`${import.meta.env.VITE_API_URL}/contacts/create-contact`, {
         method: 'POST',

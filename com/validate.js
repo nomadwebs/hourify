@@ -53,6 +53,14 @@ const validateEmail = email => {
         throw new ValidationError('invalid email')
 }
 
+const validatePhone = phone => {
+    if (typeof phone !== 'string') throw new ValidationError('invalid phone number')
+    if (phone.length > 20) throw new ValidationError('phone number is too long')
+    // Permite números internacionales (+34...), paréntesis, espacios y guiones. Mínimo 8 dígitos
+    if (!/^\+?[\d\s\-()]{8,20}$/.test(phone))
+        throw new ValidationError('invalid phone number')
+}
+
 const validateUsername = username => {
     if (typeof username !== 'string') throw new ValidationError('invalid username')
     if (username.length < 5 || username.length > 25)
@@ -190,6 +198,11 @@ const validateTaskPriority = priority => {
     if (!validPriorities.includes(priority)) throw new ValidationError('Invalid priority value')
 }
 
+const validateNotes = notes => {
+    if (typeof notes !== 'string') throw new ValidationError('invalid notes')
+    if (notes.length > 255) throw new ValidationError('notes is too long, max 255 characters')
+}
+
 const validateAttendees = attendees => {
     if (!Array.isArray(attendees)) throw new ValidationError('attendees must be an array')
     //TODO: Validate attendees id
@@ -233,7 +246,9 @@ const validate = {
     timeFormat: validateTimeFormat,
     taskStatus: validateTaskStatus,
     taskPriority: validateTaskPriority,
-    attendees: validateAttendees
+    attendees: validateAttendees,
+    phone: validatePhone,
+    notes: validateNotes
 }
 
 export default validate
