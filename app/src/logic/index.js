@@ -13,7 +13,8 @@ import {
     changePassword,
     updateProfileImage,
     getUserNameByUserId,
-    getCreatedUsers
+    getCreatedUsers,
+    resetCreatedUserPassword
 } from './users'
 
 import {
@@ -106,6 +107,7 @@ const logic = {
     updateProfileImage,
     getUserNameByUserId,
     getCreatedUsers,
+    resetCreatedUserPassword,
 
     //Packs
     createPack,

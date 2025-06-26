@@ -13,6 +13,7 @@ import changePassword from './changePassword'
 import updateProfileImage from './updateProfileImage'
 import getUserNameByUserId from './getUserNameByUserId'
 import getCreatedUsers from './getCreatedUsers'
+import resetCreatedUserPassword from './resetCreatedUserPassword'
 
 export {
     registerUser,
@@ -29,5 +30,6 @@ export {
     changePassword,
     updateProfileImage,
     getUserNameByUserId,
-    getCreatedUsers
+    getCreatedUsers,
+    resetCreatedUserPassword
 }

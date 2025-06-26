@@ -8,6 +8,7 @@ import getCustomerPacks from './getCustomerPacks.js'
 import createUserByProvider from './createUserByProvider.js'
 import updateUserPlan from './updateUserPlan.js'
 import changePassword from './changePassword.js'
+import resetCreatedUserPassword from './resetCreatedUserPassword.js'
 import updateProfileImage from './updateProfileImage.js'
 import getCreatedUsers from './getCreatedUsers.js'
 
@@ -22,6 +23,7 @@ export {
     createUserByProvider,
     updateUserPlan,
     changePassword,
+    resetCreatedUserPassword,
     updateProfileImage,
     getCreatedUsers
 }

@@ -12,6 +12,7 @@ import {
     changePassword,
     updateProfileImage,
     getCreatedUsers,
+    resetCreatedUserPassword
 } from './users/index.js'
 
 //PACKS & BASEPACKS
@@ -103,6 +104,7 @@ const logic = {
     changePassword,
     updateProfileImage,
     getCreatedUsers,
+    resetCreatedUserPassword,
 
     //Packs and basebacks
     createBasePack,
