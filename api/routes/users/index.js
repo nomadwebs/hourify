@@ -40,7 +40,8 @@ import {
     changePasswordHandler,
     updateProfileImageHandler,
     uploadProfileImageHandler,
-    getCreatedUsersHandler
+    getCreatedUsersHandler,
+    resetCreatedUserPasswordHandler
 } from './handlers/index.js'
 
 const usersRouter = Router()
@@ -58,4 +59,5 @@ usersRouter.put('/changePassword', authorizationHandler, jsonBodyParser, changeP
 usersRouter.put('/updateProfileImage/:targetUserId', authorizationHandler, jsonBodyParser, updateProfileImageHandler)
 //usersRouter.post('/uploadProfileImage', authorizationHandler, jsonBodyParser, uploadProfileImageHandler)
 usersRouter.post('/uploadProfileImage', authorizationHandler, upload.single('image'), uploadProfileImageHandler)
+usersRouter.post('/resetCreatedUserPassword/:targetUserId', authorizationHandler, resetCreatedUserPasswordHandler)
 export default usersRouter  

@@ -22,9 +22,16 @@ export default function AssignPack(props) {
     const [manualPromo, setManualPromo] = useState(false)
     const [selectedPackId, setSelectedPackId] = useState('') // Nuevo estado para el pack seleccionado
 
+    // Estados para el dropdown interactivo de clientes
+    const [customers, setCustomers] = useState([])
+    const [customerSearch, setCustomerSearch] = useState('')
+    const [showDropdown, setShowDropdown] = useState(false)
+    const [selectedCustomer, setSelectedCustomer] = useState(null)
+
     useEffect(() => {
-        const fetchBasePacks = async () => {
+        const fetchData = async () => {
             try {
+                // Obtener packs
                 const basePacks = await logic.getBasePacks()
                 setPacks(basePacks)
 
@@ -32,6 +39,10 @@ export default function AssignPack(props) {
                 if (basePacks.length > 0) {
                     setSelectedPackId(basePacks[0].id)
                 }
+
+                // Obtener clientes
+                const customersResponse = await logic.getCustomers()
+                setCustomers(customersResponse)
             } catch (error) {
                 if (error.message === 'jwt expired') {
                     error.message = 'Your session has expired.'
@@ -45,7 +56,7 @@ export default function AssignPack(props) {
                 }
             }
         }
-        fetchBasePacks()
+        fetchData()
     }, [])
 
     // Efecto para calcular el precio promocional cuando cambia el pack o el descuento
@@ -71,20 +82,27 @@ export default function AssignPack(props) {
         let finalPrice = promoPrice && !isNaN(promoPrice) ? promoPrice : undefined
 
         let {
-            customerSearch: { value: customerSearch },
             description: { value: description },
             payedAmount: { value: payedAmount },
             paymentMethod: { value: paymentMethod },
             paymentReference: { value: paymentReference }
         } = form
 
+        // Usar el valor del customerSearch o el email/username del cliente seleccionado
+        const customerSearchValue = selectedCustomer ? (selectedCustomer.email || selectedCustomer.username) : customerSearch
+
         // Formatear el monto pagado
         let formattedPayedAmount = payedAmount.replace(',', '.').replace('€', '')
         payedAmount = formattedPayedAmount
 
         try {
-            await assignPack(customerSearch, selectedPackId, description, payedAmount, paymentMethod, paymentReference, finalPrice)
+            await assignPack(customerSearchValue, selectedPackId, description, payedAmount, paymentMethod, paymentReference, finalPrice)
             alert('Pack successfully assigned to customer!', 'success')
+
+            // Resetear el formulario
+            setCustomerSearch('')
+            setSelectedCustomer(null)
+            setShowDropdown(false)
         } catch (error) {
             if (error instanceof NotFoundError && error.message === 'Customer not found') {
                 handleCreateUser()
@@ -158,6 +176,46 @@ export default function AssignPack(props) {
         props.onHomeClick()
     }
 
+    // Nuevas funciones para manejar el dropdown de clientes
+    const handleCustomerSearchChange = (e) => {
+        const value = e.target.value
+        setCustomerSearch(value)
+        setSelectedCustomer(null)
+        setShowDropdown(value.length > 0)
+    }
+
+    const handleCustomerSelect = (customer) => {
+        if (customer.id === 'invite') {
+            // Opción especial para invitar usuario
+            setShowCreateUser(true)
+            setShowDropdown(false)
+        } else {
+            setSelectedCustomer(customer)
+            setCustomerSearch(customer.name)
+            setShowDropdown(false)
+        }
+    }
+
+    const handleCustomerInputFocus = () => {
+        if (customerSearch.length > 0) {
+            setShowDropdown(true)
+        }
+    }
+
+    const handleCustomerInputBlur = () => {
+        // Usar setTimeout para permitir que el click en el dropdown funcione
+        setTimeout(() => {
+            setShowDropdown(false)
+        }, 150)
+    }
+
+    // Filtrar clientes basado en la búsqueda
+    const filteredCustomers = customers.filter(customer =>
+        customer.name.toLowerCase().includes(customerSearch.toLowerCase()) ||
+        customer.email.toLowerCase().includes(customerSearch.toLowerCase()) ||
+        (customer.username && customer.username.toLowerCase().includes(customerSearch.toLowerCase()))
+    )
+
     return (
         <main className="flex flex-col items-center bg-color_backgroundGrey w-full flex-grow pt-12">
             {showCreateUser ? (
@@ -172,14 +230,52 @@ export default function AssignPack(props) {
                             <div className="space-y-4">
                                 <Field>
                                     <Label htmlFor="customerSearch">Find customer</Label>
-                                    <div className="flex gap-2">
-                                        <Input
+                                    <div className="relative">
+                                        <InputOnChange
                                             id="customerSearch"
                                             personalClasses="border-2 rounded-lg w-full"
                                             type="text"
                                             placeholder="Use email or username"
+                                            value={customerSearch}
+                                            onChange={handleCustomerSearchChange}
+                                            onFocus={handleCustomerInputFocus}
+                                            onBlur={handleCustomerInputBlur}
                                         />
 
+                                        {/* Dropdown de clientes */}
+                                        {showDropdown && (
+                                            <div className="absolute z-10 w-full bg-white border border-gray-300 rounded-lg shadow-lg mt-1 max-h-60 overflow-y-auto">
+                                                {/* Opción para invitar usuario (siempre primera) */}
+                                                <div
+                                                    className="px-4 py-2 hover:bg-blue-50 cursor-pointer border-b border-gray-200 text-blue-600 font-medium"
+                                                    onMouseDown={() => handleCustomerSelect({ id: 'invite' })}
+                                                >
+                                                    ➕ Invite user to application
+                                                </div>
+
+                                                {/* Lista de clientes filtrados */}
+                                                {filteredCustomers.length > 0 ? (
+                                                    filteredCustomers.map(customer => (
+                                                        <div
+                                                            key={customer.id}
+                                                            className="px-4 py-2 hover:bg-gray-50 cursor-pointer"
+                                                            onMouseDown={() => handleCustomerSelect(customer)}
+                                                        >
+                                                            <div className="font-medium text-gray-900">{customer.name}</div>
+                                                            <div className="text-sm text-gray-500">{customer.email}</div>
+                                                        </div>
+                                                    ))
+                                                ) : customerSearch.length > 0 ? (
+                                                    <div className="px-4 py-2 text-gray-500 italic">
+                                                        No customers found matching "{customerSearch}"
+                                                    </div>
+                                                ) : (
+                                                    <div className="px-4 py-2 text-gray-500 italic">
+                                                        Start typing to search customers...
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
                                     </div>
                                     <span className="text-sm hover:cursor-pointer text-gray-500 hover:text-gray-800 font-bold"
                                         type="button"
